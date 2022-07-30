@@ -149,18 +149,6 @@ public class ComprobanteServiceImplements implements IComprobanteService {
     public List<Comprobante> getByClienteByIdcliente(Integer idcliente) {
         
         return comprobanteRepository.listByClienteByIdcliente(idcliente);
-    }
-
-    @Override
-    public List<DetalleComprobante> getMasVendidos(Integer idtipo) {
-        
-        return detalleComprobanteRepository.listMasVendidos(idtipo);
-    }
-
-    @Override
-    public List<DetalleComprobante> getMasVendidosGeneral() {
-        
-        return detalleComprobanteRepository.listMasVendidosGeneral();
-    }      
+    }     
     
 }

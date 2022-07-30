@@ -139,13 +139,34 @@ public class IngresoServiceImplements implements IIngresoService {
     public List<DetalleIngreso> getByTipo(Integer idtipo) {
         
         return detalleIngresoRepository.listByTipo(idtipo);
+    }    
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DetalleIngreso> getLast12ByProducto(Producto producto) {
+        
+        return detalleIngresoRepository.findTop12ByProductoByOrderByIddetalleingresoDesc(producto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<DetalleIngreso> getByIdProductoByFecha(Integer idproducto, LocalDate createAt) {
+    public List<DetalleIngreso> getMasVendidos(Integer idtipo) {
         
-        return detalleIngresoRepository.listByIdproductoByFecha(idproducto, createAt);
+        return detalleIngresoRepository.listMasVendidos(idtipo);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DetalleIngreso> getMasVendidosGeneral() {
+        
+        return detalleIngresoRepository.listMasVendidosGeneral();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DetalleIngreso> getLastTwenty() {
+        
+        return detalleIngresoRepository.listLastTwenty();
     }         
     
 }

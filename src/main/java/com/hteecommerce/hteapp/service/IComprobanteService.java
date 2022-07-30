@@ -35,10 +35,6 @@ public interface IComprobanteService {
     //detalle comprobante
     public DetalleComprobante updateDC(DetalleComprobante dc);
     public void deleteDC(Integer iddc, DetalleIngreso di);    
-    public DetalleComprobante getDCByIddetallecomprobante(Integer iddc);
-
-    //productos mas vendidos
-    public List<DetalleComprobante> getMasVendidos(Integer idtipo);
-    public List<DetalleComprobante> getMasVendidosGeneral();
+    public DetalleComprobante getDCByIddetallecomprobante(Integer iddc);    
 
 }

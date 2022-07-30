@@ -30,5 +30,10 @@ public interface IIngresoService {
     public List<DetalleIngreso> listDIAll();
     public List<DetalleIngreso> getByNombreProducto(String nombre);
     public List<DetalleIngreso> getByTipo(Integer idtipo);
-    public List<DetalleIngreso> getByIdProductoByFecha(Integer idproducto, LocalDate createAt);
+    public List<DetalleIngreso> getLast12ByProducto(Producto producto);
+
+    //productos mas vendidos
+    public List<DetalleIngreso> getMasVendidos(Integer idtipo);
+    public List<DetalleIngreso> getMasVendidosGeneral();
+    public List<DetalleIngreso> getLastTwenty();
 }

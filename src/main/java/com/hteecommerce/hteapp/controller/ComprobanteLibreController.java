@@ -308,7 +308,7 @@ public class ComprobanteLibreController {
         return new ResponseEntity<Map<String, String>>(resp, HttpStatus.OK);
     }    
 
-    @DeleteMapping("/de/by/dni/{dni}")
+    @GetMapping("/de/by/dni/{dni}")
     public ResponseEntity<?> getDestinatarioByDni(@PathVariable(value = "dni") String dni) {
 
         Map<String, Object> resp = new HashMap<>();

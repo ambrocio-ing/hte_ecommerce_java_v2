@@ -72,7 +72,7 @@ public class PersonalController {
 
         try {
             personals = personalService.getAll();
-        } catch (DataAccessException e) {
+        } catch (DataAccessException e) {            
             resp.put("mensaje", "Error de consulta a la base de datos");
             return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -1,8 +1,6 @@
 package com.hteecommerce.hteapp.mapper;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -359,17 +357,18 @@ public class Mapper {
     public static List<MDetalleIngreso> mapDetalleIngresosTienda(List<DetalleIngreso> dis) {
 
         List<MDetalleIngreso> mlista = dis.stream()
-                .map(di -> {
-                    return new MDetalleIngreso(di.getIddetalleingreso(), di.getPrecioVenta(),
-                            di.getPrecioVentaAnterior(), di.getPorcentajeDescuento(),
-                            di.getStockActual(),
-                            di.getFechaProduccion(), di.getFechaVencimiento(),
-                            di.getEstado(), di.getProducto());
-                })
+                .map(di -> mapDetalleIngresoTienda(di))
                 .collect(Collectors.toList());
 
         return mlista;
+    }
 
+    public static MDetalleIngreso mapDetalleIngresoTienda(DetalleIngreso di) {
+        return new MDetalleIngreso(di.getIddetalleingreso(), di.getPrecioVenta(),
+                di.getPrecioVentaAnterior(), di.getPorcentajeDescuento(),
+                di.getStockActual(),
+                di.getFechaProduccion(), di.getFechaVencimiento(),
+                di.getEstado(), di.getProducto());
     }
 
     public static List<MComprobante> mapComprobantes(List<Comprobante> lista) {
@@ -438,19 +437,20 @@ public class Mapper {
 
     public static List<MComentario> mapComentarios(List<Comentario> lista) {
         List<MComentario> mlista = new ArrayList<>();
-        Collections.reverse(lista);
-        mlista = lista.stream()
-                .map(co -> {
-                    MComentario mco = new MComentario(co);
-                    mco.getCliente().getPersona().setDni(null);
-                    mco.getCliente().getPersona().setDireccion(null);
-                    mco.getCliente().getPersona().setTelefono(null);
-                    return mco;
-                })
+        
+        mlista = lista.stream() 
+                .map(co -> mapComentario(co))
                 .limit(20)
                 .collect(Collectors.toList());
-
         return mlista;
+    }
+
+    public static MComentario mapComentario(Comentario co){
+        MComentario mco = new MComentario(co);
+        mco.getCliente().getPersona().setDni(null);
+        mco.getCliente().getPersona().setDireccion(null);
+        mco.getCliente().getPersona().setTelefono(null);        
+        return mco;
     }
 
     public static int masRepeticiones(int[] numeros) {
@@ -478,107 +478,16 @@ public class Mapper {
     // historico
     public static List<HistoricoPrecio> mapHistoricoPrecios(List<DetalleIngreso> lista) {
         List<HistoricoPrecio> hps = new ArrayList<>();
-        LocalDate fecha = LocalDate.now();
+        int cont = 1;
 
-        List<DetalleIngreso> dis_annio_actual = lista.stream()
-                .filter(di -> di.getCreateAt().getYear() == fecha.getYear())
-                .collect(Collectors.toList());
-
-        List<DetalleIngreso> dis_annio_anterior = lista.stream()
-                .filter(di -> di.getCreateAt().getYear() < fecha.getYear())
-                .collect(Collectors.toList());
-
-        if (dis_annio_actual.size() > 0) {
-            int nmes = fecha.getMonthValue();
-            int annio = fecha.getYear();
-
-            for (int i = nmes; i > 0; i--) {
-                HistoricoPrecio hp = historico_Precio(dis_annio_actual, nmes, annio);
-                hps.add(hp);
-                nmes--;
-            }
-        }
-
-        if(dis_annio_anterior.size() > 0){
-            int tamanno = 12 - hps.size();
-            int nmes = 12;
-            int annio = fecha.getYear()-1;
-
-            for (int i = tamanno; i > 0; i--) {
-                HistoricoPrecio hp = historico_Precio(dis_annio_anterior, nmes, annio);
-                hps.add(hp);
-                nmes--;
-                tamanno--;
-            }
+        for (DetalleIngreso di : lista) {
+            HistoricoPrecio hp = new HistoricoPrecio(di.getPrecioVenta(), di.getPrecioVentaAnterior(), cont,
+                    di.getCreateAt().getYear() + "");
+            hps.add(hp);
+            cont++;
         }
 
         return hps;
-    }
-
-    public static HistoricoPrecio historico_Precio(List<DetalleIngreso> lista, int nmes, int annio) {
-        HistoricoPrecio hp = new HistoricoPrecio();
-        Double precio_acumulado = 0.0;
-        int count = 0;
-
-        for (DetalleIngreso di : lista) {
-            if (di.getCreateAt().getMonthValue() == nmes) {
-                precio_acumulado += di.getPrecioVenta();
-                count++;
-            }
-        }
-
-        Double promedio = precio_acumulado / count;
-        promedio = (double) (Math.round(promedio * 100) / 100);
-
-        hp.setPrecioPromedio(promedio);
-        hp.setMes(asignarMes(nmes));
-        hp.setAnnio(annio + "");
-
-        return hp;
-    }
-
-    public static String asignarMes(int valor) {
-        String mes = "";
-        switch (valor) {
-            case 1:
-                mes = "Enero";
-                break;
-            case 2:
-                mes = "Febrero";
-                break;
-            case 3:
-                mes = "Marzo";
-                break;
-            case 4:
-                mes = "Abril";
-                break;
-            case 5:
-                mes = "Mayo";
-                break;
-            case 6:
-                mes = "Junio";
-                break;
-            case 7:
-                mes = "Julio";
-                break;
-            case 8:
-                mes = "Agosto";
-                break;
-            case 9:
-                mes = "Setiembre";
-                break;
-            case 10:
-                mes = "Octubre";
-                break;
-            case 11:
-                mes = "Noviembre";
-                break;
-            case 12:
-                mes = "Diciembre";
-                
-        }
-
-        return mes;
     }
 
 }

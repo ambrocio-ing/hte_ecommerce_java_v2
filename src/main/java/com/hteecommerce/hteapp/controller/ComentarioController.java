@@ -14,7 +14,6 @@ import com.hteecommerce.hteapp.entity.Comprobante;
 import com.hteecommerce.hteapp.entity.DetalleComprobante;
 import com.hteecommerce.hteapp.entity.DetalleIngreso;
 import com.hteecommerce.hteapp.mapper.Mapper;
-import com.hteecommerce.hteapp.model.MComentario;
 import com.hteecommerce.hteapp.service.IClienteService;
 import com.hteecommerce.hteapp.service.IComentarioSerivce;
 import com.hteecommerce.hteapp.service.IComprobanteService;
@@ -47,31 +46,7 @@ public class ComentarioController {
     private IClienteService clienteService;
 
     @Autowired
-    private IComprobanteService comprobanteService;
-
-    @PreAuthorize("hasRole('CLIENT')")
-    @GetMapping("/lista/{iddi}")
-    public ResponseEntity<?> comList(@PathVariable(value = "iddi") Integer iddi){
-
-        Map<String,String> resp = new HashMap<>();
-        List<Comentario> comentarios = null;
-
-        try {
-            comentarios = comentarioSerivce.getByIddetalleingreso(iddi);
-        } catch (DataAccessException e) {
-            resp.put("mensaje", "Error de consulta a la base de datos");
-            return new ResponseEntity< Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        if(comentarios != null && comentarios.size() != 0){
-            List<MComentario> mlista = Mapper.mapComentarios(comentarios);
-            return new ResponseEntity<List<MComentario>>(mlista, HttpStatus.OK);
-        }
-        else{
-            comentarios = new ArrayList<>();
-            return new ResponseEntity<List<Comentario>>(comentarios, HttpStatus.OK);
-        }
-    }
+    private IComprobanteService comprobanteService;   
 
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping("/valid/comentario/{iddi}/{idcli}")

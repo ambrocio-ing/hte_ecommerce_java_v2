@@ -31,12 +31,14 @@ public class ClienteProveedor implements Serializable {
     private String razonSocial;
 
     @Size(max = 9, min = 7)
+    @Column(unique = true)
     private String telefono;
 
     @Size(min = 5, max = 100)
     private String direccion;
 
     @Email
+    @Column(unique = true)
     @Size(min = 5, max = 50)
     private String email;
 

@@ -1,6 +1,6 @@
 package com.hteecommerce.hteapp.controller;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,20 +12,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hteecommerce.hteapp.entity.Comentario;
 import com.hteecommerce.hteapp.entity.Delivery;
-import com.hteecommerce.hteapp.entity.DetalleComprobante;
 import com.hteecommerce.hteapp.entity.DetalleIngreso;
 import com.hteecommerce.hteapp.entity.Membresia;
+import com.hteecommerce.hteapp.entity.Producto;
 import com.hteecommerce.hteapp.entity.Publicacion;
 import com.hteecommerce.hteapp.entity.Tipo;
 import com.hteecommerce.hteapp.mapper.Mapper;
 import com.hteecommerce.hteapp.model.HistoricoPrecio;
+import com.hteecommerce.hteapp.model.MComentario;
 import com.hteecommerce.hteapp.model.MDetalleIngreso;
 import com.hteecommerce.hteapp.service.ICategoriaTipoService;
-import com.hteecommerce.hteapp.service.IComprobanteService;
+import com.hteecommerce.hteapp.service.IComentarioSerivce;
 import com.hteecommerce.hteapp.service.IDeliveryService;
 import com.hteecommerce.hteapp.service.IIngresoService;
 import com.hteecommerce.hteapp.service.IMembresiaService;
@@ -39,10 +43,7 @@ public class TiendaController {
     private IIngresoService ingresoService;
 
     @Autowired
-    private IMembresiaService membresiaService;
-
-    @Autowired
-    private IComprobanteService comprobanteService;
+    private IMembresiaService membresiaService;   
 
     @Autowired
     private ICategoriaTipoService categoriaTipoService;
@@ -53,12 +54,15 @@ public class TiendaController {
     @Autowired
     private IPublicacionService publicacionService;
 
-    //Buscar detalle de ingreso por nombre del producto
+    @Autowired
+    private IComentarioSerivce comentarioSerivce;
+
+    // Buscar detalle de ingreso por nombre del producto
     @GetMapping("/buscar/{nombre}")
     public ResponseEntity<?> diByFecha(@PathVariable(value = "nombre") String nombre) {
 
         Map<String, String> resp = new HashMap<>();
-        List<DetalleIngreso> dis = null;       
+        List<DetalleIngreso> dis = null;
 
         try {
             dis = ingresoService.getByNombreProducto(nombre);
@@ -78,12 +82,12 @@ public class TiendaController {
 
     }
 
-    //Detalle de ingreso por tipo
+    // Detalle de ingreso por tipo
     @GetMapping("/bytip/{id}")
     public ResponseEntity<?> diByTipo(@PathVariable(value = "id") Integer idtipo) {
 
         Map<String, String> resp = new HashMap<>();
-        List<DetalleIngreso> dis = null;       
+        List<DetalleIngreso> dis = null;
 
         try {
             dis = ingresoService.getByTipo(idtipo);
@@ -103,39 +107,37 @@ public class TiendaController {
 
     }
 
-    //historico de precios
-    @GetMapping("/history/{idproducto}")
-    public ResponseEntity<?> historicoPrecio(@PathVariable(value = "idproducto") Integer idproducto) {
+    // historico de precios
+    @PostMapping("/history")
+    public ResponseEntity<?> historicoPrecio(@RequestBody Producto producto) {
 
-        Map<String, String> resp = new HashMap<>();
-        LocalDate fecha_actual = LocalDate.now();
-        LocalDate fecha_anterior = fecha_actual.minusMonths(12);
-        List<DetalleIngreso> dis = null;       
+        Map<String, String> resp = new HashMap<>();       
+        List<DetalleIngreso> dis = null;
 
         try {
-            dis = ingresoService.getByIdProductoByFecha(idproducto, fecha_anterior);
+            dis = ingresoService.getLast12ByProducto(producto);
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error de consulta a la base de datos");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if (dis == null || dis.size() == 0) {
-            
-            resp.put("mensaje", "Sin datos que mostrar");
-            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-        }
+        if (dis != null && dis.size() != 0) {
 
-        List<HistoricoPrecio> hps = Mapper.mapHistoricoPrecios(dis);
-        return new ResponseEntity<List<HistoricoPrecio>>(hps, HttpStatus.OK);        
+            List<HistoricoPrecio> hps = Mapper.mapHistoricoPrecios(dis);
+            return new ResponseEntity<List<HistoricoPrecio>>(hps, HttpStatus.OK);            
+        }
+        
+        resp.put("mensaje", "Sin datos que mostrar");
+        return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
 
     }
 
-    //Mostrar todos los detalles de ingreso --> todos los productos
+    // Mostrar todos los detalles de ingreso --> todos los productos
     @GetMapping("/all")
     public ResponseEntity<?> diAll() {
 
         Map<String, String> resp = new HashMap<>();
-        List<DetalleIngreso> dis = null;       
+        List<DetalleIngreso> dis = null;
 
         try {
             dis = ingresoService.listDIAll();
@@ -154,7 +156,7 @@ public class TiendaController {
         }
     }
 
-    //Detalle de ingreso por id
+    // Detalle de ingreso por id
     @GetMapping("/byid/{iddi}")
     public ResponseEntity<?> getDIById(@PathVariable(value = "iddi") Integer iddi) {
 
@@ -175,142 +177,163 @@ public class TiendaController {
 
         }
 
-        MDetalleIngreso mdi = new MDetalleIngreso(di.getIddetalleingreso(), di.getPrecioVenta(),
-                di.getPrecioVentaAnterior(),
-                di.getPorcentajeDescuento(),
-                di.getStockActual(),
-                di.getFechaProduccion(), di.getFechaVencimiento(),
-                di.getEstado(), di.getProducto());
+        MDetalleIngreso mdi = Mapper.mapDetalleIngresoTienda(di);
         return new ResponseEntity<MDetalleIngreso>(mdi, HttpStatus.OK);
-
     }
-    
-    //membresia
+
+    // membresia
     @GetMapping("/mem/lista")
-    public ResponseEntity<?> listMembresia(){
-
-        Map<String,String> resp = new HashMap<>();
-        List<Membresia> lista = null;
-        String estado = "Vigente";
-        
-        try {
-            lista = membresiaService.getByEstado(estado);
-        } catch (DataAccessException e) {
-            resp.put("mensaje", "Error de consulta a la base de datos");
-            return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        if(lista != null && lista.size() != 0){
-            return new ResponseEntity<List<Membresia>>(lista, HttpStatus.OK);
-        }
-        else{
-            resp.put("mensaje", "Sin datos que mostrar");
-            return new ResponseEntity<Map<String,String>>(resp, HttpStatus.NOT_FOUND);
-        }
-
-    }
-
-    //productos mas vendidos
-    @GetMapping("/mas/ven/{idtipo}")
-    public ResponseEntity<?> listMasVendidos(@PathVariable(value = "idtipo") Integer idtipo){
+    public ResponseEntity<?> listMembresia() {
 
         Map<String, String> resp = new HashMap<>();
-        List<DetalleComprobante> dcs = null;       
+        List<Membresia> lista = null;
+        String estado = "Vigente";
 
         try {
-
-            if(idtipo == 0){
-                dcs = comprobanteService.getMasVendidosGeneral();
-            }
-            else{
-                dcs = comprobanteService.getMasVendidos(idtipo);
-            }           
-            
+            lista = membresiaService.getByEstado(estado);
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error de consulta a la base de datos");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if (dcs != null && dcs.size() != 0) {
-            List<DetalleIngreso> lista = dcs.stream()
-                .limit(10)
-                .map(dc -> dc.getDetalleIngreso())
-                .collect(Collectors.toList());
-
-            List<MDetalleIngreso> mlista = Mapper.mapDetalleIngresosTienda(lista);
-            return new ResponseEntity<List<MDetalleIngreso>>(mlista, HttpStatus.OK);
+        if (lista != null && lista.size() != 0) {
+            return new ResponseEntity<List<Membresia>>(lista, HttpStatus.OK);
         } else {
             resp.put("mensaje", "Sin datos que mostrar");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
         }
+
     }
 
-    //lista de tipos
-    @GetMapping("/tip-lista")
-    public ResponseEntity<?> listTipos(){
+    // productos mas vendidos
+    @GetMapping("/mas/ven/{idtipo}")
+    public ResponseEntity<?> listMasVendidos(@PathVariable(value = "idtipo") Integer idtipo) {
 
-        Map<String,String> resp = new HashMap<>();
+        Map<String, String> resp = new HashMap<>();
+        List<DetalleIngreso> dis = null;
+
+        try {
+            switch (idtipo) {
+                case 0:
+                    dis = ingresoService.getMasVendidosGeneral();
+                    if(dis.size() < 15){
+                        dis = ingresoService.getLastTwenty();
+                    }
+                    break;
+                default:
+                    dis = ingresoService.getMasVendidos(idtipo);
+                    if(dis.size() < 15){
+                        dis = ingresoService.getByTipo(idtipo);
+                    }
+            }
+
+        } catch (DataAccessException e) {
+            resp.put("mensaje", "Error de consulta");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if (dis != null && dis.size() != 0) {            
+            
+            List<MDetalleIngreso> mlista = dis.stream()
+                .limit(50)
+                .map(di -> Mapper.mapDetalleIngresoTienda(di))
+                .collect(Collectors.toList());
+
+            return new ResponseEntity<List<MDetalleIngreso>>(mlista, HttpStatus.OK);
+        }       
+
+        resp.put("mensaje", "Sin datos que mostrar");
+        return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
+    }
+
+    // lista de tipos
+    @GetMapping("/tip-lista")
+    public ResponseEntity<?> listTipos() {
+
+        Map<String, String> resp = new HashMap<>();
         List<Tipo> lista = null;
 
         try {
             lista = categoriaTipoService.getTipos();
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error de consulta a la base de datos");
-            return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if(lista != null && lista.size() != 0){
+        if (lista != null && lista.size() != 0) {
             return new ResponseEntity<List<Tipo>>(lista, HttpStatus.OK);
-        }
-        else{
+        } else {
             resp.put("mensaje", "Sin datos que mostrar");
-            return new ResponseEntity<Map<String,String>>(resp, HttpStatus.NOT_FOUND);
-        }        
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
+        }
     }
 
-    //LISTA DE DELIVERYS
+    // LISTA DE DELIVERYS
     @GetMapping("/deli-lista")
-    public ResponseEntity<?> listDelivery(){
+    public ResponseEntity<?> listDelivery() {
 
-        Map<String,String> resp = new HashMap<>();
+        Map<String, String> resp = new HashMap<>();
         List<Delivery> ds = null;
 
         try {
             ds = deliveryService.getAll();
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error de consulta");
-            return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if(ds != null && ds.size() != 0){
+        if (ds != null && ds.size() != 0) {
             return new ResponseEntity<List<Delivery>>(ds, HttpStatus.OK);
         }
 
         resp.put("mensaje", "Sin datos que mostrar");
-        return new ResponseEntity<Map<String,String>>(resp, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
     }
 
-    //LISTA DE PUBLICACIONES
+    // LISTA DE PUBLICACIONES
     @GetMapping("/by/es/{estado}")
-    public ResponseEntity<?> listByEstado(@PathVariable(value = "estado") String estado){
+    public ResponseEntity<?> listByEstado(@PathVariable(value = "estado") String estado) {
 
-        Map<String,String> resp = new HashMap<>();
+        Map<String, String> resp = new HashMap<>();
         List<Publicacion> lista = null;
-        
+
         try {
             lista = publicacionService.getByEstado(estado);
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error de consulta a la base de datos");
-            return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if(lista != null && lista.size() != 0){
-            
+        if (lista != null && lista.size() != 0) {
+
             return new ResponseEntity<List<Publicacion>>(lista, HttpStatus.OK);
+        } else {
+            resp.put("mensaje", "Sin datos que mostrar");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    //lista de comentarios para un producto
+    @GetMapping("/comens/{idproducto}")
+    public ResponseEntity<?> listComentario(@PathVariable(value = "idproducto") Integer idproducto){
+
+        Map<String,String> resp = new HashMap<>();
+        List<Comentario> comentarios = null;
+
+        try {
+            comentarios = comentarioSerivce.getByIdproducto(idproducto);
+        } catch (DataAccessException e) {
+            resp.put("mensaje", "Error de consulta");
+            return new ResponseEntity< Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if(comentarios != null && comentarios.size() != 0){
+            List<MComentario> mlista = Mapper.mapComentarios(comentarios);
+            return new ResponseEntity<List<MComentario>>(mlista, HttpStatus.OK);
         }
         else{
-            resp.put("mensaje", "Sin datos que mostrar");
-            return new ResponseEntity<Map<String,String>>(resp, HttpStatus.NOT_FOUND);
+            comentarios = new ArrayList<>();
+            return new ResponseEntity<List<Comentario>>(comentarios, HttpStatus.OK);
         }
     }
 }

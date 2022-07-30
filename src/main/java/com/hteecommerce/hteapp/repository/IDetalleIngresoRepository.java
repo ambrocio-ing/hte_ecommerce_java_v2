@@ -1,6 +1,5 @@
 package com.hteecommerce.hteapp.repository;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,8 +35,18 @@ public interface IDetalleIngresoRepository extends JpaRepository<DetalleIngreso,
 
     @Query("from DetalleIngreso di where di.estado = true and di.stockActual > 0 order by di.iddetalleingreso desc")
     public List<DetalleIngreso> listAll();
+   
+    //listar los 12 ultimos ingresos de cada producto
+    public List<DetalleIngreso> findTop12ByProductoByOrderByIddetalleingresoDesc(Producto producto);
 
-    @Query("from DetalleIngreso di join di.producto pro where pro.idproducto = ?1 and di.createAt > ?2 order by di.createAt asc")
-    public List<DetalleIngreso> listByIdproductoByFecha(Integer idproducto, LocalDate createAt);
+    //lista de productos mas populares
+    @Query("from DetalleIngreso di join di.producto pro join pro.tipo tip where di.stockActual > 0 and di.estado = true and tip.idtipo = ?1 order by pro.nventas desc")
+    public List<DetalleIngreso> listMasVendidos(Integer idtipo);
+
+    @Query(nativeQuery = true, value = "select * from detalle_ingreso di inner join productos pro on di.idproducto = pro.idproducto where di.stock_actual > 0 and di.estado = true order by pro.nventas desc limit 50")
+    public List<DetalleIngreso> listMasVendidosGeneral();
+
+    @Query(nativeQuery = true, value = "select * from detalle_ingreso di where di.estado = true and di.stockActual > 0 order by di.iddetalleingreso asc limit 20")
+    public List<DetalleIngreso> listLastTwenty();
 
 }

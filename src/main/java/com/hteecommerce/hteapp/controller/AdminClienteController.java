@@ -62,7 +62,7 @@ public class AdminClienteController {
         }
 
         if(cliente == null){
-            resp.put("mensaje", "No se encontraron coincidencias que eliminar");
+            resp.put("mensaje", "No se encontraron coincidencias que mostrar");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
         }               
         
