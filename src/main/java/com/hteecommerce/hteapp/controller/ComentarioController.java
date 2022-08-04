@@ -85,7 +85,7 @@ public class ComentarioController {
         DetalleIngreso di = null;
         List<Comentario> comens = null;
         List<Integer> puntos_list = new ArrayList<>();
-        int punto_mayor = 0;
+        Integer punto_mayor = 0;
         
         if(result.hasErrors()){
 
@@ -95,25 +95,24 @@ public class ComentarioController {
             
             resp.put("mensaje", errors);
             return new ResponseEntity< Map<String,Object>>(resp, HttpStatus.BAD_REQUEST);
-
         }
 
         try {
             cliente = clienteService.getByIdcliente(comentario.getCliente().getIdcliente());
         } catch (DataAccessException e) {
-            resp.put("mensaje", "Error de consulta a la base de datos");
+            resp.put("mensaje", "Error de consulta");
             return new ResponseEntity< Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         try {
             di = ingresoService.getByIddetalleingreso(comentario.getDetalleIngreso().getIddetalleingreso());
         } catch (DataAccessException e) {
-            resp.put("mensaje", "Error de consulta a la base de datos");
+            resp.put("mensaje", "Error de consulta");
             return new ResponseEntity< Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         if(cliente == null || di == null){
-            resp.put("mensaje", "Error de consulta a la base de datos");
+            resp.put("mensaje", "Error de consulta");
             return new ResponseEntity< Map<String,Object>>(resp, HttpStatus.NOT_FOUND);
         }
 
@@ -128,7 +127,7 @@ public class ComentarioController {
             punto_mayor = Mapper.masRepeticiones(nums);                      
         }
         else{
-            punto_mayor = comentario.getEstrellas();
+            punto_mayor = (Integer) ((comentario.getDetalleIngreso().getProducto().getPuntos() + comentario.getEstrellas()) / 2);
         }          
 
         comentario.setCliente(cliente);
@@ -141,7 +140,7 @@ public class ComentarioController {
         try {
             comentarioSerivce.saveCOM(comentario);
         } catch (DataAccessException e) {
-            resp.put("mensaje", "Error al enviar comentario");            
+            resp.put("mensaje", "Error al guardar comentario");            
             return new ResponseEntity< Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

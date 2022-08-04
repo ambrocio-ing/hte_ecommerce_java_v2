@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -37,6 +38,8 @@ public class Producto implements Serializable {
     private String nombre;
 
     private Integer puntos;
+
+    private String marca;
 
     private Integer nventas;
 
@@ -68,6 +71,12 @@ public class Producto implements Serializable {
 
     public Producto() {
         
+    }
+
+    @PrePersist
+    public void asignarNumeroEstrellas() {
+        this.nestrellas = 5;
+        this.nventas = 0;
     }
 
     public Integer getIdproducto() {
@@ -164,6 +173,14 @@ public class Producto implements Serializable {
 
     public void setNestrellas(Integer nestrellas) {
         this.nestrellas = nestrellas;
+    }
+
+    public String getMarca() {
+        return marca;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca;
     }
 
     private static final long serialVersionUID = 1L;

@@ -37,8 +37,9 @@ public interface IDetalleIngresoRepository extends JpaRepository<DetalleIngreso,
     public List<DetalleIngreso> listAll();
    
     //listar los 12 ultimos ingresos de cada producto
-    public List<DetalleIngreso> findTop12ByProductoByOrderByIddetalleingresoDesc(Producto producto);
-
+    @Query("from DetalleIngreso di join di.producto pro where pro.idproducto = ?1 order by di.iddetalleingreso desc")
+    public List<DetalleIngreso> list12Ultimos(Integer idproducto);
+ 
     //lista de productos mas populares
     @Query("from DetalleIngreso di join di.producto pro join pro.tipo tip where di.stockActual > 0 and di.estado = true and tip.idtipo = ?1 order by pro.nventas desc")
     public List<DetalleIngreso> listMasVendidos(Integer idtipo);

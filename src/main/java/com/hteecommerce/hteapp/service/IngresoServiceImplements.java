@@ -2,6 +2,7 @@ package com.hteecommerce.hteapp.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.hteecommerce.hteapp.entity.DetalleIngreso;
 import com.hteecommerce.hteapp.entity.Ingreso;
@@ -145,7 +146,8 @@ public class IngresoServiceImplements implements IIngresoService {
     @Transactional(readOnly = true)
     public List<DetalleIngreso> getLast12ByProducto(Producto producto) {
         
-        return detalleIngresoRepository.findTop12ByProductoByOrderByIddetalleingresoDesc(producto);
+        List<DetalleIngreso> lista = detalleIngresoRepository.list12Ultimos(producto.getIdproducto());
+        return lista.stream().limit(12).collect(Collectors.toList());
     }
 
     @Override
