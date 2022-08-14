@@ -1,14 +1,23 @@
 package com.hteecommerce.hteapp.entity;
 
+import java.util.Set;
+import java.util.HashSet;
+
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "producto_vestimentas")
@@ -16,15 +25,8 @@ public class ProductoVestimenta implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idpvestimenta;
-    
-    @Size(max = 4)
-    private String talla;
-    
-    @NotNull
-    @Size(max = 50)
-    private String marca;
-    
+    private Integer idpvestimenta;  
+        
     @Size(max = 50)
     private String modelo;
 
@@ -37,20 +39,24 @@ public class ProductoVestimenta implements Serializable {
 
     private String descripcion;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "idpvestimenta", nullable = false)
+    private Set<Variedad> variedades = null;
+
     public ProductoVestimenta(){
+        this.variedades = new HashSet<>();
+    }        
 
-    }    
-
-    public ProductoVestimenta(Integer idpvestimenta, @Size(max = 4) String talla, @NotNull @Size(max = 50) String marca,
-            @Size(max = 50) String modelo, @NotNull @Size(max = 50) String material, @Size(max = 50) String color,
-            String descripcion) {
+    public ProductoVestimenta(Integer idpvestimenta, @Size(max = 50) String modelo,
+            @NotNull @Size(max = 50) String material, @Size(max = 50) String color, String descripcion,
+            Set<Variedad> variedades) {
         this.idpvestimenta = idpvestimenta;
-        this.talla = talla;
-        this.marca = marca;
         this.modelo = modelo;
         this.material = material;
         this.color = color;
         this.descripcion = descripcion;
+        this.variedades = variedades;
     }
 
     public Integer getIdpvestimenta() {
@@ -59,23 +65,7 @@ public class ProductoVestimenta implements Serializable {
 
     public void setIdpvestimenta(Integer idpvestimenta) {
         this.idpvestimenta = idpvestimenta;
-    }
-
-    public String getTalla() {
-        return talla;
-    }
-
-    public void setTalla(String talla) {
-        this.talla = talla;
-    }
-
-    public String getMarca() {
-        return marca;
-    }
-
-    public void setMarca(String marca) {
-        this.marca = marca;
-    }
+    }    
 
     public String getModelo() {
         return modelo;
@@ -108,6 +98,14 @@ public class ProductoVestimenta implements Serializable {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }   
+
+    public Set<Variedad> getVariedades() {
+        return variedades;
+    }
+
+    public void setVariedades(Set<Variedad> variedades) {
+        this.variedades = variedades;
+    }
 
     private static final long serialVersionUID = 1L;
     // Tallas, marca, modelo, material, color

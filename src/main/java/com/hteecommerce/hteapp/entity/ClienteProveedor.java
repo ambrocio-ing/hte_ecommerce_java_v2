@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "cliente_proveedor")
+@Table(name = "cliente_proveedores")
 public class ClienteProveedor implements Serializable {
 
     @Id

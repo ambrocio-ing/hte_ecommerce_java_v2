@@ -73,6 +73,7 @@ public class EmailController {
             return new ResponseEntity<Map<String,String>>(resp, HttpStatus.NOT_FOUND);
         }
 
+        dto.setToken(usuario.getTokenPassword());
         emailService.mailSend(dto);
         resp.put("mensaje", "Correo de recuperación enviado con éxito, por favor revise su correo");
         return new ResponseEntity<Map<String,String>>(resp, HttpStatus.OK);

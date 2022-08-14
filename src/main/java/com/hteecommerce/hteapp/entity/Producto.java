@@ -28,7 +28,7 @@ public class Producto implements Serializable {
     private Integer idproducto;
 
     @NotNull
-    @Size(max = 6)
+    @Size(max = 12)
     @Column(unique = true)
     private String codigo;
 

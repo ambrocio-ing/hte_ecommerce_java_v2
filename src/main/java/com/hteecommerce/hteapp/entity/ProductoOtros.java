@@ -18,9 +18,6 @@ public class ProductoOtros implements Serializable {
     private Integer idpotros;
 
     @Size(max = 50)
-    private String marca;
-
-    @Size(max = 50)
     private String modelo;
 
     @Size(max = 50)
@@ -41,11 +38,10 @@ public class ProductoOtros implements Serializable {
 
     }    
 
-    public ProductoOtros(Integer idpotros, @Size(max = 50) String marca, @Size(max = 50) String modelo,
+    public ProductoOtros(Integer idpotros, @Size(max = 50) String modelo,
             @Size(max = 50) String color, @Size(max = 50) String material, @Size(max = 50) String medida,
             @Size(max = 50) String peso, String detalle) {
         this.idpotros = idpotros;
-        this.marca = marca;
         this.modelo = modelo;
         this.color = color;
         this.material = material;
@@ -60,14 +56,6 @@ public class ProductoOtros implements Serializable {
 
     public void setIdpotros(Integer idpotros) {
         this.idpotros = idpotros;
-    }
-
-    public String getMarca() {
-        return marca;
-    }
-
-    public void setMarca(String marca) {
-        this.marca = marca;
     }
 
     public String getModelo() {

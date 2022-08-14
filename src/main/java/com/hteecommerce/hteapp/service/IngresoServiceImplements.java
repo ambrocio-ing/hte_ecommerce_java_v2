@@ -123,24 +123,45 @@ public class IngresoServiceImplements implements IIngresoService {
     //LISTA Y FILTRO EN VISTA DEL CLIENTE
     @Override
     @Transactional(readOnly = true)
-    public List<DetalleIngreso> listDIAll() {
+    public List<DetalleIngreso> listDIAll(String sucrsal) {
         
-        return detalleIngresoRepository.listAll();
+        return detalleIngresoRepository.listAll(sucrsal);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<DetalleIngreso> getByNombreProducto(String nombre) {
+    public List<DetalleIngreso> listDIAllToMarca(String sucursal, String marca) {
         
-        return detalleIngresoRepository.listByNombreProducto(nombre);
+        return detalleIngresoRepository.listAllToMarca(sucursal, marca);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<DetalleIngreso> getByTipo(Integer idtipo) {
+    public List<DetalleIngreso> getByNombreProducto(String nombre, String sucursal) {
         
-        return detalleIngresoRepository.listByTipo(idtipo);
+        return detalleIngresoRepository.listByNombreProducto(nombre, sucursal);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DetalleIngreso> getByNombreProductoToMarca(String nombre, String sucursal, String marca) {
+        
+        return detalleIngresoRepository.listByNombreProductoToMarca(nombre, sucursal, marca);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DetalleIngreso> getByTipo(Integer idtipo, String sucursal) {
+        
+        return detalleIngresoRepository.listByTipo(idtipo, sucursal);
     }    
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DetalleIngreso> getByTipoToMarca(Integer idtipo, String sucursal, String marca) {
+        
+        return detalleIngresoRepository.listByTipoToMarca(idtipo, sucursal, marca);
+    }   
 
     @Override
     @Transactional(readOnly = true)
@@ -152,23 +173,23 @@ public class IngresoServiceImplements implements IIngresoService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<DetalleIngreso> getMasVendidos(Integer idtipo) {
+    public List<DetalleIngreso> getMasVendidos(Integer idtipo, String sucursal) {
         
-        return detalleIngresoRepository.listMasVendidos(idtipo);
+        return detalleIngresoRepository.listMasVendidos(idtipo, sucursal);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<DetalleIngreso> getMasVendidosGeneral() {
+    public List<DetalleIngreso> getMasVendidosGeneral(String sucursal) {
         
-        return detalleIngresoRepository.listMasVendidosGeneral();
+        return detalleIngresoRepository.listMasVendidosGeneral(sucursal);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<DetalleIngreso> getLastTwenty() {
+    public List<DetalleIngreso> getLastTwenty(String sucursal) {
         
-        return detalleIngresoRepository.listLastTwenty();
+        return detalleIngresoRepository.findTop20BySucursalByOrderByIddetalleingresoDesc(sucursal);
     }         
     
 }

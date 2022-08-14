@@ -64,7 +64,7 @@ public class ConfigMainSecurity extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable()
             .authorizeRequests()
-            .antMatchers("/auth/**", "/comentario/com/**", "/cliente/cli/**", "/com-lib/cl/**", "/mostrar/**", "/proveedor/pro/**", "/tienda/ti/**")
+            .antMatchers("/ch-pass/**", "/auth/**", "/comentario/com/**", "/cliente/cli/**", "/com-lib/cl/**", "/mostrar/**", "/proveedor/pro/**", "/tienda/ti/**")
             .permitAll()
             .anyRequest()
             .authenticated()

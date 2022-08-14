@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "producto_imagen")
+@Table(name = "producto_imagenes")
 public class ProductoImagen implements Serializable {
 
     @Id

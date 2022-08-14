@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -42,20 +41,22 @@ public class Usuario implements Serializable {
     @Size(max = 12)
     private String estado;
 
-    @NotNull    
+    @NotNull
     @Column(unique = true, length = 70)
     private String password;
 
     @Column(name = "token_password", length = 70)
     private String tokenPassword;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinTable(name = "usuario_roles", joinColumns = @JoinColumn(name = "idusuario"), inverseJoinColumns = @JoinColumn(name = "idrol"), uniqueConstraints = {
-            @UniqueConstraint(columnNames = { "idusuario", "idrol" }) })
-    private Set<Role> roles = new HashSet<>();    
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "usuario_roles", 
+            joinColumns = @JoinColumn(name = "idusuario"), 
+            inverseJoinColumns = @JoinColumn(name = "idrol"), 
+            uniqueConstraints = { @UniqueConstraint(columnNames = { "idusuario", "idrol" }) })
+    private Set<Role> roles;
 
     public Usuario() {
-
+        this.roles = new HashSet<>();
     }
 
     public Usuario(@NotNull @Size(min = 4, max = 15) String username, @NotNull @Email String email,
@@ -114,7 +115,7 @@ public class Usuario implements Serializable {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }    
+    }
 
     public String getTokenPassword() {
         return tokenPassword;

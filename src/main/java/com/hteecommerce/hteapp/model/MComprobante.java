@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.hteecommerce.hteapp.entity.Comprobante;
+import com.hteecommerce.hteapp.entity.HoraEntrega;
 
 public class MComprobante {
 
@@ -31,11 +32,11 @@ public class MComprobante {
 
     private Double descuento;
 
-    private LocalDate fechaEntrega;
-
-    private String hora;
+    private LocalDate fechaEntrega;    
 
     private MDireccionEnvio direccionEnvio;
+
+    private HoraEntrega horaEntrega;
 
     private List<MDetalleComprobante> detalleComprobantes;
 
@@ -56,7 +57,7 @@ public class MComprobante {
         this.total = comprobante.getTotal();
         this.descuento = comprobante.getDescuento();
         this.fechaEntrega = comprobante.getFechaEntrega();
-        this.hora = comprobante.getHora();
+        this.horaEntrega = comprobante.getHoraEntrega();
         this.direccionEnvio = new MDireccionEnvio(comprobante.getDireccionEnvio()); 
         this.detalleComprobantes = comprobante.getDetalleComprobantes().stream()
                 .map(dc -> {
@@ -151,14 +152,6 @@ public class MComprobante {
 
     public void setFechaEntrega(LocalDate fechaEntrega) {
         this.fechaEntrega = fechaEntrega;
-    }
-
-    public String getHora() {
-        return hora;
-    }
-
-    public void setHora(String hora) {
-        this.hora = hora;
     }    
 
     public MDireccionEnvio getDireccionEnvio() {
@@ -183,6 +176,14 @@ public class MComprobante {
 
     public void setDescuento(Double descuento) {
         this.descuento = descuento;
+    }
+
+    public HoraEntrega getHoraEntrega() {
+        return horaEntrega;
+    }
+
+    public void setHoraEntrega(HoraEntrega horaEntrega) {
+        this.horaEntrega = horaEntrega;
     }
 
 }

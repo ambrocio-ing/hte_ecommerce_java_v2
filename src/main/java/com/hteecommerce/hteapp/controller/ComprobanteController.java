@@ -392,13 +392,12 @@ public class ComprobanteController {
         }
 
         LocalDateTime fechahoy = LocalDateTime.now();
-        LocalDateTime fechaCompra = LocalDateTime.parse(com.getFechaEntrega().toString()+"T"+com.getHora()).plusHours(48);
+        LocalDateTime fechaCompra = LocalDateTime.parse(com.getFechaEntrega().toString()+"T"+com.getHoraEntrega().getHora()).plusHours(48);
 
         if(com.getEstado().equals("Vendido") && fechahoy.isBefore(fechaCompra) == false){
             
             resp.put("mensaje", "No fue posible eliminar detalle de comprobante, ya pasaron mas de 48 horas");
-            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-            
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);            
         }
 
         decom.getDetalleIngreso().setStockActual(decom.replenishStockActual());     

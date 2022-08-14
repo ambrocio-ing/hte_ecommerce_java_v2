@@ -30,7 +30,7 @@ public class Comprobante implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idcomprobante;
-    
+
     @Column(unique = true)
     @Size(max = 10, min = 10)
     private String numero;
@@ -42,17 +42,17 @@ public class Comprobante implements Serializable {
     @Size(max = 15)
     @Column(name = "tipo_comprobante")
     private String tipoComprobante;
-    
+
     @Column(name = "fecha_pedido")
     private LocalDateTime fechaPedido;
 
     @NotNull
-    @Size(max = 15)
+    @Size(max = 30)
     private String estado;
 
     @NotNull
     private Double igv;
-    
+
     @Column(name = "monto_envio")
     private Double montoEnvio;
 
@@ -68,16 +68,21 @@ public class Comprobante implements Serializable {
     @Column(name = "fecha_entrega")
     private LocalDate fechaEntrega;
 
-    private String hora;
+    private String nbolsa;
 
-    @JsonIgnoreProperties(value = { "comprobantes", "hibernateLazyInitializer", "handler" }, allowSetters = true)
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "iddireccion", nullable = false)
     private DireccionEnvio direccionEnvio;
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idhoraentrega", nullable = false)
+    private HoraEntrega horaEntrega;
+
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "idcomprobante")
+    @JoinColumn(name = "idcomprobante", nullable = false)
     public List<DetalleComprobante> detalleComprobantes;
 
     public Comprobante() {
@@ -87,27 +92,7 @@ public class Comprobante implements Serializable {
     @PrePersist
     public void cargarFecha() {
         this.fechaPedido = LocalDateTime.now();
-    }
-
-    public Double calculateIGV() {
-        double igvtotal = this.total * 0.18;
-        double igvmat = Math.round(igvtotal * 100);
-        double igv = igvmat / 100;
-        return igv;
     }    
-
-    public Double calculateSubTotal() {
-        return this.total - this.igv;
-    }
-
-    public Double calculateTotal() {
-        Double total = 0.00;
-        for (DetalleComprobante dc : this.detalleComprobantes) {
-            total += dc.getSubTotal();
-        }
-
-        return total;
-    }
 
     public Integer getIdcomprobante() {
         return idcomprobante;
@@ -197,12 +182,12 @@ public class Comprobante implements Serializable {
         this.fechaEntrega = fechaEntrega;
     }
 
-    public String getHora() {
-        return hora;
+    public HoraEntrega getHoraEntrega() {
+        return horaEntrega;
     }
 
-    public void setHora(String hora) {
-        this.hora = hora;
+    public void setHoraEntrega(HoraEntrega horaEntrega) {
+        this.horaEntrega = horaEntrega;
     }
 
     public DireccionEnvio getDireccionEnvio() {
@@ -227,6 +212,14 @@ public class Comprobante implements Serializable {
 
     public void setDescuento(Double descuento) {
         this.descuento = descuento;
+    }
+
+    public String getNbolsa() {
+        return nbolsa;
+    }
+
+    public void setNbolsa(String nbolsa) {
+        this.nbolsa = nbolsa;
     }
 
     private static final long serialVersionUID = 1L;

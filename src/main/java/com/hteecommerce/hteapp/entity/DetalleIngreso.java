@@ -13,18 +13,20 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "detalle_ingreso")
+@Table(name = "detalle_ingresos")
 public class DetalleIngreso implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)   
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer iddetalleingreso;
-    
+
     @Column(name = "precio_compra")
     private Double precioCompra;
 
@@ -46,38 +48,42 @@ public class DetalleIngreso implements Serializable {
 
     @NotNull
     @Column(name = "stock_actual")
+    @Min(0)
     private Integer stockActual;
-
-    @NotNull
+    
     @Column(name = "fecha_produccion")
     private LocalDate fechaProduccion;
-    
+
     @Column(name = "fecha_vencimiento")
     private LocalDate fechaVencimiento;
-    
+
     @NotNull
     private Boolean estado;
+
+    @NotNull
+    @Size(max = 30)
+    private String sucursal;
 
     @Column(name = "create_at")
     private LocalDate createAt;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idproducto", nullable = false)
-    private Producto producto;
+    private Producto producto;    
 
-    private Integer idingreso;    
+    private Integer idingreso;
 
     public DetalleIngreso() {
-
+        
     }
 
     @PrePersist
-    public void prePersist(){
+    public void prePersist() {
         this.createAt = LocalDate.now();
     }
-    
-    public Integer calculateStockActual(Integer stock_actual){
+
+    public Integer calculateStockActual(Integer stock_actual) {
         return this.stockInicial + stock_actual;
     }
 
@@ -135,7 +141,7 @@ public class DetalleIngreso implements Serializable {
 
     public void setFechaVencimiento(LocalDate fechaVencimiento) {
         this.fechaVencimiento = fechaVencimiento;
-    }    
+    }
 
     public Producto getProducto() {
         return producto;
@@ -143,7 +149,7 @@ public class DetalleIngreso implements Serializable {
 
     public void setProducto(Producto producto) {
         this.producto = producto;
-    }    
+    }
 
     public Boolean getEstado() {
         return estado;
@@ -151,7 +157,7 @@ public class DetalleIngreso implements Serializable {
 
     public void setEstado(Boolean estado) {
         this.estado = estado;
-    }    
+    }
 
     public Integer getIdingreso() {
         return idingreso;
@@ -185,14 +191,14 @@ public class DetalleIngreso implements Serializable {
         this.createAt = createAt;
     }
 
-    @Override
-    public String toString() {
-        return "DetalleIngreso [estado=" + estado + ", fechaProduccion=" + fechaProduccion + ", fechaVencimiento="
-                + fechaVencimiento + ", iddetalleingreso=" + iddetalleingreso + ", idingreso=" + idingreso
-                + ", precioCompra=" + precioCompra + ", precioVenta=" + precioVenta + ", producto=" + producto
-                + ", stockActual=" + stockActual + ", stockInicial=" + stockInicial + "]";
+    public String getSucursal() {
+        return sucursal;
+    }
+
+    public void setSucursal(String sucursal) {
+        this.sucursal = sucursal;
     }
 
     private static final long serialVersionUID = 1L;
-    
+
 }

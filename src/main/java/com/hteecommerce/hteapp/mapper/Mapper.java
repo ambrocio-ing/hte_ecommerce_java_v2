@@ -189,7 +189,7 @@ public class Mapper {
         }
 
         if (po.getColor() != null || po.getDetalle() != null ||
-                po.getMarca() != null || po.getMaterial() != null || po.getMedida() != null ||
+                po.getMaterial() != null || po.getMedida() != null ||
                 po.getModelo() != null || po.getPeso() != null) {
 
             return true;
@@ -204,8 +204,8 @@ public class Mapper {
         }
 
         if (pv.getColor() != null || pv.getDescripcion() != null ||
-                pv.getMarca() != null || pv.getMaterial() != null || pv.getModelo() != null
-                || pv.getTalla() != null) {
+                pv.getMaterial() != null || pv.getModelo() != null
+                || pv.getVariedades() != null) {
 
             return true;
         }
@@ -488,6 +488,6 @@ public class Mapper {
         }
 
         return hps;
-    }
+    }    
 
 }

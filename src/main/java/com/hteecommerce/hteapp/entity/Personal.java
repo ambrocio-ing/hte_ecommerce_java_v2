@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hteecommerce.hteapp.security.entity.Usuario;
 
 @Entity
-@Table(name = "personal")
+@Table(name = "personales")
 public class Personal implements Serializable {
 
     @Id

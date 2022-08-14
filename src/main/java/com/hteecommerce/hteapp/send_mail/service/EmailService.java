@@ -49,7 +49,7 @@ public class EmailService {
             }
 
             context.setVariables(model);
-            String htmlText = templateEngine.process("html_template", context);
+            String htmlText = templateEngine.process("email_template", context);
             helper.setFrom(dto.getMailFrom());
             helper.setTo(dto.getMailTo());
             helper.setSubject(dto.getSubject());

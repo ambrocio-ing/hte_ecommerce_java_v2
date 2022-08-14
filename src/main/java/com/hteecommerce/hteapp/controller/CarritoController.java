@@ -58,6 +58,61 @@ public class CarritoController {
         }
 
         if (carritos != null && carritos.size() != 0) {
+
+            List<MCarrito> mlista = carritos.stream()
+                    .map(carr -> new MCarrito(carr))
+                    .collect(Collectors.toList());
+
+            return new ResponseEntity<List<MCarrito>>(mlista, HttpStatus.OK);
+        }
+
+        // resp.put("mensaje", "Sin datos que mostrar");
+        carritos = new ArrayList<>();
+        return new ResponseEntity<List<Carrito>>(carritos, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('CLIENT')")
+    @GetMapping("/edit/{idcli}")
+    public ResponseEntity<?> updateCarritos(@PathVariable(value = "idcli") Integer idcliente) {
+
+        Map<String, Object> resp = new HashMap<>();
+        List<Carrito> carritos = null;
+
+        try {
+            carritos = carritoService.getByCliente(idcliente);
+        } catch (DataAccessException e) {
+            resp.put("mensaje", "Error de consulta a la base de datos");
+            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
+        }
+
+        if (carritos != null && carritos.size() != 0) {
+            boolean cambio = false;
+            for (Carrito car : carritos) {
+                DetalleIngreso di = ingresoService
+                        .getDIByIdproducto(car.getDetalleIngreso().getProducto().getIdproducto());
+
+                if (di.getEstado() == false || di.getStockActual() == 0) {
+                    carritoService.deleteC(car.getIdcarrito());
+                    cambio = true;
+                } else {
+                    if (di.getIddetalleingreso() != car.getDetalleIngreso().getIddetalleingreso()
+                            || car.getCantidad() > di.getStockActual()) {
+                        car.setDetalleIngreso(di);
+                        car.setCantidad(1);
+                        car.setDescuento(0.00);
+                        car.setSubTotal(di.getPrecioVenta());
+
+                        carritoService.saveC(car);
+                        cambio = true;
+
+                    }
+                }
+            }
+
+            if (cambio) {
+                carritos = carritoService.getByCliente(idcliente);
+            }
+
             List<MCarrito> mlista = carritos.stream()
                     .map(carr -> new MCarrito(carr))
                     .collect(Collectors.toList());
@@ -81,19 +136,19 @@ public class CarritoController {
         Carrito carr = null;
 
         if (result.hasErrors()) {
-            List<String> errors = result.getFieldErrors().stream()
+            String errors = result.getFieldErrors().stream()
                     .map(err -> "El campo: " + err.getField() + " " + err.getDefaultMessage())
-                    .collect(Collectors.toList());
+                    .collect(Collectors.joining(", "));
 
-            resp.put("mensaje", errors.toString());
-            return new ResponseEntity<Map<String, Object>>(HttpStatus.BAD_REQUEST);
+            resp.put("mensaje", errors);
+            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.BAD_REQUEST);
         }
 
         try {
             carr = carritoService.getByIdddiAndIdcliente(carrito.getDetalleIngreso().getIddetalleingreso(),
                     carrito.getIdcliente());
         } catch (DataAccessException e) {
-            resp.put("mensaje", "Error de consulta a la base de datos");
+            resp.put("mensaje", "Error del sistema: Inténtelo mas tarde");
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
         }
 
@@ -101,19 +156,19 @@ public class CarritoController {
             try {
                 cliente = clienteService.getByIdcliente(carrito.getIdcliente());
             } catch (DataAccessException e) {
-                resp.put("mensaje", "Error de consulta a la base de datos");
+                resp.put("mensaje", "Error del sistema: Inténtelo mas tarde");
                 return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
             }
 
             try {
                 di = ingresoService.getByIddetalleingreso(carrito.getDetalleIngreso().getIddetalleingreso());
             } catch (DataAccessException e) {
-                resp.put("mensaje", "Error de consulta a la base de datos");
+                resp.put("mensaje", "Error del sistema: Inténtelo mas tarde");
                 return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
             }
 
             if (cliente == null || di == null) {
-                resp.put("mensaje", "Error de consulta a la base de datos");
+                resp.put("mensaje", "Error del sistema: Inténtelo mas tarde");
                 return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
             }
 
@@ -122,42 +177,24 @@ public class CarritoController {
             try {
                 carrito = carritoService.saveC(carrito);
             } catch (Exception e) {
-                resp.put("mensaje", "Errores al agregar producto al carrito");
+                resp.put("mensaje", "Error del sistema: Inténtelo mas tarde");
                 return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
             }
 
-            resp.put("mensaje", "Producto agregado con éxito");
-            resp.put("carrito", carrito);
+            resp.put("mensaje", "Producto agregado con éxito");            
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.CREATED);
-        } else {
-            Integer cantidad = carr.getCantidad() + carrito.getCantidad();
-            Double subTotal = cantidad * carr.getDetalleIngreso().getPrecioVenta();
-
-            carr.setCantidad(cantidad);
-            carr.setDescuento(carrito.getDescuento());
-            carr.setSubTotal(subTotal);
-            carr.setVariedad(carrito.getVariedad());
-
-            try {
-                carritoService.saveC(carr);
-            } catch (Exception e) {
-                resp.put("mensaje", "Errores al agregar producto al carrito");
-                return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
-            }
-
-            resp.put("mensaje", "Orden actualizado con éxito");
-            resp.put("carrito", carr);
-            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.OK);
         }
 
+        resp.put("mensaje", "El producto ya existe en el carrito");        
+        return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('CLIENT')")
     @PostMapping("/all-crear")
     public ResponseEntity<?> createAllCarrito(@RequestBody List<Carrito> carritos) {
 
-        Map<String, Object> resp = new HashMap<>();        
-        List<Carrito> carrs = new ArrayList<>();        
+        Map<String, Object> resp = new HashMap<>();
+        List<Carrito> carrs = new ArrayList<>();
 
         for (Carrito car : carritos) {
 
@@ -178,7 +215,7 @@ public class CarritoController {
                 return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
             }
 
-            if(ca == null && di != null){
+            if (ca == null && di != null) {
                 car.setDetalleIngreso(di);
                 carrs.add(car);
             }

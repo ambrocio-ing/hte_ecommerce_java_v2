@@ -1,8 +1,6 @@
 package com.hteecommerce.hteapp.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -38,8 +36,7 @@ public class DireccionEnvio implements Serializable {
     @NotNull
     @Size(max = 150)
     private String referencia;
-
-    @NotNull
+    
     @Size(max = 20)
     @Column(name = "codigo_postal")
     private String codigoPostal;
@@ -75,14 +72,10 @@ public class DireccionEnvio implements Serializable {
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "iddestinatario", nullable = true)
-    private Destinatario destinatario;
-
-    @JsonIgnoreProperties(value = { "direccionEnvio", "hibernateLazyInitializer", "handler" }, allowSetters = true)
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "direccionEnvio")
-    List<Comprobante> comprobantes;
+    private Destinatario destinatario;   
 
     public DireccionEnvio() {
-        this.comprobantes = new ArrayList<>();
+        
     }
 
     public Integer getIddireccion() {
@@ -179,15 +172,7 @@ public class DireccionEnvio implements Serializable {
 
     public void setDestinatario(Destinatario destinatario) {
         this.destinatario = destinatario;
-    }
-
-    public List<Comprobante> getComprobantes() {
-        return comprobantes;
-    }
-
-    public void setComprobantes(List<Comprobante> comprobantes) {
-        this.comprobantes = comprobantes;
-    }
+    }    
 
     public String getFormaEnvio() {
         return formaEnvio;

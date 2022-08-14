@@ -217,31 +217,6 @@ public class LibroReclamoController {
 
         resp.put("mensaje", "Sin datos que mostrar");
         return new ResponseEntity<Map<String,String>>(resp, HttpStatus.NOT_FOUND);
-    }
-
-    @PreAuthorize("hasRole('CLIENT')")
-    @PostMapping("/suje-crear")
-    public ResponseEntity<?> createSU(@Valid @RequestBody Sujerencia sujerencia, BindingResult result){
-
-        Map<String,String> resp = new HashMap<>();
-
-        if(result.hasErrors()){
-            List<String> errors = result.getFieldErrors().stream()
-                .map(err -> "El campo: "+err.getField()+" "+err.getDefaultMessage())
-                .collect(Collectors.toList());
-            resp.put("mensaje", errors.toString());
-            return new ResponseEntity< Map<String,String>>(resp, HttpStatus.BAD_REQUEST);
-        }
-
-        try {
-            libroReclamoService.saveSU(sujerencia);
-        } catch (Exception e) {
-            resp.put("mensaje", "Error: No fue posible enviar sujerencia");
-            return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
-        }        
-
-        resp.put("mensaje", "Sujerencia enviado con éxito");
-        return new ResponseEntity<Map<String,String>>(resp, HttpStatus.CREATED);
-    }
+    }    
 
 }

@@ -14,9 +14,10 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.hteecommerce.hteapp.exception.InsufficientStockError;
 
 @Entity
-@Table(name = "detalle_comprobante")
+@Table(name = "detalle_comprobantes")
 public class DetalleComprobante implements Serializable {
 
     @Id
@@ -32,9 +33,9 @@ public class DetalleComprobante implements Serializable {
 
     @NotNull
     @Column(name = "sub_total")
-    private Double subTotal;         
+    private Double subTotal;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "iddetalleingreso", nullable = false)
     private DetalleIngreso detalleIngreso;
@@ -45,24 +46,29 @@ public class DetalleComprobante implements Serializable {
 
     }    
 
-    public Double calculateSubTotal(){
-        double subtotal =  (this.cantidad * this.detalleIngreso.getPrecioVenta()) - this.descuento; 
-        double subMat = Math.round(subtotal * 100);
-        return (subMat / 100);
+    public Integer decreaseStockActual() throws InsufficientStockError {
+
+        if(this.detalleIngreso.getStockActual() == 0 || !this.detalleIngreso.getEstado()){
+            throw new InsufficientStockError(
+                    "Stock del producto: " + this.detalleIngreso.getProducto().getNombre() + " insuficiente o vigencia caducada");
+        }
+
+        if (this.detalleIngreso.getStockActual() >= this.cantidad) {
+            int stock = this.detalleIngreso.getStockActual() - this.cantidad;
+            this.detalleIngreso.setStockActual(stock);
+            return this.detalleIngreso.getStockActual();
+        } 
+        else {
+            throw new InsufficientStockError(
+                    "Stock del producto: " + this.detalleIngreso.getProducto().getNombre() + " insuficiente");
+        }
+
     }
 
-    public Integer decreaseStockActual(){
-        if(this.detalleIngreso.getStockActual() >= this.cantidad){
-            return this.detalleIngreso.getStockActual() - this.cantidad;
-        }
-        else{
-            return null;
-        }
-        
-    }
-
-    public Integer replenishStockActual(){
-        return this.detalleIngreso.getStockActual() + this.cantidad;
+    public Integer replenishStockActual() {
+        int stock = this.detalleIngreso.getStockActual() + this.cantidad;
+        this.detalleIngreso.setStockActual(stock);
+        return this.detalleIngreso.getStockActual();
     }
 
     public Integer getIddetallecomprobante() {
@@ -87,7 +93,7 @@ public class DetalleComprobante implements Serializable {
 
     public void setDescuento(Double descuento) {
         this.descuento = descuento;
-    }    
+    }
 
     public DetalleIngreso getDetalleIngreso() {
         return detalleIngreso;
@@ -103,8 +109,8 @@ public class DetalleComprobante implements Serializable {
 
     public void setSubTotal(Double subTotal) {
         this.subTotal = subTotal;
-    }       
-    
+    }
+
     public Integer getIdcomprobante() {
         return idcomprobante;
     }

@@ -574,17 +574,15 @@ public class ProductoController {
                     
         } else if (producto.getProductoVestimenta() != null) {
             pro.setProductoVestimenta(new ProductoVestimenta(
-                    producto.getProductoVestimenta().getIdpvestimenta(),
-                    producto.getProductoVestimenta().getTalla(),
-                    producto.getProductoVestimenta().getMarca(),
+                    producto.getProductoVestimenta().getIdpvestimenta(),                                        
                     producto.getProductoVestimenta().getModelo(),
                     producto.getProductoVestimenta().getMaterial(),
                     producto.getProductoVestimenta().getColor(),
-                    producto.getProductoVestimenta().getDescripcion()));
+                    producto.getProductoVestimenta().getDescripcion(),
+                    producto.getProductoVestimenta().getVariedades()));
         } else {
             pro.setProductoOtros(new ProductoOtros(
-                    producto.getProductoOtros().getIdpotros(),
-                    producto.getProductoOtros().getMarca(),
+                    producto.getProductoOtros().getIdpotros(),                    
                     producto.getProductoOtros().getModelo(),
                     producto.getProductoOtros().getColor(),
                     producto.getProductoOtros().getMaterial(),

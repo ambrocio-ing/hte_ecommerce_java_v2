@@ -1,7 +1,10 @@
 package com.hteecommerce.hteapp.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -42,8 +46,13 @@ public class Carrito implements Serializable {
     @JoinColumn(name = "iddetalleingreso", nullable = false)
     private DetalleIngreso detalleIngreso;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "idcarrito", nullable = true)
+    private List<Variedad> variedades = null;
+
     public Carrito(){
-        
+        this.variedades = new ArrayList<>();
     }
 
     public Integer getIdcarrito() {
