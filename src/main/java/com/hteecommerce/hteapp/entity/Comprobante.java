@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -72,17 +73,21 @@ public class Comprobante implements Serializable {
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "iddireccion", nullable = false)
+    @JoinColumn(name = "direccion_id", nullable = false)
     private DireccionEnvio direccionEnvio;
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idhoraentrega", nullable = false)
+    @JoinColumn(name = "horaentrega_id", nullable = false)
     private HoraEntrega horaEntrega;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "detallepago_id", nullable = true)
+    private DetallePago detallePago;
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "idcomprobante", nullable = false)
+    @JoinColumn(name = "comprobante_id", referencedColumnName = "idcomprobante")
     public List<DetalleComprobante> detalleComprobantes;
 
     public Comprobante() {
@@ -220,6 +225,14 @@ public class Comprobante implements Serializable {
 
     public void setNbolsa(String nbolsa) {
         this.nbolsa = nbolsa;
+    }
+
+    public DetallePago getDetallePago() {
+        return detallePago;
+    }
+
+    public void setDetallePago(DetallePago detallePago) {
+        this.detallePago = detallePago;
     }
 
     private static final long serialVersionUID = 1L;

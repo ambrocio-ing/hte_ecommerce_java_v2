@@ -53,10 +53,9 @@ public class Proveedor implements Serializable {
 
     @NotNull
     private LocalDate fecha;
-
-    @NotNull
+    
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idusuario", nullable = false)
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
     public Proveedor(){

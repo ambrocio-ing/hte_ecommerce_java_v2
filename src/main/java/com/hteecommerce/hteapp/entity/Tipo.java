@@ -33,7 +33,7 @@ public class Tipo implements Serializable {
 
     @JsonIgnoreProperties(value = {"tipos", "hibernateLazyInitializer", "handler"}, allowSetters = true)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idcategoria", nullable = false)
+    @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
 
     public Tipo() {

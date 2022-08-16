@@ -4,20 +4,20 @@ import com.hteecommerce.hteapp.entity.DetalleComprobante;
 import com.hteecommerce.hteapp.entity.DetalleIngreso;
 
 public class MDetalleComprobante {
-    
+
     private Integer iddetallecomprobante;
 
     private String variedad;
-    
+
     private Integer cantidad;
 
     private Double descuento;
-    
-    private Double subTotal;       
-        
+
+    private Double subTotal;
+
     private MDetalleIngreso detalleIngreso;
 
-    private Integer idcomprobante;
+    private Integer comprobanteId;
 
     public MDetalleComprobante() {
 
@@ -28,25 +28,28 @@ public class MDetalleComprobante {
         this.variedad = dc.getVariedad();
         this.cantidad = dc.getCantidad();
         this.descuento = dc.getDescuento();
-        this.subTotal = dc.getSubTotal();        
+        this.subTotal = dc.getSubTotal();
         this.detalleIngreso = new MDetalleIngreso(
-            dc.getDetalleIngreso().getIddetalleingreso(), dc.getDetalleIngreso().getPrecioVenta(),
-            dc.getDetalleIngreso().getPrecioVentaAnterior(), dc.getDetalleIngreso().getPorcentajeDescuento(),
-            dc.getDetalleIngreso().getStockInicial(), dc.getDetalleIngreso().getStockActual(),
-            dc.getDetalleIngreso().getFechaProduccion(), dc.getDetalleIngreso().getFechaVencimiento(),
-            dc.getDetalleIngreso().getEstado(), dc.getDetalleIngreso().getProducto(), dc.getDetalleIngreso().getIdingreso());
-        this.idcomprobante = dc.getIdcomprobante();
+                dc.getDetalleIngreso().getIddetalleingreso(), dc.getDetalleIngreso().getPrecioVenta(),
+                dc.getDetalleIngreso().getPrecioVentaAnterior(), dc.getDetalleIngreso().getPorcentajeDescuento(),
+                dc.getDetalleIngreso().getStockInicial(), dc.getDetalleIngreso().getStockActual(),
+                dc.getDetalleIngreso().getFechaProduccion(), dc.getDetalleIngreso().getFechaVencimiento(),
+                dc.getDetalleIngreso().getEstado(), dc.getDetalleIngreso().getProducto(),
+                dc.getDetalleIngreso().getIngresoId());
+        this.comprobanteId = dc.getComprobanteId();
     }
 
-    public MDetalleComprobante(Integer iddetallecomprobante, String variedad ,Integer cantidad, Double descuento, Double subTotal,
-            DetalleIngreso detalleIngreso, Integer idcomprobante) {
+    public MDetalleComprobante(Integer iddetallecomprobante, String variedad, Integer cantidad, Double descuento,
+            Double subTotal,
+            DetalleIngreso detalleIngreso, Integer comprobanteId) {
         this.iddetallecomprobante = iddetallecomprobante;
         this.variedad = variedad;
         this.cantidad = cantidad;
         this.descuento = descuento;
         this.subTotal = subTotal;
-        this.detalleIngreso = new MDetalleIngreso(detalleIngreso.getIddetalleingreso(), detalleIngreso.getProducto(), detalleIngreso.getIdingreso());
-        this.idcomprobante = idcomprobante;
+        this.detalleIngreso = new MDetalleIngreso(detalleIngreso.getIddetalleingreso(), detalleIngreso.getProducto(),
+                detalleIngreso.getIngresoId());
+        this.comprobanteId = comprobanteId;
     }
 
     public Integer getIddetallecomprobante() {
@@ -79,7 +82,7 @@ public class MDetalleComprobante {
 
     public void setSubTotal(Double subTotal) {
         this.subTotal = subTotal;
-    }   
+    }
 
     public MDetalleIngreso getDetalleIngreso() {
         return detalleIngreso;
@@ -89,20 +92,20 @@ public class MDetalleComprobante {
         this.detalleIngreso = detalleIngreso;
     }
 
-    public Integer getIdcomprobante() {
-        return idcomprobante;
-    }
-
-    public void setIdcomprobante(Integer idcomprobante) {
-        this.idcomprobante = idcomprobante;
-    }
-
     public String getVariedad() {
         return variedad;
     }
 
     public void setVariedad(String variedad) {
         this.variedad = variedad;
-    }    
-    
+    }
+
+    public Integer getComprobanteId() {
+        return comprobanteId;
+    }
+
+    public void setComprobanteId(Integer comprobanteId) {
+        this.comprobanteId = comprobanteId;
+    }
+
 }

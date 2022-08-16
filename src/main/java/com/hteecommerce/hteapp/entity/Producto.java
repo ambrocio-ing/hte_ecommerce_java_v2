@@ -50,23 +50,23 @@ public class Producto implements Serializable {
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idtipo", nullable = false)
+    @JoinColumn(name = "tipo_id", nullable = false)
     private Tipo tipo;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idpimagen", nullable = false)
+    @JoinColumn(name = "pimagen_id", nullable = false)
     private ProductoImagen productoImagen;
 
     @OneToOne(cascade = { CascadeType.MERGE, CascadeType.REMOVE })
-    @JoinColumn(name = "iddnutricional", nullable = true)
+    @JoinColumn(name = "pdnutricional_id", nullable = true)
     private ProductoDatoNutricional productoDatoNutricional;
 
     @OneToOne(cascade = { CascadeType.MERGE, CascadeType.REMOVE })
-    @JoinColumn(name = "idpvestimenta", nullable = true)
+    @JoinColumn(name = "pvestimenta_id", nullable = true)
     private ProductoVestimenta productoVestimenta;
 
     @OneToOne(cascade = { CascadeType.MERGE, CascadeType.REMOVE })
-    @JoinColumn(name = "idpotros", nullable = true)
+    @JoinColumn(name = "potros_id", nullable = true)
     private ProductoOtros productoOtros;
 
     public Producto() {

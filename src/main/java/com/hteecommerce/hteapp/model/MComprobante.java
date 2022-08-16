@@ -62,7 +62,7 @@ public class MComprobante {
         this.detalleComprobantes = comprobante.getDetalleComprobantes().stream()
                 .map(dc -> {
                     return new MDetalleComprobante(dc.getIddetallecomprobante(), dc.getVariedad() ,dc.getCantidad(), dc.getDescuento(),
-                            dc.getSubTotal(), dc.getDetalleIngreso(), dc.getIdcomprobante());
+                            dc.getSubTotal(), dc.getDetalleIngreso(), dc.getComprobanteId());
                 }).collect(Collectors.toList());
     }
 

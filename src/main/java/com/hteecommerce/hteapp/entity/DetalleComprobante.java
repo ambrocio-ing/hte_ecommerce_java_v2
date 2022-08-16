@@ -37,28 +37,29 @@ public class DetalleComprobante implements Serializable {
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "iddetalleingreso", nullable = false)
+    @JoinColumn(name = "detalleingreso_id", nullable = false)
     private DetalleIngreso detalleIngreso;
 
-    private Integer idcomprobante;
+    @Column(name = "comprobante_id")
+    private Integer comprobanteId;
 
     public DetalleComprobante() {
 
-    }    
+    }
 
     public Integer decreaseStockActual() throws InsufficientStockError {
 
-        if(this.detalleIngreso.getStockActual() == 0 || !this.detalleIngreso.getEstado()){
+        if (this.detalleIngreso.getStockActual() == 0 || !this.detalleIngreso.getEstado()) {
             throw new InsufficientStockError(
-                    "Stock del producto: " + this.detalleIngreso.getProducto().getNombre() + " insuficiente o vigencia caducada");
+                    "Stock del producto: " + this.detalleIngreso.getProducto().getNombre()
+                            + " insuficiente o vigencia caducada");
         }
 
         if (this.detalleIngreso.getStockActual() >= this.cantidad) {
             int stock = this.detalleIngreso.getStockActual() - this.cantidad;
             this.detalleIngreso.setStockActual(stock);
             return this.detalleIngreso.getStockActual();
-        } 
-        else {
+        } else {
             throw new InsufficientStockError(
                     "Stock del producto: " + this.detalleIngreso.getProducto().getNombre() + " insuficiente");
         }
@@ -111,12 +112,12 @@ public class DetalleComprobante implements Serializable {
         this.subTotal = subTotal;
     }
 
-    public Integer getIdcomprobante() {
-        return idcomprobante;
+    public Integer getComprobanteId() {
+        return comprobanteId;
     }
 
-    public void setIdcomprobante(Integer idcomprobante) {
-        this.idcomprobante = idcomprobante;
+    public void setComprobanteId(Integer comprobanteId) {
+        this.comprobanteId = comprobanteId;
     }
 
     public String getVariedad() {

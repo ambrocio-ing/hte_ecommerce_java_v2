@@ -346,7 +346,7 @@ public class Mapper {
                             di.getPorcentajeDescuento(),
                             di.getStockInicial(), di.getStockActual(),
                             di.getFechaProduccion(), di.getFechaVencimiento(),
-                            di.getEstado(), di.getProducto(), di.getIdingreso());
+                            di.getEstado(), di.getProducto(), di.getIngresoId());
                 })
                 .collect(Collectors.toList());
 

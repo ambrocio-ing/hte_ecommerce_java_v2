@@ -43,12 +43,12 @@ public class Carrito implements Serializable {
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "iddetalleingreso", nullable = false)
+    @JoinColumn(name = "detalleingreso_id", nullable = false)
     private DetalleIngreso detalleIngreso;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "idcarrito", nullable = true)
+    @JoinColumn(name = "carrito_id", referencedColumnName = "idcarrito")
     private List<Variedad> variedades = null;
 
     public Carrito(){

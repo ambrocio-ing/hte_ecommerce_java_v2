@@ -2,6 +2,7 @@ package com.hteecommerce.hteapp.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -39,10 +40,11 @@ public class ClienteOferta implements Serializable {
     private String descripcion;
 
     @NotNull
-    private String imagen;    
-    
-    private Integer idclientecomprobante;
-    
+    private String imagen;
+
+    @Column(name = "clientecomprobante_id")
+    private Integer clientecomprobanteId;
+
     public ClienteOferta() {
 
     }
@@ -101,7 +103,7 @@ public class ClienteOferta implements Serializable {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
-    }    
+    }
 
     public String getImagen() {
         return imagen;
@@ -111,12 +113,12 @@ public class ClienteOferta implements Serializable {
         this.imagen = imagen;
     }
 
-    public Integer getIdclientecomprobante() {
-        return idclientecomprobante;
+    public Integer getClientecomprobanteId() {
+        return clientecomprobanteId;
     }
 
-    public void setIdclientecomprobante(Integer idclientecomprobante) {
-        this.idclientecomprobante = idclientecomprobante;
+    public void setClientecomprobanteId(Integer clientecomprobanteId) {
+        this.clientecomprobanteId = clientecomprobanteId;
     }
 
     private static final long serialVersionUID = 1L;

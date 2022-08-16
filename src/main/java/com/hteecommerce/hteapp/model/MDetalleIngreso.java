@@ -15,7 +15,7 @@ public class MDetalleIngreso {
     private Double precioVenta;
 
     private Double precioVentaAnterior;
-    
+
     private Double porcentajeDescuento;
 
     private Integer stockInicial;
@@ -24,14 +24,14 @@ public class MDetalleIngreso {
 
     private LocalDate fechaProduccion;
 
-    private LocalDate fechaVencimiento;  
-    
+    private LocalDate fechaVencimiento;
+
     private Boolean estado;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private Producto producto;
 
-    private Integer idingreso;
+    private Integer ingresoId;
 
     public MDetalleIngreso() {
 
@@ -46,15 +46,16 @@ public class MDetalleIngreso {
         this.stockInicial = di.getStockInicial();
         this.stockActual = di.getStockActual();
         this.fechaProduccion = di.getFechaProduccion();
-        this.fechaVencimiento = di.getFechaVencimiento();    
-        this.estado = di.getEstado();    
+        this.fechaVencimiento = di.getFechaVencimiento();
+        this.estado = di.getEstado();
         this.producto = di.getProducto();
-        this.idingreso = di.getIdingreso();        
-    }  
-    
-    public MDetalleIngreso(Integer iddetalleingreso, Double precioVenta, Double precioVentaAnterior, Double porcentajeDescuento, Integer stockInicial, Integer stockActual,
+        this.ingresoId = di.getIngresoId();
+    }
+
+    public MDetalleIngreso(Integer iddetalleingreso, Double precioVenta, Double precioVentaAnterior,
+            Double porcentajeDescuento, Integer stockInicial, Integer stockActual,
             LocalDate fechaProduccion, LocalDate fechaVencimiento, Boolean estado,
-             Producto producto, Integer idingreso) {
+            Producto producto, Integer ingresoId) {
         this.iddetalleingreso = iddetalleingreso;
         this.precioVenta = precioVenta;
         this.precioVentaAnterior = precioVentaAnterior;
@@ -65,10 +66,11 @@ public class MDetalleIngreso {
         this.fechaVencimiento = fechaVencimiento;
         this.estado = estado;
         this.producto = producto;
-        this.idingreso = idingreso;
-    }      
+        this.ingresoId = ingresoId;
+    }
 
-    public MDetalleIngreso(Integer iddetalleingreso, Double precioVenta, Double precioVentaAnterior, Double porcentajeDescuento, Integer stockActual, LocalDate fechaProduccion,
+    public MDetalleIngreso(Integer iddetalleingreso, Double precioVenta, Double precioVentaAnterior,
+            Double porcentajeDescuento, Integer stockActual, LocalDate fechaProduccion,
             LocalDate fechaVencimiento, Boolean estado, Producto producto) {
         this.iddetalleingreso = iddetalleingreso;
         this.precioVenta = precioVenta;
@@ -81,7 +83,8 @@ public class MDetalleIngreso {
         this.producto = producto;
     }
 
-    public MDetalleIngreso(Integer iddetalleingreso, Double precioVenta , Double precioVentaAnterior, Double porcentajeDescuento, Integer stockInicial, Integer stockActual,
+    public MDetalleIngreso(Integer iddetalleingreso, Double precioVenta, Double precioVentaAnterior,
+            Double porcentajeDescuento, Integer stockInicial, Integer stockActual,
             Boolean estado) {
         this.iddetalleingreso = iddetalleingreso;
         this.precioVenta = precioVenta;
@@ -92,10 +95,10 @@ public class MDetalleIngreso {
         this.estado = estado;
     }
 
-    public MDetalleIngreso(Integer iddetalleingreso, Producto producto, Integer idingreso) {
+    public MDetalleIngreso(Integer iddetalleingreso, Producto producto, Integer ingresoId) {
         this.iddetalleingreso = iddetalleingreso;
         this.producto = producto;
-        this.idingreso = idingreso;
+        this.ingresoId = ingresoId;
     }
 
     public Integer getIddetalleingreso() {
@@ -152,7 +155,7 @@ public class MDetalleIngreso {
 
     public void setFechaVencimiento(LocalDate fechaVencimiento) {
         this.fechaVencimiento = fechaVencimiento;
-    }    
+    }
 
     public Producto getProducto() {
         return producto;
@@ -170,14 +173,6 @@ public class MDetalleIngreso {
         this.estado = estado;
     }
 
-    public Integer getIdingreso() {
-        return idingreso;
-    }
-
-    public void setIdingreso(Integer idingreso) {
-        this.idingreso = idingreso;
-    }
-
     public Double getPrecioVentaAnterior() {
         return precioVentaAnterior;
     }
@@ -192,6 +187,14 @@ public class MDetalleIngreso {
 
     public void setPorcentajeDescuento(Double porcentajeDescuento) {
         this.porcentajeDescuento = porcentajeDescuento;
-    }    
+    }
+
+    public Integer getIngresoId() {
+        return ingresoId;
+    }
+
+    public void setIngresoId(Integer ingresoId) {
+        this.ingresoId = ingresoId;
+    }
 
 }

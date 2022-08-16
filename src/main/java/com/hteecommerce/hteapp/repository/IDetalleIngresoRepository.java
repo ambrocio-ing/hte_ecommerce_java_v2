@@ -53,11 +53,11 @@ public interface IDetalleIngresoRepository extends JpaRepository<DetalleIngreso,
     @Query("from DetalleIngreso di join di.producto pro join pro.tipo tip where di.stockActual > 0 and di.estado = true and tip.idtipo = ?1 and di.sucursal = ?2 order by pro.nventas desc")
     public List<DetalleIngreso> listMasVendidos(Integer idtipo, String sucursal);
 
-    @Query(nativeQuery = true, value = "select * from detalle_ingreso di inner join productos pro on di.idproducto = pro.idproducto where di.stock_actual > 0 and di.sucursal = ?1 and di.estado = true order by pro.nventas desc limit 50")
+    @Query(nativeQuery = true, value = "select * from detalle_ingreso di inner join productos pro on di.producto_id = pro.idproducto where di.stock_actual > 0 and di.sucursal = ?1 and di.estado = true order by pro.nventas desc limit 50")
     public List<DetalleIngreso> listMasVendidosGeneral(String sucursal);    
 
     /* @Query(nativeQuery = true, value = "select * from detalle_ingreso di where di.estado = true and di.stock_actual > 0 and di.sucursal = ?1 order by di.iddetalleingreso asc limit 20")
     public List<DetalleIngreso> listLastTwenty(String sucursal); */
-    public List<DetalleIngreso> findTop20BySucursalByOrderByIddetalleingresoDesc(String sucursal);
+    public List<DetalleIngreso> findTop20BySucursalOrderByIddetalleingresoDesc(String sucursal);
 
 }

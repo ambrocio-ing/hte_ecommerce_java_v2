@@ -45,12 +45,12 @@ public class Ingreso implements Serializable {
 
     @JsonIgnoreProperties(value = {"ingresos", "hibernateLazyInitializer", "handler"}, allowSetters = true)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idpersonal", nullable = false)
+    @JoinColumn(name = "personal_id", nullable = false)
     private Personal personal;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "idingreso", nullable = false)
+    @JoinColumn(name = "ingreso_id", referencedColumnName = "idingreso")
     public List<DetalleIngreso> detalleIngresos;
 
     @NotNull

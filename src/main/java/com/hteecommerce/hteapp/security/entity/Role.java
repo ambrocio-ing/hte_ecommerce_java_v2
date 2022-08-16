@@ -2,6 +2,7 @@ package com.hteecommerce.hteapp.security.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -22,6 +23,7 @@ public class Role implements Serializable {
     private int idrol;
 
     @NotNull
+    @Column(name = "nombre_role", unique = true)
     @Enumerated(EnumType.STRING)
     private NombreRole nombreRole;
 

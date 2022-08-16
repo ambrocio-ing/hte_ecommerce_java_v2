@@ -41,7 +41,7 @@ public class Personal implements Serializable {
     private Persona persona;
     
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idusuario", nullable = false)
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
     @JsonIgnoreProperties(value = {"personal", "hibernateLazyInitializer", "handler"}, allowSetters = true)

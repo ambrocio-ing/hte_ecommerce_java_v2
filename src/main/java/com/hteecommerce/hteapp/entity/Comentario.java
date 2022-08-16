@@ -39,12 +39,12 @@ public class Comentario implements Serializable {
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idcliente", nullable = false)
+    @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "iddetalleingreso", nullable = false)
+    @JoinColumn(name = "detalleingreso_id", nullable = false)
     private DetalleIngreso detalleIngreso;    
 
     public Comentario() {

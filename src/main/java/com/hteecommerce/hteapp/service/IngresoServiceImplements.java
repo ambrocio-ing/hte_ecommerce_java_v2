@@ -189,7 +189,7 @@ public class IngresoServiceImplements implements IIngresoService {
     @Transactional(readOnly = true)
     public List<DetalleIngreso> getLastTwenty(String sucursal) {
         
-        return detalleIngresoRepository.findTop20BySucursalByOrderByIddetalleingresoDesc(sucursal);
+        return detalleIngresoRepository.findTop20BySucursalOrderByIddetalleingresoDesc(sucursal);
     }         
     
 }

@@ -66,12 +66,12 @@ public class DireccionEnvio implements Serializable {
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idcliente", nullable = true)
+    @JoinColumn(name = "cliente_id", nullable = true)
     private Cliente cliente;
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "iddestinatario", nullable = true)
+    @JoinColumn(name = "destinatario_id", nullable = true)
     private Destinatario destinatario;   
 
     public DireccionEnvio() {

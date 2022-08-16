@@ -50,7 +50,7 @@ public class DetalleIngreso implements Serializable {
     @Column(name = "stock_actual")
     @Min(0)
     private Integer stockActual;
-    
+
     @Column(name = "fecha_produccion")
     private LocalDate fechaProduccion;
 
@@ -69,13 +69,14 @@ public class DetalleIngreso implements Serializable {
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idproducto", nullable = false)
-    private Producto producto;    
+    @JoinColumn(name = "producto_id", nullable = false)
+    private Producto producto;
 
-    private Integer idingreso;
+    @Column(name = "ingreso_id")
+    private Integer ingresoId;
 
     public DetalleIngreso() {
-        
+
     }
 
     @PrePersist
@@ -159,12 +160,12 @@ public class DetalleIngreso implements Serializable {
         this.estado = estado;
     }
 
-    public Integer getIdingreso() {
-        return idingreso;
+    public Integer getIngresoId() {
+        return ingresoId;
     }
 
-    public void setIdingreso(Integer idingreso) {
-        this.idingreso = idingreso;
+    public void setIngresoId(Integer ingresoId) {
+        this.ingresoId = ingresoId;
     }
 
     public Double getPrecioVentaAnterior() {

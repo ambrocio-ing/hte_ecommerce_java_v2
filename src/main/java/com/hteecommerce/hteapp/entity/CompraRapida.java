@@ -27,7 +27,7 @@ public class CompraRapida implements Serializable {
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "iddetaleingreso", nullable = false)
+    @JoinColumn(name = "detaleingreso_id", nullable = false)
     private DetalleIngreso detalleIngreso;
 
     public CompraRapida() {

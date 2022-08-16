@@ -39,15 +39,15 @@ public class Cliente implements Serializable {
     private Persona persona;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idusuario", nullable = false)
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
     @OneToOne(cascade = { CascadeType.MERGE, CascadeType.REMOVE })
-    @JoinColumn(name = "idcp", nullable = true)
+    @JoinColumn(name = "cp_id", nullable = true)
     private ClienteProveedor clienteProveedor;
 
     @OneToOne(cascade = { CascadeType.MERGE, CascadeType.REMOVE })
-    @JoinColumn(name = "idcaracteristica", nullable = true)
+    @JoinColumn(name = "caracteristica_id", nullable = true)
     private ClienteCaracteristica clienteCaracteristica;
 
     public Cliente() {

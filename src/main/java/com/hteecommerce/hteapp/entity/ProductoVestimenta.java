@@ -41,7 +41,7 @@ public class ProductoVestimenta implements Serializable {
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "idpvestimenta", nullable = false)
+    @JoinColumn(name = "pvestimenta_id", referencedColumnName = "idpvestimenta")
     private Set<Variedad> variedades = null;
 
     public ProductoVestimenta(){

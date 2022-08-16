@@ -48,11 +48,11 @@ public class Usuario implements Serializable {
     @Column(name = "token_password", length = 70)
     private String tokenPassword;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "usuario_roles", 
-            joinColumns = @JoinColumn(name = "idusuario"), 
-            inverseJoinColumns = @JoinColumn(name = "idrol"), 
-            uniqueConstraints = { @UniqueConstraint(columnNames = { "idusuario", "idrol" }) })
+            joinColumns = @JoinColumn(name = "usuario_id"), 
+            inverseJoinColumns = @JoinColumn(name = "role_id"), 
+            uniqueConstraints = { @UniqueConstraint(columnNames = { "usuario_id", "role_id" }) })
     private Set<Role> roles;
 
     public Usuario() {

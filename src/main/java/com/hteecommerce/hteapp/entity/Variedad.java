@@ -2,6 +2,7 @@ package com.hteecommerce.hteapp.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,9 +28,11 @@ public class Variedad implements Serializable {
     @Min(0)
     private Integer cantidad;
 
-    private Integer idpvestimenta;
+    @Column(name = "pvestimenta_id")
+    private Integer pvestimentaId;
 
-    private Integer idcarrito;
+    @Column(name = "carrito_id")
+    private Integer carritoId;
 
     public Variedad() {
 
@@ -64,20 +67,20 @@ public class Variedad implements Serializable {
         this.cantidad = cantidad;
     }
 
-    public Integer getIdpvestimenta() {
-        return idpvestimenta;
+    public Integer getPvestimentaId() {
+        return pvestimentaId;
     }
 
-    public void setIdpvestimenta(Integer idpvestimenta) {
-        this.idpvestimenta = idpvestimenta;
+    public void setPvestimentaId(Integer pvestimentaId) {
+        this.pvestimentaId = pvestimentaId;
     }
 
-    public Integer getIdcarrito() {
-        return idcarrito;
+    public Integer getCarritoId() {
+        return carritoId;
     }
 
-    public void setIdcarrito(Integer idcarrito) {
-        this.idcarrito = idcarrito;
+    public void setCarritoId(Integer carritoId) {
+        this.carritoId = carritoId;
     }
 
     private static final long serialVersionUID = 1L;

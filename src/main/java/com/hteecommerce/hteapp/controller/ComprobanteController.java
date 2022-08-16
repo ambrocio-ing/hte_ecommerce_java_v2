@@ -339,7 +339,7 @@ public class ComprobanteController {
         }
 
         try {
-            com = comprobanteService.getByIdcomprobante(decom.getIdcomprobante());
+            com = comprobanteService.getByIdcomprobante(decom.getComprobanteId());
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error de consulta a la base de datos");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);

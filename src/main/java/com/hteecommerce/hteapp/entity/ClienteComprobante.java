@@ -48,12 +48,12 @@ public class ClienteComprobante implements Serializable {
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idcp", nullable = false)
+    @JoinColumn(name = "cp_id", nullable = false)
     private ClienteProveedor clienteProveedor;
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "idclientecomprobante")
+    @JoinColumn(name = "clientecomprobante_id")
     private List<ClienteOferta> clienteOfertas;
 
     public ClienteComprobante() {
