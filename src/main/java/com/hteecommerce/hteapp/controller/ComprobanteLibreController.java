@@ -297,7 +297,8 @@ public class ComprobanteLibreController {
 
         com.setIdtransaccion(comprobante.getIdtransaccion());
         com.setTipoComprobante(comprobante.getTipoComprobante());
-        com.setEstado(comprobante.getEstado());       
+        com.setEstado(comprobante.getEstado());
+        com.getDetallePago().setEstadoPago(comprobante.getDetallePago().getEstadoPago());       
           
         try {
             comprobanteService.saveCOM(com);

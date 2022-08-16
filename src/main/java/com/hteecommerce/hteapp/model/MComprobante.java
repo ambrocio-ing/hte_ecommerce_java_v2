@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.hteecommerce.hteapp.entity.Comprobante;
+import com.hteecommerce.hteapp.entity.DetallePago;
 import com.hteecommerce.hteapp.entity.HoraEntrega;
 
 public class MComprobante {
@@ -32,11 +33,15 @@ public class MComprobante {
 
     private Double descuento;
 
-    private LocalDate fechaEntrega;    
+    private LocalDate fechaEntrega;  
+
+    private String nbolsa;  
 
     private MDireccionEnvio direccionEnvio;
 
     private HoraEntrega horaEntrega;
+
+    private DetallePago detallePago;
 
     private List<MDetalleComprobante> detalleComprobantes;
 
@@ -56,8 +61,10 @@ public class MComprobante {
         this.subTotal = comprobante.getSubTotal();
         this.total = comprobante.getTotal();
         this.descuento = comprobante.getDescuento();
+        this.nbolsa = comprobante.getNbolsa();
         this.fechaEntrega = comprobante.getFechaEntrega();
         this.horaEntrega = comprobante.getHoraEntrega();
+        this.detallePago = comprobante.getDetallePago();
         this.direccionEnvio = new MDireccionEnvio(comprobante.getDireccionEnvio()); 
         this.detalleComprobantes = comprobante.getDetalleComprobantes().stream()
                 .map(dc -> {
@@ -184,6 +191,22 @@ public class MComprobante {
 
     public void setHoraEntrega(HoraEntrega horaEntrega) {
         this.horaEntrega = horaEntrega;
+    }
+
+    public DetallePago getDetallePago() {
+        return detallePago;
+    }
+
+    public void setDetallePago(DetallePago detallePago) {
+        this.detallePago = detallePago;
+    }
+
+    public String getNbolsa() {
+        return nbolsa;
+    }
+
+    public void setNbolsa(String nbolsa) {
+        this.nbolsa = nbolsa;
     }
 
 }
