@@ -1,16 +1,24 @@
 package com.hteecommerce.hteapp.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "variedades")
@@ -22,11 +30,13 @@ public class Variedad implements Serializable {
 
     @NotNull
     @Size(max = 20)
-    private String nombre;
+    @Column(name = "nombre_talla")
+    private String nombreTalla;
 
     @NotNull
     @Min(0)
-    private Integer cantidad;
+    @Column(name = "cantidad_talla")
+    private Integer cantidadTalla;
 
     @Column(name = "pvestimenta_id")
     private Integer pvestimentaId;
@@ -34,13 +44,18 @@ public class Variedad implements Serializable {
     @Column(name = "carrito_id")
     private Integer carritoId;
 
-    public Variedad() {
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "variedad_id", referencedColumnName = "idvariedad", nullable = true)
+    private List<Color> colores = null;
 
+    public Variedad() {
+        this.colores = new ArrayList<>();
     }
 
-    public Variedad(@NotNull @Size(max = 20) String nombre, @NotNull @Min(0) Integer cantidad) {
-        this.nombre = nombre;
-        this.cantidad = cantidad;
+    public Variedad(@NotNull @Size(max = 20) String nombreTalla, @NotNull @Min(0) Integer cantidadTalla) {
+        this.nombreTalla = nombreTalla;
+        this.cantidadTalla = cantidadTalla;
     }
 
     public Integer getIdvariedad() {
@@ -51,20 +66,20 @@ public class Variedad implements Serializable {
         this.idvariedad = idvariedad;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNombreTalla() {
+        return nombreTalla;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombreTalla(String nombreTalla) {
+        this.nombreTalla = nombreTalla;
     }
 
-    public Integer getCantidad() {
-        return cantidad;
+    public Integer getCantidadTalla() {
+        return cantidadTalla;
     }
 
-    public void setCantidad(Integer cantidad) {
-        this.cantidad = cantidad;
+    public void setCantidadTalla(Integer cantidadTalla) {
+        this.cantidadTalla = cantidadTalla;
     }
 
     public Integer getPvestimentaId() {

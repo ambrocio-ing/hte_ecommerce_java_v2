@@ -25,7 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hteecommerce.hteapp.entity.Carrito;
 import com.hteecommerce.hteapp.entity.Cliente;
 import com.hteecommerce.hteapp.entity.DetalleIngreso;
+import com.hteecommerce.hteapp.mapper.Mapper;
 import com.hteecommerce.hteapp.model.MCarrito;
+import com.hteecommerce.hteapp.model.MCompraRapida;
 import com.hteecommerce.hteapp.service.ICarritoService;
 import com.hteecommerce.hteapp.service.IClienteService;
 import com.hteecommerce.hteapp.service.IIngresoService;
@@ -89,7 +91,7 @@ public class CarritoController {
             boolean cambio = false;
             for (Carrito car : carritos) {
                 DetalleIngreso di = ingresoService
-                        .getDIByIdproducto(car.getDetalleIngreso().getProducto().getIdproducto());
+                        .getDIByIdproducto(car.getDetalleIngreso().getProducto().getIdproducto(), car.getDetalleIngreso().getSucursal());
 
                 if (di.getEstado() == false || di.getStockActual() == 0) {
                     carritoService.deleteC(car.getIdcarrito());
@@ -123,7 +125,6 @@ public class CarritoController {
         // resp.put("mensaje", "Sin datos que mostrar");
         carritos = new ArrayList<>();
         return new ResponseEntity<List<Carrito>>(carritos, HttpStatus.OK);
-
     }
 
     @PreAuthorize("hasRole('CLIENT')")
@@ -145,7 +146,7 @@ public class CarritoController {
         }
 
         try {
-            carr = carritoService.getByIdddiAndIdcliente(carrito.getDetalleIngreso().getIddetalleingreso(),
+            carr = carritoService.getByIdproductoAndIdcliente(carrito.getDetalleIngreso().getProducto().getIdproducto(),
                     carrito.getIdcliente());
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error del sistema: Inténtelo mas tarde");
@@ -167,12 +168,15 @@ public class CarritoController {
                 return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
             }
 
-            if (cliente == null || di == null) {
-                resp.put("mensaje", "Error del sistema: Inténtelo mas tarde");
+            if (cliente == null || di == null || di.getEstado() == false || di.getStockActual() == 0) {
+                resp.put("mensaje", "Error de validación: Inténtelo mas tarde");
                 return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
             }
 
             carrito.setDetalleIngreso(di);
+            if(carrito.getDetalleIngreso().getProducto().getProductoVestimenta() == null){
+                carrito.setVariedades(null);
+            }
 
             try {
                 carrito = carritoService.saveC(carrito);
@@ -194,42 +198,55 @@ public class CarritoController {
     public ResponseEntity<?> createAllCarrito(@RequestBody List<Carrito> carritos) {
 
         Map<String, Object> resp = new HashMap<>();
+        List<MCompraRapida> compras = null;
         List<Carrito> carrs = new ArrayList<>();
-
+        
         for (Carrito car : carritos) {
 
             Carrito ca = null;
             DetalleIngreso di = null;
 
             try {
-                di = ingresoService.getDIByIdproducto(car.getDetalleIngreso().getProducto().getIdproducto());
+                di = ingresoService.getDIByIdproducto(car.getDetalleIngreso().getProducto().getIdproducto(), car.getDetalleIngreso().getSucursal());
             } catch (DataAccessException e) {
                 resp.put("mensaje", "Error de consulta");
                 return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
             }
 
             try {
-                ca = carritoService.getByIdddiAndIdcliente(di.getIddetalleingreso(), car.getIdcliente());
+                ca = carritoService.getByIdproductoAndIdcliente(car.getDetalleIngreso().getProducto().getIdproducto(), car.getIdcliente());
             } catch (DataAccessException e) {
                 resp.put("mensaje", "Error de consulta");
                 return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
             }
 
             if (ca == null && di != null) {
+                if(di.getProducto().getProductoVestimenta() == null){
+                    car.setVariedades(null);
+                }         
+
                 car.setDetalleIngreso(di);
+                car.setSubTotal(di.getPrecioVenta());
                 carrs.add(car);
             }
-
-        }
+            else{
+                MCompraRapida mcompra = new MCompraRapida();
+                mcompra.setCondicion("Stock insuficiente");
+                mcompra.setDetalleIngreso(Mapper.mapDetalleIngresoTienda(car.getDetalleIngreso()));
+                compras = new ArrayList<>();
+                compras.add(mcompra);
+            }            
+        }       
 
         try {
             carritoService.saveAllC(carrs);
         } catch (Exception e) {
             resp.put("mensaje", "Error, no fue posible agregar productos al carrito");
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
-        }
+        }        
 
-        resp.put("mensaje", "productos agregados al carrito con éxito");
+        resp.put("cantidad_ok", carrs.size());
+        resp.put("compras_error", compras);
         return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.OK);
     }
 
@@ -255,7 +272,10 @@ public class CarritoController {
         carr.setCantidad(carrito.getCantidad());
         carr.setDescuento(carrito.getDescuento());
         carr.setSubTotal(carrito.getSubTotal());
-        carr.setVariedad(carrito.getVariedad());
+
+        if(carrito.getDetalleIngreso().getProducto().getProductoVestimenta() != null){
+            carr.setVariedades(carrito.getVariedades());
+        }  
 
         try {
             carr = carritoService.saveC(carr);

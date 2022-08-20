@@ -32,7 +32,7 @@ public class HoraEntregaController {
     private IHoraEntregaService horaEntregaService;
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/lista/{id}")
+    @GetMapping("/lista")
     public ResponseEntity<?> getAllHE(){
 
         Map<String, String> resp = new HashMap<>();

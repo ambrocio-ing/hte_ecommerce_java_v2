@@ -1,6 +1,7 @@
 package com.hteecommerce.hteapp.entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -25,10 +27,8 @@ public class Carrito implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idcarrito;  
+    private Integer idcarrito;    
     
-    private String variedad;
-
     @NotNull
     private Integer cantidad;
 
@@ -40,6 +40,9 @@ public class Carrito implements Serializable {
     
     @NotNull
     private Integer idcliente;
+
+    @Column(name = "create_at")
+    private LocalDate createAt;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
@@ -53,6 +56,11 @@ public class Carrito implements Serializable {
 
     public Carrito(){
         this.variedades = new ArrayList<>();
+    }
+
+    @PrePersist
+    public void generateDate(){
+        this.createAt = LocalDate.now();
     }
 
     public Integer getIdcarrito() {
@@ -101,15 +109,23 @@ public class Carrito implements Serializable {
 
     public void setDetalleIngreso(DetalleIngreso detalleIngreso) {
         this.detalleIngreso = detalleIngreso;
+    }     
+
+    public LocalDate getCreateAt() {
+        return createAt;
     }
 
-    public String getVariedad() {
-        return variedad;
+    public void setCreateAt(LocalDate createAt) {
+        this.createAt = createAt;
     }
 
-    public void setVariedad(String variedad) {
-        this.variedad = variedad;
-    }    
+    public List<Variedad> getVariedades() {
+        return variedades;
+    }
+
+    public void setVariedades(List<Variedad> variedades) {
+        this.variedades = variedades;
+    }
 
     private static final long serialVersionUID = 1L;
 }

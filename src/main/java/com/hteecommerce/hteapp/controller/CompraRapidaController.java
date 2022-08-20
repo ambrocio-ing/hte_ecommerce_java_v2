@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hteecommerce.hteapp.entity.CompraRapida;
 import com.hteecommerce.hteapp.entity.DetalleIngreso;
+import com.hteecommerce.hteapp.model.MCompraRapida;
 import com.hteecommerce.hteapp.service.ICompraRapidaService;
 import com.hteecommerce.hteapp.service.IIngresoService;
 
@@ -52,26 +53,31 @@ public class CompraRapidaController {
         }
 
         if (crs != null && crs.size() != 0) {     
+            String sucursal = crs.get(0).getSucursal();
             List<CompraRapida> crss = new ArrayList<>();
             for(CompraRapida cr : crs)  {
-                if(cr.getDetalleIngreso().getEstado()){
-                    if(cr.getDetalleIngreso().getStockActual() > 0){
-                        crss.add(cr);
+                if(cr.getDetalleIngreso().getEstado() && cr.getDetalleIngreso().getStockActual() > 0){                    
+                    crss.add(cr);                                     
+                }
+                else if(cr.getDetalleIngreso().getEstado() == false){
+                    DetalleIngreso di = ingresoService.getDIByIdproducto(cr.getDetalleIngreso().getProducto().getIdproducto(), cr.getDetalleIngreso().getSucursal());
+                    if(di != null && di.getSucursal().equals(sucursal)){
+                        cr.setDetalleIngreso(di);
+                        compraRapidaService.saveCR(cr);                        
+                        crss.add(cr);                        
                     }                    
                 }
                 else{
-                    DetalleIngreso di = ingresoService.getDIByIdproducto(cr.getDetalleIngreso().getProducto().getIdproducto());
-                    if(di != null){
-                        cr.setDetalleIngreso(di);
-                        compraRapidaService.saveCR(cr);
-                        if(cr.getDetalleIngreso().getStockActual() > 0){
-                            crss.add(cr);
-                        }
-                    }
+                    cr.setCondicion("Agotado");
+                    crss.add(cr);
                 }
             }       
 
-            return new ResponseEntity<List<CompraRapida>>(crss, HttpStatus.OK);
+            List<MCompraRapida> mlista = crss.stream()
+                                    .map(cor -> new MCompraRapida(cor))
+                                    .collect(Collectors.toList());
+
+            return new ResponseEntity<List<MCompraRapida>>(mlista, HttpStatus.OK);
         }
 
         resp.put(("mensaje"), "Sin datos que mostrar");

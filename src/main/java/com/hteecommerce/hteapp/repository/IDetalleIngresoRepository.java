@@ -16,17 +16,20 @@ import org.springframework.stereotype.Repository;
 public interface IDetalleIngresoRepository extends JpaRepository<DetalleIngreso, Integer> {   
         
     @Query("from DetalleIngreso di join di.producto pro where di.estado = true and di.stockActual > 0 and pro.codigo like %?1% or upper(trim(pro.nombre)) like concat('%',upper(?2),'%')")
-    public List<DetalleIngreso> listByCodigoOrNombreOfProducto(String codigo, String nombre);
-
-    @Query("from DetalleIngreso di join di.producto pro where di.estado = true and pro.idproducto = ?1")
-    public Optional<DetalleIngreso> findByIdproducto(Integer idproducto);
+    public List<DetalleIngreso> listByCodigoOrNombreOfProducto(String codigo, String nombre);    
 
     public Optional<DetalleIngreso> findTopByProductoOrderByIddetalleingresoDesc(Producto producto);
 
     @Query("from DetalleIngreso di where di.estado = true and di.stockActual > 0 order by di.iddetalleingreso desc")
     public Page<DetalleIngreso> pageAll(Pageable pageable);
 
+    @Query("from DetalleIngreso di join di.producto pro where di.estado = true and pro.idproducto = ?1")
+    public Optional<DetalleIngreso> find_ByIdproducto(Integer idproducto);
+
     //LISTA Y FILTRO DESDE VISTA CLIENTE
+    @Query("from DetalleIngreso di join di.producto pro where di.estado = true and di.stockActual > 0 and pro.idproducto = ?1 and di.sucursal = ?2")
+    public Optional<DetalleIngreso> findByIdproducto(Integer idproducto, String sucursal);
+
     @Query("from DetalleIngreso di join di.producto pro where di.estado = true and di.stockActual > 0 and upper(trim(pro.nombre)) like concat('%',upper(?1),'%') and di.sucursal = ?2")
     public List<DetalleIngreso> listByNombreProducto(String nombre, String sucursal);
 

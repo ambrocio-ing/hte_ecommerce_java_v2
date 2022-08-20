@@ -32,16 +32,11 @@ public class ProductoVestimenta implements Serializable {
 
     @NotNull
     @Size(max = 50)
-    private String material;
-    
-    @Size(max = 50)
-    private String color;
-
-    private String descripcion;
-
+    private String material;   
+     
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "pvestimenta_id", referencedColumnName = "idpvestimenta")
+    @JoinColumn(name = "pvestimenta_id", referencedColumnName = "idpvestimenta", nullable = true)
     private Set<Variedad> variedades = null;
 
     public ProductoVestimenta(){
@@ -49,13 +44,10 @@ public class ProductoVestimenta implements Serializable {
     }        
 
     public ProductoVestimenta(Integer idpvestimenta, @Size(max = 50) String modelo,
-            @NotNull @Size(max = 50) String material, @Size(max = 50) String color, String descripcion,
-            Set<Variedad> variedades) {
+            @NotNull @Size(max = 50) String material, Set<Variedad> variedades) {
         this.idpvestimenta = idpvestimenta;
         this.modelo = modelo;
-        this.material = material;
-        this.color = color;
-        this.descripcion = descripcion;
+        this.material = material;        
         this.variedades = variedades;
     }
 
@@ -81,23 +73,7 @@ public class ProductoVestimenta implements Serializable {
 
     public void setMaterial(String material) {
         this.material = material;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }   
+    }    
 
     public Set<Variedad> getVariedades() {
         return variedades;

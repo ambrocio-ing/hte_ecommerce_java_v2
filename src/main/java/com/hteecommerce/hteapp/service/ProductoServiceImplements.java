@@ -115,6 +115,14 @@ public class ProductoServiceImplements implements IProductoService {
     public void savePI(ProductoImagen pi) {
         
         productoImagenRepository.save(pi);
+    }
+
+    @Override
+    @Transactional
+    public void saveAllPI(List<ProductoImagen> pis) {
+        
+        productoImagenRepository.saveAll(pis);
+        
     }    
     
 }

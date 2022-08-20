@@ -188,7 +188,7 @@ public class Mapper {
             return false;
         }
 
-        if (po.getColor() != null || po.getDetalle() != null ||
+        if (po.getColor() != null ||
                 po.getMaterial() != null || po.getMedida() != null ||
                 po.getModelo() != null || po.getPeso() != null) {
 
@@ -203,8 +203,7 @@ public class Mapper {
             return false;
         }
 
-        if (pv.getColor() != null || pv.getDescripcion() != null ||
-                pv.getMaterial() != null || pv.getModelo() != null
+        if (pv.getMaterial() != null || pv.getModelo() != null
                 || pv.getVariedades() != null) {
 
             return true;
@@ -346,7 +345,7 @@ public class Mapper {
                             di.getPorcentajeDescuento(),
                             di.getStockInicial(), di.getStockActual(),
                             di.getFechaProduccion(), di.getFechaVencimiento(),
-                            di.getEstado(), di.getProducto(), di.getIngresoId());
+                            di.getEstado(), di.getSucursal(), di.getProducto(), di.getIngresoId());
                 })
                 .collect(Collectors.toList());
 
@@ -368,7 +367,7 @@ public class Mapper {
                 di.getPrecioVentaAnterior(), di.getPorcentajeDescuento(),
                 di.getStockActual(),
                 di.getFechaProduccion(), di.getFechaVencimiento(),
-                di.getEstado(), di.getProducto());
+                di.getEstado(), di.getSucursal(), di.getProducto());
     }
 
     public static List<MComprobante> mapComprobantes(List<Comprobante> lista) {

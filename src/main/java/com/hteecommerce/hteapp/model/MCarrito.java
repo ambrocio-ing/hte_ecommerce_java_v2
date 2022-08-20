@@ -1,12 +1,15 @@
 package com.hteecommerce.hteapp.model;
 
+import java.util.List;
+
 import com.hteecommerce.hteapp.entity.Carrito;
+import com.hteecommerce.hteapp.entity.Variedad;
 
 public class MCarrito {
 
     private Integer idcarrito;  
     
-    private String variedad;
+    private List<Variedad> variedades;
    
     private Integer cantidad;
 
@@ -24,7 +27,7 @@ public class MCarrito {
 
     public MCarrito(Carrito carrito) {
         this.idcarrito = carrito.getIdcarrito();
-        this.variedad = carrito.getVariedad();
+        this.variedades = carrito.getVariedades();
         this.cantidad = carrito.getCantidad();
         this.descuento = carrito.getDescuento();
         this.subTotal = carrito.getSubTotal();
@@ -38,6 +41,7 @@ public class MCarrito {
             carrito.getDetalleIngreso().getFechaProduccion(),
             carrito.getDetalleIngreso().getFechaVencimiento(),
             carrito.getDetalleIngreso().getEstado(),
+            carrito.getDetalleIngreso().getSucursal(),
             carrito.getDetalleIngreso().getProducto());
     }
 
@@ -48,15 +52,7 @@ public class MCarrito {
     public void setIdcarrito(Integer idcarrito) {
         this.idcarrito = idcarrito;
     }
-
-    public String getVariedad() {
-        return variedad;
-    }
-
-    public void setVariedad(String variedad) {
-        this.variedad = variedad;
-    }
-
+    
     public Integer getCantidad() {
         return cantidad;
     }
@@ -95,6 +91,14 @@ public class MCarrito {
 
     public void setDetalleIngreso(MDetalleIngreso detalleIngreso) {
         this.detalleIngreso = detalleIngreso;
+    }
+
+    public List<Variedad> getVariedades() {
+        return variedades;
+    }
+
+    public void setVariedades(List<Variedad> variedades) {
+        this.variedades = variedades;
     }
     
 }

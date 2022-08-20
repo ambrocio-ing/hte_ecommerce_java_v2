@@ -48,7 +48,7 @@ public class Usuario implements Serializable {
     @Column(name = "token_password", length = 70)
     private String tokenPassword;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usuario_roles", 
             joinColumns = @JoinColumn(name = "usuario_id"), 
             inverseJoinColumns = @JoinColumn(name = "role_id"), 

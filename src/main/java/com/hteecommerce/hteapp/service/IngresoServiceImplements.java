@@ -115,9 +115,9 @@ public class IngresoServiceImplements implements IIngresoService {
 
     @Override
     @Transactional(readOnly = true)
-    public DetalleIngreso getDIByIdproducto(Integer idproducto) {
+    public DetalleIngreso getDIByIdproducto(Integer idproducto, String sucursal) {
         
-        return detalleIngresoRepository.findByIdproducto(idproducto).orElse(null);
+        return detalleIngresoRepository.findByIdproducto(idproducto, sucursal).orElse(null);
     }
 
     //LISTA Y FILTRO EN VISTA DEL CLIENTE
@@ -190,6 +190,12 @@ public class IngresoServiceImplements implements IIngresoService {
     public List<DetalleIngreso> getLastTwenty(String sucursal) {
         
         return detalleIngresoRepository.findTop20BySucursalOrderByIddetalleingresoDesc(sucursal);
+    }
+
+    @Override
+    public DetalleIngreso getDetalleIngresoByIdproducto(Integer idproducto) {
+        
+        return detalleIngresoRepository.find_ByIdproducto(idproducto).orElse(null);
     }         
     
 }

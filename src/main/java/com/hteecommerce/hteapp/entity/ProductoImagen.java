@@ -18,17 +18,11 @@ public class ProductoImagen implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idpimagen;
 
-    @Size(max = 100)
-    @Column(name = "imagen_uno")
-    private String imagenUno;
-
-    @Size(max = 100)
-    @Column(name = "imagen_dos")
-    private String imagenDos;
-
-    @Size(max = 100)
-    @Column(name = "imagen_tres")
-    private String imagenTres;
+    @Size(max = 100)    
+    private String imagen;   
+    
+    @Column(name = "producto_id")
+    private Integer productoId;
 
     public ProductoImagen() {
 
@@ -40,31 +34,24 @@ public class ProductoImagen implements Serializable {
 
     public void setIdpimagen(Integer idpimagen) {
         this.idpimagen = idpimagen;
+    }   
+
+    public String getImagen() {
+        return imagen;
     }
 
-    public String getImagenUno() {
-        return imagenUno;
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 
-    public void setImagenUno(String imagenUno) {
-        this.imagenUno = imagenUno;
+    public void setProductoId(Integer productoId) {
+        this.productoId = productoId;
     }
 
-    public String getImagenDos() {
-        return imagenDos;
-    }
-
-    public void setImagenDos(String imagenDos) {
-        this.imagenDos = imagenDos;
-    }
-
-    public String getImagenTres() {
-        return imagenTres;
-    }
-
-    public void setImagenTres(String imagenTres) {
-        this.imagenTres = imagenTres;
+    public Integer getProductoId() {
+        return productoId;
     }
 
     private static final long serialVersionUID = 1L;
+    
 }

@@ -1,6 +1,8 @@
 package com.hteecommerce.hteapp.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
@@ -45,17 +48,16 @@ public class Producto implements Serializable {
 
     private Integer nestrellas;
 
-    @NotNull
     private String descripcion;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tipo_id", nullable = false)
     private Tipo tipo;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "pimagen_id", nullable = false)
-    private ProductoImagen productoImagen;
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @JoinColumn(name = "producto_id")
+    private List<ProductoImagen> productoImagenes = null;
 
     @OneToOne(cascade = { CascadeType.MERGE, CascadeType.REMOVE })
     @JoinColumn(name = "pdnutricional_id", nullable = true)
@@ -70,7 +72,7 @@ public class Producto implements Serializable {
     private ProductoOtros productoOtros;
 
     public Producto() {
-        
+        this.productoImagenes = new ArrayList<>();
     }
 
     @PrePersist
@@ -119,12 +121,12 @@ public class Producto implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public ProductoImagen getProductoImagen() {
-        return productoImagen;
+    public List<ProductoImagen> getProductoImagenes() {
+        return productoImagenes;
     }
 
-    public void setProductoImagen(ProductoImagen productoImagen) {
-        this.productoImagen = productoImagen;
+    public void setProductoImagenes(List<ProductoImagen> productoImagenes) {
+        this.productoImagenes = productoImagenes;
     }
 
     public ProductoDatoNutricional getProductoDatoNutricional() {

@@ -110,7 +110,7 @@ public class IngresoController {
         DetalleIngreso di = null;
 
         try {
-            di = ingresoService.getDIByIdproducto(idproducto);
+            di = ingresoService.getDetalleIngresoByIdproducto(idproducto);
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error de consulta a la base de datos");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -127,7 +127,7 @@ public class IngresoController {
                 di.getPrecioVentaAnterior(),
                 di.getPorcentajeDescuento(),
                 di.getStockInicial(), di.getStockActual(),
-                di.getEstado());
+                di.getEstado(), di.getSucursal());
         return new ResponseEntity<MDetalleIngreso>(mdi, HttpStatus.OK);
 
     }    
@@ -231,8 +231,13 @@ public class IngresoController {
         for (DetalleIngreso di : ingreso.getDetalleIngresos()) {
 
             Producto pro = productoService.getByIdproducto(di.getProducto().getIdproducto());
-            DetalleIngreso di2 = ingresoService.getDIByIdproducto(di.getProducto().getIdproducto());
+            DetalleIngreso di2 = ingresoService.getDIByIdproducto(di.getProducto().getIdproducto(), di.getSucursal());
             if (pro != null) {
+
+                if(pro.getProductoVestimenta() != null){
+                    pro.getProductoVestimenta().setVariedades(di.getProducto().getProductoVestimenta().getVariedades());
+                }
+
                 di.setProducto(pro);
 
                 if (di2 != null) {
@@ -318,7 +323,7 @@ public class IngresoController {
             Producto pro = productoService.getByIdproducto(di.getProducto().getIdproducto());
             DetalleIngreso di2 = null;
             if (di.getIddetalleingreso() == null) {
-                di2 = ingresoService.getDIByIdproducto(di.getProducto().getIdproducto());
+                di2 = ingresoService.getDIByIdproducto(di.getProducto().getIdproducto(), di.getSucursal());
             }
 
             if (pro != null) {

@@ -34,7 +34,7 @@ public class MDetalleComprobante {
                 dc.getDetalleIngreso().getPrecioVentaAnterior(), dc.getDetalleIngreso().getPorcentajeDescuento(),
                 dc.getDetalleIngreso().getStockInicial(), dc.getDetalleIngreso().getStockActual(),
                 dc.getDetalleIngreso().getFechaProduccion(), dc.getDetalleIngreso().getFechaVencimiento(),
-                dc.getDetalleIngreso().getEstado(), dc.getDetalleIngreso().getProducto(),
+                dc.getDetalleIngreso().getEstado(), dc.getDetalleIngreso().getSucursal(), dc.getDetalleIngreso().getProducto(),
                 dc.getDetalleIngreso().getIngresoId());
         this.comprobanteId = dc.getComprobanteId();
     }
@@ -47,7 +47,8 @@ public class MDetalleComprobante {
         this.cantidad = cantidad;
         this.descuento = descuento;
         this.subTotal = subTotal;
-        this.detalleIngreso = new MDetalleIngreso(detalleIngreso.getIddetalleingreso(), detalleIngreso.getProducto(),
+        this.detalleIngreso = new MDetalleIngreso(detalleIngreso.getIddetalleingreso(), 
+                detalleIngreso.getSucursal(), detalleIngreso.getProducto(),
                 detalleIngreso.getIngresoId());
         this.comprobanteId = comprobanteId;
     }

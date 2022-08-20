@@ -121,8 +121,8 @@ public class VariedadController {
             return new ResponseEntity<Map<String, String>>(HttpStatus.NOT_FOUND);
         }       
 
-        va.setCantidad(variedad.getCantidad());
-        va.setNombre(variedad.getNombre());
+        va.setCantidadTalla(variedad.getCantidadTalla());
+        va.setNombreTalla(variedad.getNombreTalla());
 
         try {
             variedadService.saveVA(va);

@@ -23,4 +23,5 @@ public interface IProductoService {
 
     //imagen
     public void savePI(ProductoImagen pi);
+    public void saveAllPI(List<ProductoImagen> pis);
 }

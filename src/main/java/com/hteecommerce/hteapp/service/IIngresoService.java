@@ -23,10 +23,11 @@ public interface IIngresoService {
     public List<DetalleIngreso> getDetalleIngresoByCodigoOrNombre(String codigoOrNombre);
     public Page<DetalleIngreso> pageAllDetalleIngreso(Pageable pageable);
     public DetalleIngreso getByIddetalleingreso(Integer iddi);
-    public DetalleIngreso getDIByIdproducto(Integer idproducto);
+    public DetalleIngreso getDetalleIngresoByIdproducto(Integer idproducto);
     public DetalleIngreso getTopByProductoOrderByIddetalleingresoDesc(Producto producto);
 
     //LISTA Y FILTRO DESDE VISTA DEL CLIENTE
+    public DetalleIngreso getDIByIdproducto(Integer idproducto, String sucursal);
     public List<DetalleIngreso> listDIAll(String sucursal);
     public List<DetalleIngreso> listDIAllToMarca(String sucursal, String marca);
 

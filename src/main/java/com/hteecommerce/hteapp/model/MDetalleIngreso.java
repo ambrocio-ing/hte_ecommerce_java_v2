@@ -28,6 +28,8 @@ public class MDetalleIngreso {
 
     private Boolean estado;
 
+    private String sucursal;
+
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private Producto producto;
 
@@ -48,6 +50,7 @@ public class MDetalleIngreso {
         this.fechaProduccion = di.getFechaProduccion();
         this.fechaVencimiento = di.getFechaVencimiento();
         this.estado = di.getEstado();
+        this.sucursal = di.getSucursal();
         this.producto = di.getProducto();
         this.ingresoId = di.getIngresoId();
     }
@@ -55,7 +58,7 @@ public class MDetalleIngreso {
     public MDetalleIngreso(Integer iddetalleingreso, Double precioVenta, Double precioVentaAnterior,
             Double porcentajeDescuento, Integer stockInicial, Integer stockActual,
             LocalDate fechaProduccion, LocalDate fechaVencimiento, Boolean estado,
-            Producto producto, Integer ingresoId) {
+            String sucursal, Producto producto, Integer ingresoId) {
         this.iddetalleingreso = iddetalleingreso;
         this.precioVenta = precioVenta;
         this.precioVentaAnterior = precioVentaAnterior;
@@ -65,13 +68,14 @@ public class MDetalleIngreso {
         this.fechaProduccion = fechaProduccion;
         this.fechaVencimiento = fechaVencimiento;
         this.estado = estado;
+        this.sucursal = sucursal;
         this.producto = producto;
         this.ingresoId = ingresoId;
     }
 
     public MDetalleIngreso(Integer iddetalleingreso, Double precioVenta, Double precioVentaAnterior,
             Double porcentajeDescuento, Integer stockActual, LocalDate fechaProduccion,
-            LocalDate fechaVencimiento, Boolean estado, Producto producto) {
+            LocalDate fechaVencimiento, Boolean estado, String sucursal, Producto producto) {
         this.iddetalleingreso = iddetalleingreso;
         this.precioVenta = precioVenta;
         this.precioVentaAnterior = precioVentaAnterior;
@@ -80,12 +84,13 @@ public class MDetalleIngreso {
         this.fechaProduccion = fechaProduccion;
         this.fechaVencimiento = fechaVencimiento;
         this.estado = estado;
+        this.sucursal = sucursal;
         this.producto = producto;
     }
 
     public MDetalleIngreso(Integer iddetalleingreso, Double precioVenta, Double precioVentaAnterior,
             Double porcentajeDescuento, Integer stockInicial, Integer stockActual,
-            Boolean estado) {
+            Boolean estado, String sucursal) {
         this.iddetalleingreso = iddetalleingreso;
         this.precioVenta = precioVenta;
         this.precioVentaAnterior = precioVentaAnterior;
@@ -93,10 +98,12 @@ public class MDetalleIngreso {
         this.stockInicial = stockInicial;
         this.stockActual = stockActual;
         this.estado = estado;
+        this.sucursal = sucursal;
     }
 
-    public MDetalleIngreso(Integer iddetalleingreso, Producto producto, Integer ingresoId) {
+    public MDetalleIngreso(Integer iddetalleingreso, String sucursal, Producto producto, Integer ingresoId) {
         this.iddetalleingreso = iddetalleingreso;
+        this.sucursal = sucursal;
         this.producto = producto;
         this.ingresoId = ingresoId;
     }
@@ -195,6 +202,14 @@ public class MDetalleIngreso {
 
     public void setIngresoId(Integer ingresoId) {
         this.ingresoId = ingresoId;
+    }
+
+    public String getSucursal() {
+        return sucursal;
+    }
+
+    public void setSucursal(String sucursal) {
+        this.sucursal = sucursal;
     }
 
 }

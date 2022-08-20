@@ -30,9 +30,7 @@ public class ProductoOtros implements Serializable {
     private String medida;
 
     @Size(max = 50)
-    private String peso;
-
-    private String detalle;
+    private String peso;    
 
     public ProductoOtros() {
 
@@ -40,14 +38,13 @@ public class ProductoOtros implements Serializable {
 
     public ProductoOtros(Integer idpotros, @Size(max = 50) String modelo,
             @Size(max = 50) String color, @Size(max = 50) String material, @Size(max = 50) String medida,
-            @Size(max = 50) String peso, String detalle) {
+            @Size(max = 50) String peso) {
         this.idpotros = idpotros;
         this.modelo = modelo;
         this.color = color;
         this.material = material;
         this.medida = medida;
-        this.peso = peso;
-        this.detalle = detalle;
+        this.peso = peso;        
     }
 
     public Integer getIdpotros() {
@@ -97,15 +94,7 @@ public class ProductoOtros implements Serializable {
     public void setPeso(String peso) {
         this.peso = peso;
     }
-
-    public String getDetalle() {
-        return detalle;
-    }
-
-    public void setDetalle(String detalle) {
-        this.detalle = detalle;
-    }
-
+    
     // Marca, modelo, color, material, medida, peso, detalle
     private static final long serialVersionUID = 1L;
 }

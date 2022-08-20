@@ -45,16 +45,16 @@ public class CarritoServiceImplements implements ICarritoService {
 
     @Override
     @Transactional(readOnly = true)
-    public Carrito getByIdddiAndIdcliente(Integer iddi, Integer idcliente) {
+    public Carrito getByIdproductoAndIdcliente(Integer idproducto, Integer idcliente) {
         
-        return carritoRepository.findByIddetalleingresoAndIdcliente(iddi, idcliente).orElse(null);
+        return carritoRepository.findByIdproductoAndIdcliente(idproducto, idcliente).orElse(null);
     }
 
     @Override
     @Transactional
-    public void saveAllC(List<Carrito> carritos) {
+    public List<Carrito> saveAllC(List<Carrito> carritos) {
         
-        carritoRepository.saveAll(carritos);
+        return carritoRepository.saveAll(carritos);
         
     }
     

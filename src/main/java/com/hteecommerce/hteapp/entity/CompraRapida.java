@@ -22,6 +22,11 @@ public class CompraRapida implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idcompra;
 
+    private String condicion;
+
+    @NotNull
+    private String sucursal;
+
     @NotNull
     private Integer idcliente;    
 
@@ -56,6 +61,22 @@ public class CompraRapida implements Serializable {
 
     public void setDetalleIngreso(DetalleIngreso detalleIngreso) {
         this.detalleIngreso = detalleIngreso;
+    }
+
+    public String getCondicion() {
+        return condicion;
+    }
+
+    public void setCondicion(String condicion) {
+        this.condicion = condicion;
+    }
+
+    public String getSucursal() {
+        return sucursal;
+    }
+
+    public void setSucursal(String sucursal) {
+        this.sucursal = sucursal;
     }
 
     private static final long serialVersionUID = 1L;
