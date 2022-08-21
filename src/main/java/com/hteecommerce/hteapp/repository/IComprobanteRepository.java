@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IComprobanteRepository extends JpaRepository<Comprobante, Integer> {
 
-    @Query("from Comprobante com where com.estado = 'Pedido' and date(com.fechaPedido) = date(?1)")
+    @Query("from Comprobante com where com.estado = 'Entrega pendiente' and date(com.fechaPedido) = date(?1)")
     public List<Comprobante> listByFechaByEstadoPedido(LocalDate fecha);
 
     @Query("from Comprobante com where com.estado = 'Entregado' and date(com.fechaPedido) = date(?1)")
@@ -30,7 +30,7 @@ public interface IComprobanteRepository extends JpaRepository<Comprobante, Integ
     @Query("from Comprobante com where com.estado = 'Entregado' order by com.idcomprobante desc")
     public Page<Comprobante> listByEstadoEntregado(Pageable pageable);
 
-    @Query("from Comprobante com where com.estado = 'Pedido' order by com.idcomprobante desc")
+    @Query("from Comprobante com where com.estado = 'Entrega pendiente' order by com.idcomprobante desc")
     public Page<Comprobante> listByEstadoPedido(Pageable pageable);
 
     @Query("from Comprobante com where com.estado = 'Anulado' order by com.idcomprobante desc")

@@ -43,7 +43,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProductoController {
 
     @Autowired
-    private static IProductoService productoService;
+    private IProductoService productoService;
 
     @Autowired
     private IFileService fileService;
@@ -576,6 +576,8 @@ public class ProductoController {
 
         pro.setNombre(producto.getNombre());
         pro.setTipo(producto.getTipo());
+        pro.setPuntos(producto.getPuntos());
+        pro.setMarca(producto.getMarca());
         pro.setDescripcion(producto.getDescripcion());
 
         if (pro.getProductoDatoNutricional() != null) {
@@ -596,8 +598,7 @@ public class ProductoController {
             pro.setProductoVestimenta(new ProductoVestimenta(
                     producto.getProductoVestimenta().getIdpvestimenta(),
                     producto.getProductoVestimenta().getModelo(),
-                    producto.getProductoVestimenta().getMaterial(),                    
-                    producto.getProductoVestimenta().getVariedades()));
+                    producto.getProductoVestimenta().getMaterial()));
         } else {
             pro.setProductoOtros(new ProductoOtros(
                     producto.getProductoOtros().getIdpotros(),

@@ -51,7 +51,7 @@ public class Ingreso implements Serializable {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "ingreso_id", referencedColumnName = "idingreso")
-    public List<DetalleIngreso> detalleIngresos;
+    public List<DetalleIngreso> detalleIngresos = null;
 
     @NotNull
     @Size(max = 11, min = 10)

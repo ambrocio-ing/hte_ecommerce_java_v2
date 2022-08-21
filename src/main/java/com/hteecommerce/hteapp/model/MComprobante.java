@@ -68,7 +68,7 @@ public class MComprobante {
         this.direccionEnvio = new MDireccionEnvio(comprobante.getDireccionEnvio()); 
         this.detalleComprobantes = comprobante.getDetalleComprobantes().stream()
                 .map(dc -> {
-                    return new MDetalleComprobante(dc.getIddetallecomprobante(), dc.getVariedad() ,dc.getCantidad(), dc.getDescuento(),
+                    return new MDetalleComprobante(dc.getIddetallecomprobante(), dc.getVariedades() ,dc.getCantidad(), dc.getDescuento(),
                             dc.getSubTotal(), dc.getDetalleIngreso(), dc.getComprobanteId());
                 }).collect(Collectors.toList());
     }

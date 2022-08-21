@@ -1,7 +1,9 @@
 package com.hteecommerce.hteapp.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -24,8 +27,6 @@ public class DetalleComprobante implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer iddetallecomprobante;
 
-    private String variedad;
-
     @NotNull
     private Integer cantidad;
 
@@ -39,6 +40,11 @@ public class DetalleComprobante implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "detalleingreso_id", nullable = false)
     private DetalleIngreso detalleIngreso;
+
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "detallecomprobante_id", nullable = true)
+    private List<Variedad> variedades = null;
 
     @Column(name = "comprobante_id")
     private Integer comprobanteId;
@@ -120,12 +126,12 @@ public class DetalleComprobante implements Serializable {
         this.comprobanteId = comprobanteId;
     }
 
-    public String getVariedad() {
-        return variedad;
+    public List<Variedad> getVariedades() {
+        return variedades;
     }
 
-    public void setVariedad(String variedad) {
-        this.variedad = variedad;
+    public void setVariedades(List<Variedad> variedades) {
+        this.variedades = variedades;
     }
 
     private static final long serialVersionUID = 1L;

@@ -127,7 +127,7 @@ public class IngresoController {
                 di.getPrecioVentaAnterior(),
                 di.getPorcentajeDescuento(),
                 di.getStockInicial(), di.getStockActual(),
-                di.getEstado(), di.getSucursal());
+                di.getEstado(), di.getSucursal(), di.getVariedades());
         return new ResponseEntity<MDetalleIngreso>(mdi, HttpStatus.OK);
 
     }    
@@ -234,8 +234,8 @@ public class IngresoController {
             DetalleIngreso di2 = ingresoService.getDIByIdproducto(di.getProducto().getIdproducto(), di.getSucursal());
             if (pro != null) {
 
-                if(pro.getProductoVestimenta() != null){
-                    pro.getProductoVestimenta().setVariedades(di.getProducto().getProductoVestimenta().getVariedades());
+                if(pro.getProductoVestimenta() == null){
+                    di.setVariedades(null);
                 }
 
                 di.setProducto(pro);
@@ -250,7 +250,6 @@ public class IngresoController {
 
                 dis.add(di);
             }
-
         }
 
         if (ingreso.getDetalleIngresos().size() != dis.size()) {

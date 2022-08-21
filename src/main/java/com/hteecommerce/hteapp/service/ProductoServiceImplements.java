@@ -3,15 +3,9 @@ package com.hteecommerce.hteapp.service;
 import java.util.List;
 
 import com.hteecommerce.hteapp.entity.Producto;
-import com.hteecommerce.hteapp.entity.ProductoDatoNutricional;
 import com.hteecommerce.hteapp.entity.ProductoImagen;
-import com.hteecommerce.hteapp.entity.ProductoOtros;
-import com.hteecommerce.hteapp.entity.ProductoVestimenta;
-import com.hteecommerce.hteapp.repository.IProductoDatoNutricionalRepository;
 import com.hteecommerce.hteapp.repository.IProductoImagenRepository;
-import com.hteecommerce.hteapp.repository.IProductoOtrosRepository;
 import com.hteecommerce.hteapp.repository.IProductoRepository;
-import com.hteecommerce.hteapp.repository.IProductoVestimentaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,14 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProductoServiceImplements implements IProductoService {
 
-    @Autowired
+    /* @Autowired
     private IProductoDatoNutricionalRepository productoDatoNutricionalRepository;
 
     @Autowired
     private IProductoVestimentaRepository productoVestimentaRepository;
 
     @Autowired
-    private IProductoOtrosRepository productoOtrosRepository;
+    private IProductoOtrosRepository productoOtrosRepository; */
 
     @Autowired
     private IProductoRepository productoRepository;
@@ -48,7 +42,7 @@ public class ProductoServiceImplements implements IProductoService {
     @Transactional
     public Producto savePto(Producto producto) {
         
-        if(producto.getProductoDatoNutricional() != null){
+       /*  if(producto.getProductoDatoNutricional() != null){
             ProductoDatoNutricional pdn = productoDatoNutricionalRepository.save(producto.getProductoDatoNutricional());
             producto.setProductoDatoNutricional(pdn);
         }
@@ -61,10 +55,9 @@ public class ProductoServiceImplements implements IProductoService {
         if(producto.getProductoOtros() != null){
             ProductoOtros po = productoOtrosRepository.save(producto.getProductoOtros());
             producto.setProductoOtros(po);
-        }
+        } */
 
-        return productoRepository.save(producto);
-        
+        return productoRepository.save(producto);        
     }
 
     @Override
@@ -121,8 +114,7 @@ public class ProductoServiceImplements implements IProductoService {
     @Transactional
     public void saveAllPI(List<ProductoImagen> pis) {
         
-        productoImagenRepository.saveAll(pis);
-        
+        productoImagenRepository.saveAll(pis);        
     }    
     
 }

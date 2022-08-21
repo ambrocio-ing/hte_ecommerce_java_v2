@@ -88,7 +88,7 @@ public class Comprobante implements Serializable {
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "comprobante_id", referencedColumnName = "idcomprobante")
-    public List<DetalleComprobante> detalleComprobantes;
+    public List<DetalleComprobante> detalleComprobantes = null;
 
     public Comprobante() {
         this.detalleComprobantes = new ArrayList<>();

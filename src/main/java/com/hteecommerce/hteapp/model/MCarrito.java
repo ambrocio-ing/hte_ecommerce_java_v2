@@ -42,7 +42,8 @@ public class MCarrito {
             carrito.getDetalleIngreso().getFechaVencimiento(),
             carrito.getDetalleIngreso().getEstado(),
             carrito.getDetalleIngreso().getSucursal(),
-            carrito.getDetalleIngreso().getProducto());
+            carrito.getDetalleIngreso().getProducto(),
+            carrito.getVariedades());
     }
 
     public Integer getIdcarrito() {

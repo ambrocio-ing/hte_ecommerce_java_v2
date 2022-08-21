@@ -203,8 +203,7 @@ public class Mapper {
             return false;
         }
 
-        if (pv.getMaterial() != null || pv.getModelo() != null
-                || pv.getVariedades() != null) {
+        if (pv.getMaterial() != null || pv.getModelo() != null) {
 
             return true;
         }
@@ -214,25 +213,34 @@ public class Mapper {
 
     // validando detalle ingreso
     public static Stream<String> isValidDetalleIngreso(DetalleIngreso di) {
-        List<String> mensajes = new ArrayList<>();
-        if (di.getPrecioCompra() == null || di.getPrecioCompra() == 0) {
-            mensajes.add("EL precio de compra no puede ser nulo ni cero");
-        }
+        List<String> mensajes = new ArrayList<>();       
 
         if (di.getPrecioVenta() == null || di.getPrecioVenta() == 0) {
             mensajes.add("El precio de venta no puede ser nulo");
         }
 
-        if (di.getStockInicial() == null || di.getStockInicial() == 0) {
-            mensajes.add("Stock inicial no debe ser nulo ni cero");
+        if (di.getPrecioVentaAnterior() == null || di.getPrecioVentaAnterior() == 0) {
+            mensajes.add("EL precio de venta anterior no puede ser nulo ni cero");
         }
 
-        if (di.getFechaProduccion() == null) {
-            mensajes.add("Fecha no pruduccion no debe ser nulo");
+        if (di.getPorcentajeDescuento() == null || di.getPorcentajeDescuento() == 0 ) {
+            mensajes.add("El porcentaje de descuento no debe ser nulo");
         }
+
+        if (di.getStockInicial() == null || di.getStockInicial() == 0) {
+            mensajes.add("Stock inicial no debe ser nulo ni cero");
+        } 
+        
+        if (di.getStockActual() == null || di.getStockActual() == 0) {
+            mensajes.add("Stock Actual no debe ser nulo ni cero");
+        } 
 
         if (di.getEstado() == null) {
             mensajes.add("Estado no debe ser nulo");
+        }
+
+        if (di.getSucursal() == null) {
+            mensajes.add("La sucursal no puede ser nulo");
         }
 
         return mensajes.stream();
@@ -345,7 +353,8 @@ public class Mapper {
                             di.getPorcentajeDescuento(),
                             di.getStockInicial(), di.getStockActual(),
                             di.getFechaProduccion(), di.getFechaVencimiento(),
-                            di.getEstado(), di.getSucursal(), di.getProducto(), di.getIngresoId());
+                            di.getEstado(), di.getSucursal(), di.getProducto(), 
+                            di.getVariedades(), di.getIngresoId());
                 })
                 .collect(Collectors.toList());
 
@@ -367,7 +376,7 @@ public class Mapper {
                 di.getPrecioVentaAnterior(), di.getPorcentajeDescuento(),
                 di.getStockActual(),
                 di.getFechaProduccion(), di.getFechaVencimiento(),
-                di.getEstado(), di.getSucursal(), di.getProducto());
+                di.getEstado(), di.getSucursal(), di.getProducto(), di.getVariedades());
     }
 
     public static List<MComprobante> mapComprobantes(List<Comprobante> lista) {

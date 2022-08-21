@@ -1,10 +1,12 @@
 package com.hteecommerce.hteapp.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hteecommerce.hteapp.entity.DetalleIngreso;
 import com.hteecommerce.hteapp.entity.Producto;
+import com.hteecommerce.hteapp.entity.Variedad;
 
 public class MDetalleIngreso {
 
@@ -33,6 +35,9 @@ public class MDetalleIngreso {
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private Producto producto;
 
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+    private List<Variedad> variedades;
+
     private Integer ingresoId;
 
     public MDetalleIngreso() {
@@ -52,13 +57,14 @@ public class MDetalleIngreso {
         this.estado = di.getEstado();
         this.sucursal = di.getSucursal();
         this.producto = di.getProducto();
+        this.variedades = di.getVariedades();
         this.ingresoId = di.getIngresoId();
     }
 
     public MDetalleIngreso(Integer iddetalleingreso, Double precioVenta, Double precioVentaAnterior,
             Double porcentajeDescuento, Integer stockInicial, Integer stockActual,
             LocalDate fechaProduccion, LocalDate fechaVencimiento, Boolean estado,
-            String sucursal, Producto producto, Integer ingresoId) {
+            String sucursal, Producto producto, List<Variedad> variedades, Integer ingresoId) {
         this.iddetalleingreso = iddetalleingreso;
         this.precioVenta = precioVenta;
         this.precioVentaAnterior = precioVentaAnterior;
@@ -70,12 +76,13 @@ public class MDetalleIngreso {
         this.estado = estado;
         this.sucursal = sucursal;
         this.producto = producto;
+        this.variedades = variedades;
         this.ingresoId = ingresoId;
     }
 
     public MDetalleIngreso(Integer iddetalleingreso, Double precioVenta, Double precioVentaAnterior,
             Double porcentajeDescuento, Integer stockActual, LocalDate fechaProduccion,
-            LocalDate fechaVencimiento, Boolean estado, String sucursal, Producto producto) {
+            LocalDate fechaVencimiento, Boolean estado, String sucursal, Producto producto, List<Variedad> variedades) {
         this.iddetalleingreso = iddetalleingreso;
         this.precioVenta = precioVenta;
         this.precioVentaAnterior = precioVentaAnterior;
@@ -86,11 +93,12 @@ public class MDetalleIngreso {
         this.estado = estado;
         this.sucursal = sucursal;
         this.producto = producto;
+        this.variedades = variedades;
     }
 
     public MDetalleIngreso(Integer iddetalleingreso, Double precioVenta, Double precioVentaAnterior,
             Double porcentajeDescuento, Integer stockInicial, Integer stockActual,
-            Boolean estado, String sucursal) {
+            Boolean estado, String sucursal, List<Variedad> variedades) {
         this.iddetalleingreso = iddetalleingreso;
         this.precioVenta = precioVenta;
         this.precioVentaAnterior = precioVentaAnterior;
@@ -99,12 +107,14 @@ public class MDetalleIngreso {
         this.stockActual = stockActual;
         this.estado = estado;
         this.sucursal = sucursal;
+        this.variedades = variedades;
     }
 
-    public MDetalleIngreso(Integer iddetalleingreso, String sucursal, Producto producto, Integer ingresoId) {
+    public MDetalleIngreso(Integer iddetalleingreso, String sucursal, Producto producto, List<Variedad> variedades, Integer ingresoId) {
         this.iddetalleingreso = iddetalleingreso;
         this.sucursal = sucursal;
         this.producto = producto;
+        this.variedades = variedades;
         this.ingresoId = ingresoId;
     }
 
@@ -211,5 +221,13 @@ public class MDetalleIngreso {
     public void setSucursal(String sucursal) {
         this.sucursal = sucursal;
     }
+
+    public List<Variedad> getVariedades() {
+        return variedades;
+    }
+
+    public void setVariedades(List<Variedad> variedades) {
+        this.variedades = variedades;
+    }    
 
 }

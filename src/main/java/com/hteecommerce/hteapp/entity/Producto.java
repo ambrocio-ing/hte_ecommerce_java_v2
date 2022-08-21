@@ -59,15 +59,15 @@ public class Producto implements Serializable {
     @JoinColumn(name = "producto_id")
     private List<ProductoImagen> productoImagenes = null;
 
-    @OneToOne(cascade = { CascadeType.MERGE, CascadeType.REMOVE })
+    @OneToOne(cascade = CascadeType.ALL )
     @JoinColumn(name = "pdnutricional_id", nullable = true)
     private ProductoDatoNutricional productoDatoNutricional;
 
-    @OneToOne(cascade = { CascadeType.MERGE, CascadeType.REMOVE })
+    @OneToOne(cascade = CascadeType.ALL )
     @JoinColumn(name = "pvestimenta_id", nullable = true)
     private ProductoVestimenta productoVestimenta;
 
-    @OneToOne(cascade = { CascadeType.MERGE, CascadeType.REMOVE })
+    @OneToOne(cascade = CascadeType.ALL )
     @JoinColumn(name = "potros_id", nullable = true)
     private ProductoOtros productoOtros;
 

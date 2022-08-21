@@ -2,7 +2,10 @@ package com.hteecommerce.hteapp.entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
@@ -67,6 +71,11 @@ public class DetalleIngreso implements Serializable {
     @Column(name = "create_at")
     private LocalDate createAt;
 
+    //@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "detalleingreso_id", nullable = true)
+    private List<Variedad> variedades = null;
+
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "producto_id", nullable = false)
@@ -76,7 +85,7 @@ public class DetalleIngreso implements Serializable {
     private Integer ingresoId;
 
     public DetalleIngreso() {
-
+        this.variedades = new ArrayList<>();
     }
 
     @PrePersist
@@ -198,6 +207,14 @@ public class DetalleIngreso implements Serializable {
 
     public void setSucursal(String sucursal) {
         this.sucursal = sucursal;
+    }
+
+    public List<Variedad> getVariedades() {
+        return variedades;
+    }
+
+    public void setVariedades(List<Variedad> variedades) {
+        this.variedades = variedades;
     }
 
     private static final long serialVersionUID = 1L;

@@ -38,15 +38,18 @@ public class Variedad implements Serializable {
     @Column(name = "cantidad_talla")
     private Integer cantidadTalla;
 
-    @Column(name = "pvestimenta_id")
-    private Integer pvestimentaId;
+    @Column(name = "detalleingreso_id")
+    private Integer detalleingresoId;
+
+    @Column(name = "detallecomprobante_id")
+    private Integer detallecomprobanteId;
 
     @Column(name = "carrito_id")
     private Integer carritoId;
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "variedad_id", referencedColumnName = "idvariedad", nullable = true)
+    @JoinColumn(name = "variedad_id", nullable = true)
     private List<Color> colores = null;
 
     public Variedad() {
@@ -80,14 +83,14 @@ public class Variedad implements Serializable {
 
     public void setCantidadTalla(Integer cantidadTalla) {
         this.cantidadTalla = cantidadTalla;
+    }   
+
+    public Integer getDetalleingresoId() {
+        return detalleingresoId;
     }
 
-    public Integer getPvestimentaId() {
-        return pvestimentaId;
-    }
-
-    public void setPvestimentaId(Integer pvestimentaId) {
-        this.pvestimentaId = pvestimentaId;
+    public Integer getDetallecomprobanteId() {
+        return detallecomprobanteId;
     }
 
     public Integer getCarritoId() {
@@ -96,6 +99,14 @@ public class Variedad implements Serializable {
 
     public void setCarritoId(Integer carritoId) {
         this.carritoId = carritoId;
+    }
+
+    public List<Color> getColores() {
+        return colores;
+    }
+
+    public void setColores(List<Color> colores) {
+        this.colores = colores;
     }
 
     private static final long serialVersionUID = 1L;

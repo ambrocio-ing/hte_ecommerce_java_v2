@@ -1,13 +1,15 @@
 package com.hteecommerce.hteapp.model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hteecommerce.hteapp.entity.DetalleComprobante;
 import com.hteecommerce.hteapp.entity.DetalleIngreso;
+import com.hteecommerce.hteapp.entity.Variedad;
 
 public class MDetalleComprobante {
 
     private Integer iddetallecomprobante;
-
-    private String variedad;
 
     private Integer cantidad;
 
@@ -17,6 +19,9 @@ public class MDetalleComprobante {
 
     private MDetalleIngreso detalleIngreso;
 
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+    private List<Variedad> variedades;
+
     private Integer comprobanteId;
 
     public MDetalleComprobante() {
@@ -25,7 +30,7 @@ public class MDetalleComprobante {
 
     public MDetalleComprobante(DetalleComprobante dc) {
         this.iddetallecomprobante = dc.getIddetallecomprobante();
-        this.variedad = dc.getVariedad();
+        this.variedades = dc.getVariedades();
         this.cantidad = dc.getCantidad();
         this.descuento = dc.getDescuento();
         this.subTotal = dc.getSubTotal();
@@ -34,22 +39,24 @@ public class MDetalleComprobante {
                 dc.getDetalleIngreso().getPrecioVentaAnterior(), dc.getDetalleIngreso().getPorcentajeDescuento(),
                 dc.getDetalleIngreso().getStockInicial(), dc.getDetalleIngreso().getStockActual(),
                 dc.getDetalleIngreso().getFechaProduccion(), dc.getDetalleIngreso().getFechaVencimiento(),
-                dc.getDetalleIngreso().getEstado(), dc.getDetalleIngreso().getSucursal(), dc.getDetalleIngreso().getProducto(),
-                dc.getDetalleIngreso().getIngresoId());
+                dc.getDetalleIngreso().getEstado(), dc.getDetalleIngreso().getSucursal(),
+                dc.getDetalleIngreso().getProducto(),
+                dc.getDetalleIngreso().getVariedades(), dc.getDetalleIngreso().getIngresoId());
         this.comprobanteId = dc.getComprobanteId();
     }
 
-    public MDetalleComprobante(Integer iddetallecomprobante, String variedad, Integer cantidad, Double descuento,
+    public MDetalleComprobante(Integer iddetallecomprobante, List<Variedad> variedades, Integer cantidad,
+            Double descuento,
             Double subTotal,
             DetalleIngreso detalleIngreso, Integer comprobanteId) {
         this.iddetallecomprobante = iddetallecomprobante;
-        this.variedad = variedad;
+        this.variedades = variedades;
         this.cantidad = cantidad;
         this.descuento = descuento;
         this.subTotal = subTotal;
-        this.detalleIngreso = new MDetalleIngreso(detalleIngreso.getIddetalleingreso(), 
+        this.detalleIngreso = new MDetalleIngreso(detalleIngreso.getIddetalleingreso(),
                 detalleIngreso.getSucursal(), detalleIngreso.getProducto(),
-                detalleIngreso.getIngresoId());
+                detalleIngreso.getVariedades(), detalleIngreso.getIngresoId());
         this.comprobanteId = comprobanteId;
     }
 
@@ -93,20 +100,20 @@ public class MDetalleComprobante {
         this.detalleIngreso = detalleIngreso;
     }
 
-    public String getVariedad() {
-        return variedad;
-    }
-
-    public void setVariedad(String variedad) {
-        this.variedad = variedad;
-    }
-
     public Integer getComprobanteId() {
         return comprobanteId;
     }
 
     public void setComprobanteId(Integer comprobanteId) {
         this.comprobanteId = comprobanteId;
+    }
+
+    public List<Variedad> getVariedades() {
+        return variedades;
+    }
+
+    public void setVariedades(List<Variedad> variedades) {
+        this.variedades = variedades;
     }
 
 }

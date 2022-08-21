@@ -1,23 +1,14 @@
 package com.hteecommerce.hteapp.entity;
 
-import java.util.Set;
-import java.util.HashSet;
-
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "producto_vestimentas")
@@ -30,25 +21,18 @@ public class ProductoVestimenta implements Serializable {
     @Size(max = 50)
     private String modelo;
 
-    @NotNull
     @Size(max = 50)
-    private String material;   
-     
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "pvestimenta_id", referencedColumnName = "idpvestimenta", nullable = true)
-    private Set<Variedad> variedades = null;
+    private String material; 
 
-    public ProductoVestimenta(){
-        this.variedades = new HashSet<>();
+    public ProductoVestimenta(){        
     }        
 
     public ProductoVestimenta(Integer idpvestimenta, @Size(max = 50) String modelo,
-            @NotNull @Size(max = 50) String material, Set<Variedad> variedades) {
+            @NotNull @Size(max = 50) String material) {
         this.idpvestimenta = idpvestimenta;
         this.modelo = modelo;
-        this.material = material;        
-        this.variedades = variedades;
+        this.material = material;       
+        
     }
 
     public Integer getIdpvestimenta() {
@@ -73,16 +57,9 @@ public class ProductoVestimenta implements Serializable {
 
     public void setMaterial(String material) {
         this.material = material;
-    }    
+    }   
 
-    public Set<Variedad> getVariedades() {
-        return variedades;
-    }
-
-    public void setVariedades(Set<Variedad> variedades) {
-        this.variedades = variedades;
-    }
-
+    
     private static final long serialVersionUID = 1L;
     // Tallas, marca, modelo, material, color
 }
