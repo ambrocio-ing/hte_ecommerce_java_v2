@@ -241,11 +241,12 @@ public class ComprobanteLibreController {
             com = comprobanteService.saveCOM(comprobante);
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error al guardar datos");
+            
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         resp.put("mensaje", "Orden creado con éxito");
-        resp.put("id", com.getIdcomprobante().toString());
+        resp.put("id", com.getIdcomprobante().toString());        
         return new ResponseEntity<Map<String, String>>(resp, HttpStatus.CREATED);
     }
 
@@ -338,6 +339,11 @@ public class ComprobanteLibreController {
 
         try {
             comprobanteService.deleteCOM(idcom, dis);
+
+            if(com.getDireccionEnvio().getCliente() == null){
+                direccionEnvioService.deleteDE(com.getDireccionEnvio().getIddireccion());
+            }
+
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error al eliminar comporobante");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);

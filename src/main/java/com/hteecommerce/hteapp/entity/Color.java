@@ -38,6 +38,13 @@ public class Color implements Serializable {
 
     public Color(){
 
+    }    
+
+    public Color(@NotNull String nombreColor, @NotNull @Min(0) Integer cantidadColor,
+            @Size(max = 100) String nombreImagen) {
+        this.nombreColor = nombreColor;
+        this.cantidadColor = cantidadColor;
+        this.nombreImagen = nombreImagen;
     }
 
     public Integer getIdcolor() {

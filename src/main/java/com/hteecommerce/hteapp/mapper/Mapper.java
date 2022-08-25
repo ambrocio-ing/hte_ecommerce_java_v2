@@ -9,21 +9,25 @@ import com.hteecommerce.hteapp.entity.Carrito;
 import com.hteecommerce.hteapp.entity.ClienteCaracteristica;
 import com.hteecommerce.hteapp.entity.ClienteOferta;
 import com.hteecommerce.hteapp.entity.ClienteProveedor;
+import com.hteecommerce.hteapp.entity.Color;
 import com.hteecommerce.hteapp.entity.Comentario;
 import com.hteecommerce.hteapp.entity.Comprobante;
 import com.hteecommerce.hteapp.entity.Destinatario;
 import com.hteecommerce.hteapp.entity.DetalleIngreso;
+import com.hteecommerce.hteapp.entity.DetallePago;
 import com.hteecommerce.hteapp.entity.DireccionEnvio;
 import com.hteecommerce.hteapp.entity.Persona;
 import com.hteecommerce.hteapp.entity.ProductoDatoNutricional;
 import com.hteecommerce.hteapp.entity.ProductoOtros;
 import com.hteecommerce.hteapp.entity.ProductoVestimenta;
 import com.hteecommerce.hteapp.entity.ProveedorOferta;
+import com.hteecommerce.hteapp.entity.Variedad;
 import com.hteecommerce.hteapp.model.HistoricoPrecio;
 import com.hteecommerce.hteapp.model.MCarrito;
 import com.hteecommerce.hteapp.model.MComentario;
 import com.hteecommerce.hteapp.model.MComprobante;
 import com.hteecommerce.hteapp.model.MDetalleIngreso;
+import com.hteecommerce.hteapp.model.MDetallePago;
 import com.hteecommerce.hteapp.model.MDireccionEnvio;
 import com.hteecommerce.hteapp.security.model.MUsuario;
 import com.hteecommerce.hteapp.util.UClienteOferta;
@@ -213,7 +217,7 @@ public class Mapper {
 
     // validando detalle ingreso
     public static Stream<String> isValidDetalleIngreso(DetalleIngreso di) {
-        List<String> mensajes = new ArrayList<>();       
+        List<String> mensajes = new ArrayList<>();
 
         if (di.getPrecioVenta() == null || di.getPrecioVenta() == 0) {
             mensajes.add("El precio de venta no puede ser nulo");
@@ -223,17 +227,17 @@ public class Mapper {
             mensajes.add("EL precio de venta anterior no puede ser nulo ni cero");
         }
 
-        if (di.getPorcentajeDescuento() == null || di.getPorcentajeDescuento() == 0 ) {
+        if (di.getPorcentajeDescuento() == null || di.getPorcentajeDescuento() == 0) {
             mensajes.add("El porcentaje de descuento no debe ser nulo");
         }
 
         if (di.getStockInicial() == null || di.getStockInicial() == 0) {
             mensajes.add("Stock inicial no debe ser nulo ni cero");
-        } 
-        
+        }
+
         if (di.getStockActual() == null || di.getStockActual() == 0) {
             mensajes.add("Stock Actual no debe ser nulo ni cero");
-        } 
+        }
 
         if (di.getEstado() == null) {
             mensajes.add("Estado no debe ser nulo");
@@ -353,7 +357,7 @@ public class Mapper {
                             di.getPorcentajeDescuento(),
                             di.getStockInicial(), di.getStockActual(),
                             di.getFechaProduccion(), di.getFechaVencimiento(),
-                            di.getEstado(), di.getSucursal(), di.getProducto(), 
+                            di.getEstado(), di.getSucursal(), di.getProducto(),
                             di.getVariedades(), di.getIngresoId());
                 })
                 .collect(Collectors.toList());
@@ -381,7 +385,7 @@ public class Mapper {
 
     public static List<MComprobante> mapComprobantes(List<Comprobante> lista) {
         List<MComprobante> mlista = lista.stream()
-                .map(dc -> new MComprobante(dc))
+                .map(com -> Mapper.mapComprobante(com))
                 .collect(Collectors.toList());
 
         return mlista;
@@ -415,7 +419,7 @@ public class Mapper {
                 die.getIddireccion(), die.getDireccion(), die.getTelefono(),
                 die.getReferencia(), die.getCodigoPostal(), die.getPais(),
                 die.getRegion(), die.getProvincia(), die.getDistrito(),
-                die.getPrincipal(), die.getFormaEnvio(), die.getDestinatario());
+                die.getPrincipal(), die.getDestinatario());
 
         return mdie;
     }
@@ -445,19 +449,19 @@ public class Mapper {
 
     public static List<MComentario> mapComentarios(List<Comentario> lista) {
         List<MComentario> mlista = new ArrayList<>();
-        
-        mlista = lista.stream() 
+
+        mlista = lista.stream()
                 .map(co -> mapComentario(co))
                 .limit(20)
                 .collect(Collectors.toList());
         return mlista;
     }
 
-    public static MComentario mapComentario(Comentario co){
+    public static MComentario mapComentario(Comentario co) {
         MComentario mco = new MComentario(co);
         mco.getCliente().getPersona().setDni(null);
         mco.getCliente().getPersona().setDireccion(null);
-        mco.getCliente().getPersona().setTelefono(null);        
+        mco.getCliente().getPersona().setTelefono(null);
         return mco;
     }
 
@@ -496,6 +500,121 @@ public class Mapper {
         }
 
         return hps;
-    }    
+    }
+
+    // agregando variedades del ingreso anterior
+    public static List<Variedad> mapVariedadesNuevos(List<Variedad> vasNuevos, List<Variedad> anteriores) {
+
+        List<Variedad> vasAnteriores = anteriores.stream()
+                        .filter(va -> va.getCantidadTalla() > 0)
+                        .collect(Collectors.toList());                   
+
+        List<Variedad> lista_nueva = vasNuevos;
+
+        for(Variedad vaAnterior : vasAnteriores) {           
+            lista_nueva = mapVariedadesExistentes(lista_nueva, vaAnterior);
+        }
+
+        return lista_nueva;
+
+    }
+
+    public static List<Variedad> mapVariedadesExistentes(List<Variedad> vasNuevos, Variedad variedad) {
+
+        List<Variedad> existeVariedades = vasNuevos.stream()
+                .filter(va -> va.getNombreTalla().toLowerCase().equals(variedad.getNombreTalla().toLowerCase()))
+                .collect(Collectors.toList());
+        
+        if(existeVariedades.size() != 0){
+           
+            for(Variedad va : vasNuevos){
+                if(va.getNombreTalla().toLowerCase().equals(variedad.getNombreTalla().toLowerCase())){
+                    va = mapVariedad(va, variedad);
+                }
+            }
+
+            return vasNuevos;
+
+        }
+        else{
+
+            List<Color> colores = variedad.getColores().stream()
+                                .filter(co -> co.getCantidadColor() > 0)
+                                .collect(Collectors.toList());
+
+            List<Color> colores_nuevos = colores.stream()
+                                .map(co -> new Color(co.getNombreColor(), co.getCantidadColor(), co.getNombreImagen()))
+                                .collect(Collectors.toList());
+
+            Variedad vari = new Variedad(variedad.getNombreTalla(),
+                                variedad.getCantidadTalla(), colores_nuevos);
+            
+            vasNuevos.add(vari);
+            return vasNuevos;
+        }        
+
+    }
+
+    public static Variedad mapVariedad(Variedad nuevo, Variedad anterior){       
+
+        List<Color> coloresAnteriores = anterior.getColores().stream()
+                            .filter(co -> co.getCantidadColor() > 0)
+                            .collect(Collectors.toList());
+
+        List<Color> nueva_lista = nuevo.getColores();
+
+        for(Color color : coloresAnteriores){
+            nueva_lista = mapColores(nueva_lista, color);
+        }       
+
+        return new Variedad(nuevo.getNombreTalla(),
+                            nuevo.getCantidadTalla() + anterior.getCantidadTalla(), 
+                            nueva_lista);
+    }
+
+    public static List<Color> mapColores(List<Color> cosNuevos, Color coAnterior){
+        
+        List<Color> color_lista = cosNuevos.stream()
+                        .filter(co -> co.getNombreColor().toLowerCase().equals(coAnterior.getNombreColor().toLowerCase()))
+                        .collect(Collectors.toList());
+
+        if(color_lista.size() != 0){
+
+            for(Color co : cosNuevos){
+                if(co.getNombreColor().toLowerCase().equals(coAnterior.getNombreColor().toLowerCase())){
+
+                    co.setCantidadColor(co.getCantidadColor() + coAnterior.getCantidadColor());                            
+                }
+            }
+
+            return cosNuevos;
+            
+        }
+        else{
+            Color col = new Color(coAnterior.getNombreColor(),
+                coAnterior.getCantidadColor(), coAnterior.getNombreImagen());
+            cosNuevos.add(col);
+
+            return cosNuevos;
+        }
+    }
+
+    //map degalle pago
+    public static MDetallePago mapDetallePago(DetallePago dp){
+        MDetallePago mdp = new MDetallePago(dp.getIddetallepago(), dp.getEstadoPago(), 
+                            dp.getFormaPago(), dp.getMarcaTarjeta(), dp.getTipoTarjeta(), 
+                            dp.getFechaCreacion(), dp.getFechaExpiracion());
+        return mdp;
+    }
+
+    public static MComprobante mapComprobante(Comprobante com){
+        MComprobante mcom = new MComprobante(com.getIdcomprobante(), com.getNumero(), 
+                com.getIdtransaccion(), com.getTipoComprobante(), com.getFechaPedido(), 
+                com.getEstado(), com.getIgv(), com.getMontoEnvio(), com.getSubTotal(), 
+                com.getTotal(), com.getDescuento(), com.getFechaEntrega(), com.getNbolsa(),
+                com.getFormaEnvio(), com.getDireccionEnvio(), com.getDetallePago(), 
+                com.getDetalleComprobantes());
+        return mcom;
+    }
 
 }

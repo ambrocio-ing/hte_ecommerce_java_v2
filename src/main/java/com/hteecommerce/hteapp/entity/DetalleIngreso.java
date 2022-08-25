@@ -93,9 +93,9 @@ public class DetalleIngreso implements Serializable {
         this.createAt = LocalDate.now();
     }
 
-    public Integer calculateStockActual(Integer stock_actual) {
+    /* public Integer calculateStockActual(Integer stock_actual) {
         return this.stockInicial + stock_actual;
-    }
+    } */
 
     public Integer getIddetalleingreso() {
         return iddetalleingreso;

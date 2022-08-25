@@ -18,7 +18,7 @@ public interface IDetalleIngresoRepository extends JpaRepository<DetalleIngreso,
     @Query("from DetalleIngreso di join di.producto pro where di.estado = true and di.stockActual > 0 and pro.codigo like %?1% or upper(trim(pro.nombre)) like concat('%',upper(?2),'%')")
     public List<DetalleIngreso> listByCodigoOrNombreOfProducto(String codigo, String nombre);    
 
-    public Optional<DetalleIngreso> findTopByProductoOrderByIddetalleingresoDesc(Producto producto);
+    public Optional<DetalleIngreso> findTopByProductoAndSucursalOrderByIddetalleingresoDesc(Producto producto, String sucursal);
 
     @Query("from DetalleIngreso di where di.estado = true and di.stockActual > 0 order by di.iddetalleingreso desc")
     public Page<DetalleIngreso> pageAll(Pageable pageable);
@@ -27,7 +27,7 @@ public interface IDetalleIngresoRepository extends JpaRepository<DetalleIngreso,
     public Optional<DetalleIngreso> find_ByIdproducto(Integer idproducto);
 
     //LISTA Y FILTRO DESDE VISTA CLIENTE
-    @Query("from DetalleIngreso di join di.producto pro where di.estado = true and di.stockActual > 0 and pro.idproducto = ?1 and di.sucursal = ?2")
+    @Query("from DetalleIngreso di join di.producto pro where di.estado = true and pro.idproducto = ?1 and di.sucursal = ?2")
     public Optional<DetalleIngreso> findByIdproducto(Integer idproducto, String sucursal);
 
     @Query("from DetalleIngreso di join di.producto pro where di.estado = true and di.stockActual > 0 and upper(trim(pro.nombre)) like concat('%',upper(?1),'%') and di.sucursal = ?2")
@@ -56,7 +56,7 @@ public interface IDetalleIngresoRepository extends JpaRepository<DetalleIngreso,
     @Query("from DetalleIngreso di join di.producto pro join pro.tipo tip where di.stockActual > 0 and di.estado = true and tip.idtipo = ?1 and di.sucursal = ?2 order by pro.nventas desc")
     public List<DetalleIngreso> listMasVendidos(Integer idtipo, String sucursal);
 
-    @Query(nativeQuery = true, value = "select * from detalle_ingreso di inner join productos pro on di.producto_id = pro.idproducto where di.stock_actual > 0 and di.sucursal = ?1 and di.estado = true order by pro.nventas desc limit 50")
+    @Query(nativeQuery = true, value = "select * from detalle_ingresos di inner join productos pro on di.producto_id = pro.idproducto where di.stock_actual > 0 and di.sucursal = ?1 and di.estado = true order by pro.nventas desc limit 50")
     public List<DetalleIngreso> listMasVendidosGeneral(String sucursal);    
 
     /* @Query(nativeQuery = true, value = "select * from detalle_ingreso di where di.estado = true and di.stock_actual > 0 and di.sucursal = ?1 order by di.iddetalleingreso asc limit 20")

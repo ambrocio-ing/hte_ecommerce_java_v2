@@ -56,7 +56,7 @@ public class ComprobanteController {
         }
 
         if (comPage != null && comPage.getContent().size() != 0) {
-            Page<MComprobante> mpage = comPage.map(com -> new MComprobante(com));
+            Page<MComprobante> mpage = comPage.map(com -> Mapper.mapComprobante(com));
             return new ResponseEntity<Page<MComprobante>>(mpage, HttpStatus.OK);
         } 
         else {
@@ -83,7 +83,7 @@ public class ComprobanteController {
         }
 
         if (comPage != null && comPage.getContent().size() != 0) {
-            Page<MComprobante> mpage = comPage.map(com -> new MComprobante(com));
+            Page<MComprobante> mpage = comPage.map(com -> Mapper.mapComprobante(com));
             return new ResponseEntity<Page<MComprobante>>(mpage, HttpStatus.OK);
         } 
         else {
@@ -110,7 +110,7 @@ public class ComprobanteController {
         }
 
         if (comPage != null && comPage.getContent().size() != 0) {
-            Page<MComprobante> mpage = comPage.map(com -> new MComprobante(com));
+            Page<MComprobante> mpage = comPage.map(com -> Mapper.mapComprobante(com));
             return new ResponseEntity<Page<MComprobante>>(mpage, HttpStatus.OK);
         } 
         else {
@@ -218,7 +218,7 @@ public class ComprobanteController {
         }
 
         if (com != null) {
-            MComprobante mcom = new MComprobante(com);
+            MComprobante mcom = Mapper.mapComprobante(com);
             return new ResponseEntity<MComprobante>(mcom, HttpStatus.OK);
         } else {
             resp.put("mensaje", "Sin datos que mostrar");
@@ -242,7 +242,7 @@ public class ComprobanteController {
         }
 
         if (com != null) {
-            MComprobante mcom = new MComprobante(com);
+            MComprobante mcom = Mapper.mapComprobante(com);
             return new ResponseEntity<MComprobante>(mcom, HttpStatus.OK);
         } else {
             resp.put("mensaje", "Sin datos que mostrar");
@@ -392,7 +392,7 @@ public class ComprobanteController {
         }
 
         LocalDateTime fechahoy = LocalDateTime.now();
-        LocalDateTime fechaCompra = LocalDateTime.parse(com.getFechaEntrega().toString()+"T"+com.getHoraEntrega().getHora()).plusHours(48);
+        LocalDateTime fechaCompra = com.getFechaEntrega().plusHours(48);
 
         if(com.getEstado().equals("Vendido") && fechahoy.isBefore(fechaCompra) == false){
             

@@ -2,6 +2,7 @@ package com.hteecommerce.hteapp.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -59,10 +60,7 @@ public class DireccionEnvio implements Serializable {
 
     @NotNull
     @Size(max = 150)
-    private String principal;
-
-    @Column(name = "forma_envio")
-    private String formaEnvio;
+    private String principal;    
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
@@ -70,7 +68,7 @@ public class DireccionEnvio implements Serializable {
     private Cliente cliente;
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "destinatario_id", nullable = true)
     private Destinatario destinatario;   
 
@@ -172,15 +170,7 @@ public class DireccionEnvio implements Serializable {
 
     public void setDestinatario(Destinatario destinatario) {
         this.destinatario = destinatario;
-    }    
-
-    public String getFormaEnvio() {
-        return formaEnvio;
-    }
-
-    public void setFormaEnvio(String formaEnvio) {
-        this.formaEnvio = formaEnvio;
-    }
+    }        
 
     private static final long serialVersionUID = 1L;
 }

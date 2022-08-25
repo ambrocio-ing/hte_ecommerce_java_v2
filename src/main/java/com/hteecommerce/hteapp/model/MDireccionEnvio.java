@@ -30,8 +30,6 @@ public class MDireccionEnvio {
 
     private String principal;
 
-    private String formaEnvio;
-
     private MCliente cliente;
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
@@ -53,8 +51,7 @@ public class MDireccionEnvio {
         this.region = de.getRegion();
         this.provincia = de.getProvincia();
         this.distrito = de.getDistrito();
-        this.principal = de.getPrincipal();
-        this.formaEnvio = de.getFormaEnvio();
+        this.principal = de.getPrincipal();       
         if(de.getCliente() != null){
             this.cliente = new MCliente(de.getCliente().getIdcliente(), de.getCliente().getPersona());
         }
@@ -67,7 +64,7 @@ public class MDireccionEnvio {
 
     public MDireccionEnvio(Integer iddireccion, String direccion, String telefono, String referencia,
             String codigoPostal, String pais, String region, String provincia, String distrito, String principal,
-            String formaEnvio,  Destinatario destinatario) {
+            Destinatario destinatario) {
         this.iddireccion = iddireccion;
         this.direccion = direccion;
         this.telefono = telefono;
@@ -77,8 +74,7 @@ public class MDireccionEnvio {
         this.region = region;
         this.provincia = provincia;
         this.distrito = distrito;
-        this.principal = principal;
-        this.formaEnvio = formaEnvio;
+        this.principal = principal;       
         this.destinatario = destinatario;
     }
 
@@ -191,14 +187,6 @@ public class MDireccionEnvio {
 
     public void setComprobantes(List<MComprobante> comprobantes) {
         this.comprobantes = comprobantes;
-    }
-
-    public String getFormaEnvio() {
-        return formaEnvio;
-    }
-
-    public void setFormaEnvio(String formaEnvio) {
-        this.formaEnvio = formaEnvio;
-    }
+    }    
 
 }

@@ -3,6 +3,7 @@ package com.hteecommerce.hteapp.entity;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -48,6 +50,10 @@ public class DetalleMembresia implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "membresia_id", nullable = false)
     private Membresia membresia;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "detallepago_id", nullable = false)
+    private DetallePago detallePago;
 
     public DetalleMembresia() {
 
@@ -107,6 +113,14 @@ public class DetalleMembresia implements Serializable {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public DetallePago getDetallePago() {
+        return detallePago;
+    }
+
+    public void setDetallePago(DetallePago detallePago) {
+        this.detallePago = detallePago;
     }
 
     private static final long serialVersionUID = 1L;

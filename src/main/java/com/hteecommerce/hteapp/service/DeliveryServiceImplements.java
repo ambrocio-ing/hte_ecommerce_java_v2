@@ -47,20 +47,28 @@ public class DeliveryServiceImplements implements IDeliveryService {
 
     @Override
     @Transactional(readOnly = true)
-    public boolean isExistsByEmpresa(String empresa) {
+    public boolean isExistsByEmpresaAndSucursal(String empresa, String sucursal) {
         
-        return deliveryRepository.existsByEmpresa(empresa);
+        return deliveryRepository.existsByEmpresaAndSucursal(empresa, sucursal);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public boolean isExistsByEmpresaAndIddelivery(String empresa, Integer iddelivery) {
+    public boolean isExistsByEmpresaAndSucursalAndIddelivery(String empresa, String sucursal, Integer iddelivery) {
         
-        Delivery del = deliveryRepository.getByEmpresaAndIddelivery(empresa, iddelivery).orElse(null);
+        Delivery del = deliveryRepository.getByEmpresaAndSucursalAndIddelivery(empresa, sucursal, iddelivery).orElse(null);
         if(del != null){
             return true;
         }
+        
         return false;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Delivery> getBySucursal(String sucursal) {
+        
+        return deliveryRepository.findBySucursal(sucursal);
     }    
     
 }

@@ -1,13 +1,14 @@
 package com.hteecommerce.hteapp.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.hteecommerce.hteapp.entity.Comprobante;
+import com.hteecommerce.hteapp.entity.DetalleComprobante;
 import com.hteecommerce.hteapp.entity.DetallePago;
-import com.hteecommerce.hteapp.entity.HoraEntrega;
+import com.hteecommerce.hteapp.entity.DireccionEnvio;
+import com.hteecommerce.hteapp.mapper.Mapper;
 
 public class MComprobante {
 
@@ -33,15 +34,15 @@ public class MComprobante {
 
     private Double descuento;
 
-    private LocalDate fechaEntrega;  
+    private LocalDateTime fechaEntrega;  
 
     private String nbolsa;  
 
-    private MDireccionEnvio direccionEnvio;
+    private String formaEnvio;
 
-    private HoraEntrega horaEntrega;
+    private MDireccionEnvio direccionEnvio;    
 
-    private DetallePago detallePago;
+    private MDetallePago detallePago;
 
     private List<MDetalleComprobante> detalleComprobantes;
 
@@ -60,13 +61,42 @@ public class MComprobante {
         this.montoEnvio = comprobante.getMontoEnvio();
         this.subTotal = comprobante.getSubTotal();
         this.total = comprobante.getTotal();
-        this.descuento = comprobante.getDescuento();
+        this.descuento = comprobante.getDescuento();        
+        this.fechaEntrega = comprobante.getFechaEntrega();  
         this.nbolsa = comprobante.getNbolsa();
-        this.fechaEntrega = comprobante.getFechaEntrega();
-        this.horaEntrega = comprobante.getHoraEntrega();
-        this.detallePago = comprobante.getDetallePago();
+        this.formaEnvio = comprobante.getFormaEnvio();      
+        this.detallePago = Mapper.mapDetallePago(comprobante.getDetallePago());
         this.direccionEnvio = new MDireccionEnvio(comprobante.getDireccionEnvio()); 
         this.detalleComprobantes = comprobante.getDetalleComprobantes().stream()
+                .map(dc -> {
+                    return new MDetalleComprobante(dc.getIddetallecomprobante(), dc.getVariedades() ,dc.getCantidad(), dc.getDescuento(),
+                            dc.getSubTotal(), dc.getDetalleIngreso(), dc.getComprobanteId());
+                }).collect(Collectors.toList());
+    }
+
+    
+
+    public MComprobante(Integer idcomprobante, String numero, String idtransaccion, String tipoComprobante,
+            LocalDateTime fechaPedido, String estado, double igv, Double montoEnvio, Double subTotal, Double total,
+            Double descuento, LocalDateTime fechaEntrega, String nbolsa, String formaEnvio,
+            DireccionEnvio direccionEnvio, DetallePago detallePago, List<DetalleComprobante> detalleComprobantes) {
+        this.idcomprobante = idcomprobante;
+        this.numero = numero;
+        this.idtransaccion = idtransaccion;
+        this.tipoComprobante = tipoComprobante;
+        this.fechaPedido = fechaPedido;
+        this.estado = estado;
+        this.igv = igv;
+        this.montoEnvio = montoEnvio;
+        this.subTotal = subTotal;
+        this.total = total;
+        this.descuento = descuento;
+        this.fechaEntrega = fechaEntrega;
+        this.nbolsa = nbolsa;
+        this.formaEnvio = formaEnvio;
+        this.detallePago = new MDetallePago(detallePago);
+        this.direccionEnvio = new MDireccionEnvio(direccionEnvio); 
+        this.detalleComprobantes = detalleComprobantes.stream()
                 .map(dc -> {
                     return new MDetalleComprobante(dc.getIddetallecomprobante(), dc.getVariedades() ,dc.getCantidad(), dc.getDescuento(),
                             dc.getSubTotal(), dc.getDetalleIngreso(), dc.getComprobanteId());
@@ -153,13 +183,7 @@ public class MComprobante {
         this.total = total;
     }
 
-    public LocalDate getFechaEntrega() {
-        return fechaEntrega;
-    }
-
-    public void setFechaEntrega(LocalDate fechaEntrega) {
-        this.fechaEntrega = fechaEntrega;
-    }    
+      
 
     public MDireccionEnvio getDireccionEnvio() {
         return direccionEnvio;
@@ -183,23 +207,7 @@ public class MComprobante {
 
     public void setDescuento(Double descuento) {
         this.descuento = descuento;
-    }
-
-    public HoraEntrega getHoraEntrega() {
-        return horaEntrega;
-    }
-
-    public void setHoraEntrega(HoraEntrega horaEntrega) {
-        this.horaEntrega = horaEntrega;
-    }
-
-    public DetallePago getDetallePago() {
-        return detallePago;
-    }
-
-    public void setDetallePago(DetallePago detallePago) {
-        this.detallePago = detallePago;
-    }
+    }        
 
     public String getNbolsa() {
         return nbolsa;
@@ -208,5 +216,30 @@ public class MComprobante {
     public void setNbolsa(String nbolsa) {
         this.nbolsa = nbolsa;
     }
+
+    public LocalDateTime getFechaEntrega() {
+        return fechaEntrega;
+    }
+
+    public void setFechaEntrega(LocalDateTime fechaEntrega) {
+        this.fechaEntrega = fechaEntrega;
+    }
+
+    public String getFormaEnvio() {
+        return formaEnvio;
+    }
+
+    public void setFormaEnvio(String formaEnvio) {
+        this.formaEnvio = formaEnvio;
+    }
+
+    public MDetallePago getDetallePago() {
+        return detallePago;
+    }
+
+    public void setDetallePago(MDetallePago detallePago) {
+        this.detallePago = detallePago;
+    }
+    
 
 }

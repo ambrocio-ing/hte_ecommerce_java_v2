@@ -50,7 +50,7 @@ public class DireccionEnvioController {
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping("/historial/{idcliente}/{tipo}")
     public ResponseEntity<?> listComprobantesByCliente(@PathVariable(value = "idcliente") Integer idcliente,
-        @PathVariable(value = "tipo") Integer tipo) {
+            @PathVariable(value = "tipo") Integer tipo) {
 
         Map<String, String> resp = new HashMap<>();
         List<Comprobante> lista = null;
@@ -72,7 +72,7 @@ public class DireccionEnvioController {
         }
 
         if (lista != null && lista.size() != 0 && tipo == 2) {
-            List<MComprobante> mlista = lista.stream()                    
+            List<MComprobante> mlista = lista.stream()
                     .map(com -> new MComprobante(com))
                     .collect(Collectors.toList());
 
@@ -116,8 +116,8 @@ public class DireccionEnvioController {
 
         Map<String, Object> resp = new HashMap<>();
         Cliente cliente = null;
-        Destinatario destinatario = new Destinatario();
-        DireccionEnvio de = null;
+        Destinatario destinatario = null;
+        // DireccionEnvio de = null;
 
         if (result.hasErrors()) {
             List<String> errors = result.getFieldErrors().stream()
@@ -129,6 +129,7 @@ public class DireccionEnvioController {
         }
 
         if (Mapper.isPresentDestinatario(die.getDestinatario())) {
+            destinatario = new Destinatario();
             destinatario = die.getDestinatario();
             if (die.getDestinatario().getIddestinatario() == null &&
                     direccionEnvioService.isExistsByDni(die.getDestinatario().getDni())) {
@@ -136,36 +137,33 @@ public class DireccionEnvioController {
                 resp.put("mensaje", "El documento ingresado para destinatario ya existe en el sistema");
                 return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
             }
-        }        
+        }
 
-        if(die.getCliente().getIdcliente() != null){
-            try {
-                cliente = clienteService.getByIdcliente(die.getCliente().getIdcliente());
-            } catch (DataAccessException e) {
-                resp.put("mensaje", "Error de consulta a la base de datos");
-                return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+        try {
+            cliente = clienteService.getByIdcliente(die.getCliente().getIdcliente());
+        } catch (DataAccessException e) {
+            resp.put("mensaje", "Error de consulta al sistema, intentelo mas tarde");
+            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
-            if (cliente == null) {
-                resp.put("mensaje", "Error de consulta al sistema, intentelo mas tarde");
-                return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
-            }           
-
+        if (cliente == null) {
+            resp.put("mensaje", "Error de consulta al sistema, intentelo mas tarde");
+            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
         }
 
         die.setCliente(cliente);
         die.setDestinatario(destinatario);
 
         try {
-            de = direccionEnvioService.saveDE(die);
+            direccionEnvioService.saveDE(die);
         } catch (Exception e) {
             resp.put("mensaje", "Error.. no fue posible guardar nueva dirección");
-            //resp.put("error", e.getMessage());
+            // resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         resp.put("mensaje", "Dirección creada con éxito");
-        resp.put("direccionEnvio", Mapper.mapDireccionEnvio(de));
+        // resp.put("direccionEnvio", Mapper.mapDireccionEnvio(de));
         return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.CREATED);
     }
 
@@ -188,7 +186,7 @@ public class DireccionEnvioController {
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
         }
 
-        MDireccionEnvio mdie = Mapper.mapDireccionEnvio(de);        
+        MDireccionEnvio mdie = Mapper.mapDireccionEnvio(de);
         return new ResponseEntity<MDireccionEnvio>(mdie, HttpStatus.OK);
     }
 
@@ -226,12 +224,12 @@ public class DireccionEnvioController {
         return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.CREATED);
     }
 
-    //LISTA DE DESTINATARIOS
+    // LISTA DE DESTINATARIOS
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/des-list/{page}")
-    public ResponseEntity<?> listDestinatarios(@PathVariable(value = "page") int page){
+    public ResponseEntity<?> listDestinatarios(@PathVariable(value = "page") int page) {
 
-        Map<String,String> resp = new HashMap<>();
+        Map<String, String> resp = new HashMap<>();
         Page<Destinatario> des = null;
 
         Pageable pageable = PageRequest.of(page, 20);
@@ -242,7 +240,7 @@ public class DireccionEnvioController {
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if(des != null && des.getContent().size() != 0){
+        if (des != null && des.getContent().size() != 0) {
             return new ResponseEntity<Page<Destinatario>>(des, HttpStatus.OK);
         }
 
@@ -252,9 +250,9 @@ public class DireccionEnvioController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/des-obtener/{dni}")
-    public ResponseEntity<?> getDestinatario(@PathVariable(value = "dni") String dni){
+    public ResponseEntity<?> getDestinatario(@PathVariable(value = "dni") String dni) {
 
-        Map<String,String> resp = new HashMap<>();
+        Map<String, String> resp = new HashMap<>();
         Destinatario des = null;
 
         try {
@@ -264,19 +262,19 @@ public class DireccionEnvioController {
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if(des == null){
+        if (des == null) {
             resp.put("mensaje", "Sin datos que mostrar");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
         }
-        
+
         return new ResponseEntity<Destinatario>(des, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/des-editar")
-    public ResponseEntity<?> updateDestinatario(@RequestBody Destinatario destinatario){
+    public ResponseEntity<?> updateDestinatario(@RequestBody Destinatario destinatario) {
 
-        Map<String,String> resp = new HashMap<>();
+        Map<String, String> resp = new HashMap<>();
         Destinatario des = null;
 
         try {
@@ -286,7 +284,7 @@ public class DireccionEnvioController {
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if(des == null){
+        if (des == null) {
             resp.put("mensaje", "No se encontraron conincidencias");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
         }

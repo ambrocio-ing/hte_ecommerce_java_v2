@@ -2,8 +2,10 @@ package com.hteecommerce.hteapp.model;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hteecommerce.hteapp.entity.DetalleMembresia;
 import com.hteecommerce.hteapp.entity.Membresia;
+import com.hteecommerce.hteapp.mapper.Mapper;
 
 public class MDetalleMembresia {
 
@@ -17,7 +19,10 @@ public class MDetalleMembresia {
 
     private MCliente cliente;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Membresia membresia;
+
+    private MDetallePago detallePago;
 
     public MDetalleMembresia(){
 
@@ -30,6 +35,7 @@ public class MDetalleMembresia {
         this.fechaFin = dm.getFechaFin();
         this.cliente = new MCliente(dm.getCliente().getIdcliente());
         this.membresia = dm.getMembresia();
+        this.detallePago = Mapper.mapDetallePago(dm.getDetallePago());
     }
 
     public Integer getIddetallemembresia() {
@@ -80,5 +86,12 @@ public class MDetalleMembresia {
         this.membresia = membresia;
     }
 
-    
+    public MDetallePago getDetallePago() {
+        return detallePago;
+    }
+
+    public void setDetallePago(MDetallePago detallePago) {
+        this.detallePago = detallePago;
+    }
+
 }

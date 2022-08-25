@@ -110,8 +110,9 @@ public class MDetalleIngreso {
         this.variedades = variedades;
     }
 
-    public MDetalleIngreso(Integer iddetalleingreso, String sucursal, Producto producto, List<Variedad> variedades, Integer ingresoId) {
+    public MDetalleIngreso(Integer iddetalleingreso, Double precioVenta, String sucursal, Producto producto, List<Variedad> variedades, Integer ingresoId) {
         this.iddetalleingreso = iddetalleingreso;
+        this.precioVenta = precioVenta;
         this.sucursal = sucursal;
         this.producto = producto;
         this.variedades = variedades;

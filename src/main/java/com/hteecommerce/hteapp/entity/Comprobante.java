@@ -1,7 +1,6 @@
 package com.hteecommerce.hteapp.entity;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +53,7 @@ public class Comprobante implements Serializable {
     @NotNull
     private Double igv;
 
+    @NotNull
     @Column(name = "monto_envio")
     private Double montoEnvio;
 
@@ -66,20 +66,22 @@ public class Comprobante implements Serializable {
 
     private Double descuento;
 
+    @NotNull
     @Column(name = "fecha_entrega")
-    private LocalDate fechaEntrega;
+    private LocalDateTime fechaEntrega;
 
+    @Size(max = 20)
     private String nbolsa;
+
+    @NotNull
+    @Column(name = "forma_envio")
+    @Size(max = 50)
+    private String formaEnvio;
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "direccion_id", nullable = false)
-    private DireccionEnvio direccionEnvio;
-
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "horaentrega_id", nullable = false)
-    private HoraEntrega horaEntrega;
+    private DireccionEnvio direccionEnvio;    
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "detallepago_id", nullable = true)
@@ -179,22 +181,6 @@ public class Comprobante implements Serializable {
         this.total = total;
     }
 
-    public LocalDate getFechaEntrega() {
-        return fechaEntrega;
-    }
-
-    public void setFechaEntrega(LocalDate fechaEntrega) {
-        this.fechaEntrega = fechaEntrega;
-    }
-
-    public HoraEntrega getHoraEntrega() {
-        return horaEntrega;
-    }
-
-    public void setHoraEntrega(HoraEntrega horaEntrega) {
-        this.horaEntrega = horaEntrega;
-    }
-
     public DireccionEnvio getDireccionEnvio() {
         return direccionEnvio;
     }
@@ -233,6 +219,22 @@ public class Comprobante implements Serializable {
 
     public void setDetallePago(DetallePago detallePago) {
         this.detallePago = detallePago;
+    }
+
+    public LocalDateTime getFechaEntrega() {
+        return fechaEntrega;
+    }
+
+    public void setFechaEntrega(LocalDateTime fechaEntrega) {
+        this.fechaEntrega = fechaEntrega;
+    }
+
+    public String getFormaEnvio() {
+        return formaEnvio;
+    }
+
+    public void setFormaEnvio(String formaEnvio) {
+        this.formaEnvio = formaEnvio;
     }
 
     private static final long serialVersionUID = 1L;

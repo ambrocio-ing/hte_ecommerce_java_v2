@@ -227,28 +227,35 @@ public class IngresoController {
         }
 
         List<DetalleIngreso> dis = new ArrayList<>();
-        List<DetalleIngreso> dis2 = new ArrayList<>();
-        for (DetalleIngreso di : ingreso.getDetalleIngresos()) {
+        List<DetalleIngreso> dis_anterior = new ArrayList<>();
+        for (DetalleIngreso di_nuevo : ingreso.getDetalleIngresos()) {
 
-            Producto pro = productoService.getByIdproducto(di.getProducto().getIdproducto());
-            DetalleIngreso di2 = ingresoService.getDIByIdproducto(di.getProducto().getIdproducto(), di.getSucursal());
+            Producto pro = productoService.getByIdproducto(di_nuevo.getProducto().getIdproducto());
+            DetalleIngreso di_anterior = ingresoService.getDIByIdproducto(di_nuevo.getProducto().getIdproducto(), di_nuevo.getSucursal());
             if (pro != null) {
 
                 if(pro.getProductoVestimenta() == null){
-                    di.setVariedades(null);
-                }
+                    di_nuevo.setVariedades(null);
+                } 
 
-                di.setProducto(pro);
+                di_nuevo.setProducto(pro);
 
-                if (di2 != null) {
-                    di2.setEstado(false);
-                    dis2.add(di2);
-                    di.setStockActual(di.calculateStockActual(di2.getStockActual()));
+                if (di_anterior != null) {
+
+                    di_anterior.setEstado(false);
+                    if(di_anterior.getProducto().getProductoVestimenta() != null && di_anterior.getStockActual() > 0){
+
+                        di_nuevo.setStockActual(di_nuevo.getStockInicial() + di_anterior.getStockActual());
+                        di_nuevo.setVariedades(Mapper.mapVariedadesNuevos(di_nuevo.getVariedades(), di_anterior.getVariedades()));
+                    }
+
+                    dis_anterior.add(di_anterior);
+
                 } else {
-                    di.setStockActual(di.getStockInicial());
+                    di_nuevo.setStockActual(di_nuevo.getStockInicial());
                 }
 
-                dis.add(di);
+                dis.add(di_nuevo);
             }
         }
 
@@ -261,7 +268,7 @@ public class IngresoController {
         ingreso.setDetalleIngresos(dis);
 
         try {
-            ingresoService.saveIN(ingreso, dis2);
+            ingresoService.saveIN(ingreso, dis_anterior);
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error al guardar ingresos");
             resp.put("error", e.getMessage().concat(" : ").concat(e.getMostSpecificCause().getMessage()));
@@ -314,42 +321,34 @@ public class IngresoController {
             resp.put("mensaje", "Error al actualizar ingreso");
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
         }
+        
+        for (DetalleIngreso di : ingre.getDetalleIngresos()) {          
+            
+            for(DetalleIngreso diAnterior : ingreso.getDetalleIngresos()){
 
-        List<DetalleIngreso> dis = new ArrayList<>();
-        List<DetalleIngreso> dis2 = new ArrayList<>();
-        for (DetalleIngreso di : ingreso.getDetalleIngresos()) {
+                if(di.getIddetalleingreso() == diAnterior.getIddetalleingreso()){
 
-            Producto pro = productoService.getByIdproducto(di.getProducto().getIdproducto());
-            DetalleIngreso di2 = null;
-            if (di.getIddetalleingreso() == null) {
-                di2 = ingresoService.getDIByIdproducto(di.getProducto().getIdproducto(), di.getSucursal());
-            }
+                    di.setFechaProduccion(diAnterior.getFechaProduccion());
+                    di.setFechaVencimiento(diAnterior.getFechaVencimiento());
+                    di.setPorcentajeDescuento(diAnterior.getPorcentajeDescuento());
+                    di.setPrecioCompra(diAnterior.getPrecioCompra());
+                    di.setPrecioVenta(diAnterior.getPrecioVenta());
+                    di.setPrecioVentaAnterior(diAnterior.getPrecioVentaAnterior());
+                    di.setStockActual(diAnterior.getStockActual());
+                    di.setStockInicial(diAnterior.getStockInicial());
 
-            if (pro != null) {
+                    if(di.getVariedades() != null){
+                        di.setVariedades(diAnterior.getVariedades());
+                    }                  
 
-                di.setProducto(pro);
-
-                if (di2 != null && di.getIddetalleingreso() == null) {
-                    di2.setEstado(false);
-                    dis2.add(di2);
-                    di.setStockActual(di.calculateStockActual(di2.getStockActual()));
                 }
-
-                dis.add(di);
             }
+        }        
 
-        }
-
-        if (ingreso.getDetalleIngresos().size() != dis.size()) {
-            resp.put("mensaje", "Error al guardar ingresos");
-            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
-        }
-
-        ingre.setEstado(ingreso.getEstado());
-        ingre.setDetalleIngresos(dis);
+        ingre.setEstado(ingreso.getEstado());        
 
         try {
-            ingresoService.saveIN(ingre, dis2);
+            ingresoService.updateIN(ingre);
         } catch (Exception e) {
             resp.put("mensaje", "Error al guardar ingresos");
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -365,6 +364,7 @@ public class IngresoController {
 
         Map<String, String> resp = new HashMap<>();
         Ingreso ingreso = null;
+        String sucursal;
 
         try {
             ingreso = ingresoService.getByIdngreso(idingreso);
@@ -373,7 +373,9 @@ public class IngresoController {
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if (ingreso == null) {
+        sucursal = ingreso.getDetalleIngresos().get(0).getSucursal();
+
+        if (ingreso == null || sucursal == null) {
             resp.put("mensaje", "Error, no se encontraron coincidencias");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
         }
@@ -384,7 +386,7 @@ public class IngresoController {
         }
 
         try {
-            ingresoService.deleteIN(ingreso.getIdingreso(), productos);
+            ingresoService.deleteIN(ingreso.getIdingreso(), productos, sucursal);
         } catch (Exception e) {
             resp.put("mensaje", "Error, es posible que algún producto del ingreso ya fue vendido");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -412,25 +414,10 @@ public class IngresoController {
         if (di == null) {
             resp.put("mensaje", "Error, no se encontraron coincidencias");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-        }
-
-        /*
-         * try {
-         * producto = productoService.getByIdproducto(di.getProducto().getIdproducto());
-         * } catch (Exception e) {
-         * resp.put("mensaje", "Error de consulta a la base de datos");
-         * return new ResponseEntity<Map<String, String>>(resp,
-         * HttpStatus.INTERNAL_SERVER_ERROR);
-         * }
-         * 
-         * if (producto == null) {
-         * resp.put("mensaje", "Error, no se encontraron coincidencias");
-         * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-         * }
-         */
+        }        
 
         try {
-            ingresoService.deleteDI(di.getIddetalleingreso(), di.getProducto());
+            ingresoService.deleteDI(di.getIddetalleingreso(), di.getProducto(), di.getSucursal());
         } catch (Exception e) {
             resp.put("mensaje", "No se a podido eliminar el detalle de ingreso");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -11,7 +11,9 @@ public interface IDeliveryService {
     public void deleteDEL(Integer iddelivery);
     public Delivery getByIddelivery(Integer iddelivery);   
 
-    public boolean isExistsByEmpresa(String empresa);
-    public boolean isExistsByEmpresaAndIddelivery(String empresa, Integer iddelivery);   
+    public List<Delivery> getBySucursal(String sucursal);
+
+    public boolean isExistsByEmpresaAndSucursal(String empresa, String sucursal);
+    public boolean isExistsByEmpresaAndSucursalAndIddelivery(String empresa, String sucursal, Integer iddelivery);   
 
 }

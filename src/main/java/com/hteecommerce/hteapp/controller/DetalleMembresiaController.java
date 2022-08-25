@@ -215,6 +215,7 @@ public class DetalleMembresiaController {
         
         dm.setIdtransaccion(demem.getIdtransaccion());
         dm.setEstado(demem.getEstado());
+        dm.getDetallePago().setEstadoPago(demem.getDetallePago().getEstadoPago());
 
         try {
             detalleMembresiaService.saveDM(dm);
@@ -255,7 +256,6 @@ public class DetalleMembresiaController {
         
         resp.put("mensaje", "Compra eliminado con éxito");
         return new ResponseEntity<Map<String,String>>(resp, HttpStatus.OK);
-
     }
     
 }

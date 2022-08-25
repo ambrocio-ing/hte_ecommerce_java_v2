@@ -2,7 +2,6 @@ package com.hteecommerce.hteapp.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "diliverys")
+@Table(name = "deliverys")
 public class Delivery implements Serializable {
     
     @Id
@@ -20,12 +19,14 @@ public class Delivery implements Serializable {
     private Integer iddelivery;
 
     @NotNull
-    @Size(max = 100)
-    @Column(unique = true)
+    @Size(max = 100)    
     private String empresa;
 
     @NotNull
     private Double costo;
+
+    @NotNull
+    private String sucursal;
 
     @Size(max = 100)
     private String detalle;
@@ -64,6 +65,14 @@ public class Delivery implements Serializable {
 
     public void setDetalle(String detalle) {
         this.detalle = detalle;
+    }
+
+    public String getSucursal() {
+        return sucursal;
+    }
+
+    public void setSucursal(String sucursal) {
+        this.sucursal = sucursal;
     }
 
     public static final long serialVersionUID = 1L;

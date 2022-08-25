@@ -54,13 +54,15 @@ public class Variedad implements Serializable {
 
     public Variedad() {
         this.colores = new ArrayList<>();
-    }
+    }    
 
-    public Variedad(@NotNull @Size(max = 20) String nombreTalla, @NotNull @Min(0) Integer cantidadTalla) {
+    public Variedad(@NotNull @Size(max = 20) String nombreTalla, @NotNull @Min(0) Integer cantidadTalla,
+            List<Color> colores) {
         this.nombreTalla = nombreTalla;
         this.cantidadTalla = cantidadTalla;
+        this.colores = colores;
     }
-
+    
     public Integer getIdvariedad() {
         return idvariedad;
     }

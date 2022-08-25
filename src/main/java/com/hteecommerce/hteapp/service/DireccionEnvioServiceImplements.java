@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.hteecommerce.hteapp.entity.Destinatario;
 import com.hteecommerce.hteapp.entity.DireccionEnvio;
-import com.hteecommerce.hteapp.mapper.Mapper;
 import com.hteecommerce.hteapp.repository.IDestinatarioRepository;
 import com.hteecommerce.hteapp.repository.IDireccionEnvioRepository;
 
@@ -32,19 +31,8 @@ public class DireccionEnvioServiceImplements implements IDireccionEnvioService {
 
     @Override
     @Transactional
-    public DireccionEnvio saveDE(DireccionEnvio de) {
+    public DireccionEnvio saveDE(DireccionEnvio de) {       
         
-        if(de.getDestinatario().getIddestinatario() == null && 
-            Mapper.isPresentDestinatario(de.getDestinatario())){
-
-            Destinatario des = destinatarioRepository.save(de.getDestinatario());
-            de.setDestinatario(des);
-        }
-
-        if(!Mapper.isPresentDestinatario(de.getDestinatario())){
-            de.setDestinatario(null);
-        }
-
         return direccionEnvioRepository.save(de);
     }
 

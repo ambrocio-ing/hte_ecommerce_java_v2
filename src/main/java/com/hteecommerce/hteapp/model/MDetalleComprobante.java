@@ -55,6 +55,7 @@ public class MDetalleComprobante {
         this.descuento = descuento;
         this.subTotal = subTotal;
         this.detalleIngreso = new MDetalleIngreso(detalleIngreso.getIddetalleingreso(),
+                detalleIngreso.getPrecioVenta(),
                 detalleIngreso.getSucursal(), detalleIngreso.getProducto(),
                 detalleIngreso.getVariedades(), detalleIngreso.getIngresoId());
         this.comprobanteId = comprobanteId;

@@ -364,14 +364,14 @@ public class TiendaController {
     }    
 
     // LISTA DE DELIVERYS
-    @GetMapping("/deli-lista")
-    public ResponseEntity<?> listDelivery() {
+    @GetMapping("/deli-lista/{sucursal}")
+    public ResponseEntity<?> listDelivery(@PathVariable(value = "sucursal") String sucursal) {
 
         Map<String, String> resp = new HashMap<>();
         List<Delivery> ds = null;
 
         try {
-            ds = deliveryService.getAll();
+            ds = deliveryService.getBySucursal(sucursal);
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error de consulta");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -458,7 +458,7 @@ public class TiendaController {
     }
 
     //LISTA DE HORAS DE ENTREGA
-    @GetMapping("/he/lista/{id}")
+    @GetMapping("/he/lista")
     public ResponseEntity<?> getAllHE(){
 
         Map<String, String> resp = new HashMap<>();

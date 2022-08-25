@@ -45,25 +45,24 @@ public class IngresoServiceImplements implements IIngresoService {
 
     @Override
     @Transactional
-    public void deleteIN(Integer idingreso, List<Producto> productos) {
+    public void deleteIN(Integer idingreso, List<Producto> productos, String sucursal) {
         
         ingresoRepository.deleteById(idingreso);
         for(Producto pro : productos){
-            DetalleIngreso di = detalleIngresoRepository.findTopByProductoOrderByIddetalleingresoDesc(pro).orElse(null);
+            DetalleIngreso di = detalleIngresoRepository.findTopByProductoAndSucursalOrderByIddetalleingresoDesc(pro, sucursal).orElse(null);
             if(di != null){
                 di.setEstado(true);
                 detalleIngresoRepository.save(di);
             }
-        }
-        
+        }        
     }
 
     @Override
     @Transactional
-    public void deleteDI(Integer iddi, Producto producto) {
+    public void deleteDI(Integer iddi, Producto producto, String sucursal) {
         
         detalleIngresoRepository.deleteById(iddi);
-        DetalleIngreso di = detalleIngresoRepository.findTopByProductoOrderByIddetalleingresoDesc(producto).orElse(null);
+        DetalleIngreso di = detalleIngresoRepository.findTopByProductoAndSucursalOrderByIddetalleingresoDesc(producto, sucursal).orElse(null);
         if(di != null){
             di.setEstado(true);
             detalleIngresoRepository.save(di);
@@ -73,9 +72,9 @@ public class IngresoServiceImplements implements IIngresoService {
 
     @Override
     @Transactional(readOnly = true)
-    public DetalleIngreso getTopByProductoOrderByIddetalleingresoDesc(Producto producto) {
+    public DetalleIngreso getTopByProductoAndSucursalOrderByIddetalleingresoDesc(Producto producto, String sucursal) {
         
-        return detalleIngresoRepository.findTopByProductoOrderByIddetalleingresoDesc(producto).orElse(null);
+        return detalleIngresoRepository.findTopByProductoAndSucursalOrderByIddetalleingresoDesc(producto, sucursal).orElse(null);
     } 
 
     @Override
@@ -193,9 +192,18 @@ public class IngresoServiceImplements implements IIngresoService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public DetalleIngreso getDetalleIngresoByIdproducto(Integer idproducto) {
         
         return detalleIngresoRepository.find_ByIdproducto(idproducto).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void updateIN(Ingreso ingreso) {
+        
+        ingresoRepository.save(ingreso);
+        
     }         
     
 }
