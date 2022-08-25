@@ -14,7 +14,7 @@ public interface IPersonaRepository extends JpaRepository<Persona,String> {
     public boolean existsByDni(String dni);
     public boolean existsByTelefono(String telefono);
 
-    @Query("from Persona per where per.telefono = ?1 and per.dni != ?1")
+    @Query("from Persona per where per.telefono = ?1 and per.dni != ?2")
     public Optional<Persona> validTelefono(String telefono, String dni);
     
 }

@@ -18,6 +18,6 @@ public interface IClienteProveedorRepository extends JpaRepository<ClienteProvee
     public Optional<ClienteProveedor> validRuc(String ruc, Integer idcp);
 
     @Query("from ClienteProveedor cp where cp.razonSocial = ?1 and cp.idcp != ?2")
-    public Optional<ClienteProveedor> validRazonSocial(String razonSocial);
+    public Optional<ClienteProveedor> validRazonSocial(String razonSocial, Integer idcp);
 
 }

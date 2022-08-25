@@ -85,16 +85,30 @@ public class AdminClienteController {
         }   
       
         if (Mapper.isPresentClienteProveedor(cliente.getClienteProveedor())) {
+            if(cliente.getClienteProveedor().getIdcp() != null){
+                if(clienteProveedorService.isExistsRuc(cliente.getClienteProveedor().getRuc())){
 
-            if(clienteProveedorService.isExistsRuc(cliente.getClienteProveedor().getRuc())){
-                resp.put("mensaje", "El ruc que ingresó ya existe en el sistema");
-                return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
+                    resp.put("mensaje", "El ruc que ingresó ya existe en el sistema");
+                    return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
+                }
+    
+                if(clienteProveedorService.isExistsRazonSocial(cliente.getClienteProveedor().getRazonSocial())){
+                    resp.put("mensaje", "La razón social que ingresó ya existe en el sistema");
+                    return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
+                }
             }
+            else{
+                if(clienteProveedorService.isExistsRucAndIdcp(cliente.getClienteProveedor().getRuc(), cliente.getClienteProveedor().getIdcp())){
 
-            if(clienteProveedorService.isExistsRazonSocial(cliente.getClienteProveedor().getRazonSocial())){
-                resp.put("mensaje", "La razón social que ingresó ya existe en el sistema");
-                return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
-            }
+                    resp.put("mensaje", "El ruc que ingresó ya existe en el sistema");
+                    return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
+                }
+    
+                if(clienteProveedorService.isExistsRazonSocialAndIdcp(cliente.getClienteProveedor().getRazonSocial(), cliente.getClienteProveedor().getIdcp())){
+                    resp.put("mensaje", "La razón social que ingresó ya existe en el sistema");
+                    return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
+                }
+            }           
 
         }      
 

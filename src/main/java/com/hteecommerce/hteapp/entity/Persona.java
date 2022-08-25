@@ -40,7 +40,7 @@ public class Persona implements Serializable {
     @Size(max = 9, min = 7)
     private String telefono;
 
-    @Size(min = 10, max = 100)
+    @Size(max = 100)
     private String direccion;
 
     @Column(name = "foto_perfil")

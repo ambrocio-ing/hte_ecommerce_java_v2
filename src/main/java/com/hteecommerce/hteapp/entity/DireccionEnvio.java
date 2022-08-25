@@ -57,9 +57,8 @@ public class DireccionEnvio implements Serializable {
     @NotNull
     @Size(max = 50)
     private String distrito;
-
-    @NotNull
-    @Size(max = 150)
+   
+    @Size(max = 10)
     private String principal;    
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
