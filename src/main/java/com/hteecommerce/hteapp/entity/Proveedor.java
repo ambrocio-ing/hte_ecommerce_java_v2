@@ -53,6 +53,9 @@ public class Proveedor implements Serializable {
 
     @NotNull
     private LocalDate fecha;
+
+    @NotNull
+    private String sucursal;
     
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "usuario_id", nullable = false)
@@ -60,23 +63,23 @@ public class Proveedor implements Serializable {
 
     public Proveedor(){
 
-    }     
-    
-    public Proveedor(@NotNull @Size(min = 10, max = 11) String ruc,
-            @NotNull @Size(max = 100) String razonSocial, @NotNull @Size(max = 9, min = 7) String telefono,
-            @NotNull @Size(max = 100) String direccion, @NotNull @Size(max = 12) String estado,
-            @NotNull Usuario usuario) {        
+    }          
+
+    public Proveedor(@NotNull @Size(min = 10, max = 11) String ruc, @NotNull @Size(max = 100) String razonSocial,
+            @NotNull @Size(max = 9, min = 7) String telefono, @NotNull @Size(max = 100) String direccion,
+            @NotNull String sucursal, Usuario usuario) {
         this.ruc = ruc;
         this.razonSocial = razonSocial;
         this.telefono = telefono;
-        this.direccion = direccion;
-        this.estado = estado;              
+        this.direccion = direccion;        
+        this.sucursal = sucursal;
         this.usuario = usuario;
     }
 
     @PrePersist
     public void generateDate(){
         this.fecha = LocalDate.now();
+        this.estado = "Activo";
     }
 
     public Integer getIdproveedor() {
@@ -149,6 +152,14 @@ public class Proveedor implements Serializable {
 
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
+    }
+
+    public String getSucursal() {
+        return sucursal;
+    }
+
+    public void setSucursal(String sucursal) {
+        this.sucursal = sucursal;
     }
 
     private static final long serialVersionUID = 1L;

@@ -7,20 +7,22 @@ public class JwtDto {
     private String nombre;    
     private String fotoPerfil;
     private String email;
-    private boolean isProveedor;    
+    private boolean isProveedor;  
+    private String sucursal;  
 
     public JwtDto() {
 
-    }      
+    }         
 
-    public JwtDto(int id, String documento, String nombre, String fotoPerfil, String email,
-            boolean isProveedor) {
+    public JwtDto(int id, String documento, String nombre, String fotoPerfil, String email, boolean isProveedor,
+            String sucursal) {
         this.id = id;
         this.documento = documento;
-        this.nombre = nombre;        
+        this.nombre = nombre;
         this.fotoPerfil = fotoPerfil;
         this.email = email;
         this.isProveedor = isProveedor;
+        this.sucursal = sucursal;
     }
 
     public int getId() {
@@ -70,5 +72,13 @@ public class JwtDto {
     public void setProveedor(boolean isProveedor) {
         this.isProveedor = isProveedor;
     }
+
+    public String getSucursal() {
+        return sucursal;
+    }
+
+    public void setSucursal(String sucursal) {
+        this.sucursal = sucursal;
+    }    
 
 }

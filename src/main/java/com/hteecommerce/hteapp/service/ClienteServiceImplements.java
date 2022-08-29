@@ -3,9 +3,8 @@ package com.hteecommerce.hteapp.service;
 import java.util.List;
 
 import com.hteecommerce.hteapp.entity.Cliente;
-import com.hteecommerce.hteapp.entity.ClienteCaracteristica;
 import com.hteecommerce.hteapp.entity.ClienteProveedor;
-import com.hteecommerce.hteapp.repository.IClienteCaracteristicaRepository;
+//import com.hteecommerce.hteapp.repository.IClienteCaracteristicaRepository;
 import com.hteecommerce.hteapp.repository.IClienteProveedorRepository;
 import com.hteecommerce.hteapp.repository.IClienteRepository;
 
@@ -21,8 +20,8 @@ public class ClienteServiceImplements implements IClienteService {
     @Autowired
     private IClienteRepository clienteRepository;
 
-    @Autowired
-    private IClienteCaracteristicaRepository clienteCaracteristicaRepository;
+   /*  @Autowired
+    private IClienteCaracteristicaRepository clienteCaracteristicaRepository; */
 
     @Autowired
     private IClienteProveedorRepository clienteProveedorRepository;
@@ -45,7 +44,7 @@ public class ClienteServiceImplements implements IClienteService {
     @Transactional
     public Cliente saveCli(Cliente cliente) {
        
-        //guardar si es que viene cliente caracteristicas
+        /* //guardar si es que viene cliente caracteristicas
         if(cliente.getClienteCaracteristica() != null){
             if(cliente.getClienteCaracteristica().getIdcaracteristica() == null){
                 ClienteCaracteristica cc = clienteCaracteristicaRepository.save(cliente.getClienteCaracteristica());
@@ -59,7 +58,7 @@ public class ClienteServiceImplements implements IClienteService {
                 ClienteProveedor cp = clienteProveedorRepository.save(cliente.getClienteProveedor());
                 cliente.setClienteProveedor(cp);
             }            
-        }
+        } */
 
         return clienteRepository.save(cliente);
     }

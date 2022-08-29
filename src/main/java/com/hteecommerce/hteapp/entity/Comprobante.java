@@ -78,6 +78,9 @@ public class Comprobante implements Serializable {
     @Size(max = 50)
     private String formaEnvio;
 
+    @Size(max = 12)
+    private String ruc;
+
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "direccion_id", nullable = false)
@@ -235,6 +238,14 @@ public class Comprobante implements Serializable {
 
     public void setFormaEnvio(String formaEnvio) {
         this.formaEnvio = formaEnvio;
+    }
+
+    public String getRuc() {
+        return ruc;
+    }
+
+    public void setRuc(String ruc) {
+        this.ruc = ruc;
     }
 
     private static final long serialVersionUID = 1L;

@@ -53,8 +53,10 @@ public class CompraRapidaController {
         }
 
         if (crs != null && crs.size() != 0) {     
+
             String sucursal = crs.get(0).getSucursal();
             List<CompraRapida> crss = new ArrayList<>();
+
             for(CompraRapida cr : crs)  {
                 if(cr.getDetalleIngreso().getEstado() && cr.getDetalleIngreso().getStockActual() > 0){                    
                     crss.add(cr);                                     
@@ -65,7 +67,11 @@ public class CompraRapidaController {
                         cr.setDetalleIngreso(di);
                         compraRapidaService.saveCR(cr);                        
                         crss.add(cr);                        
-                    }                    
+                    }         
+                    else{
+                        cr.setCondicion("Agotado");
+                        crss.add(cr);
+                    }           
                 }
                 else{
                     cr.setCondicion("Agotado");
@@ -125,6 +131,7 @@ public class CompraRapidaController {
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
         }
 
+        compraRapida.setCondicion("Disponible");
         compraRapida.setDetalleIngreso(dIngreso);
 
         try {

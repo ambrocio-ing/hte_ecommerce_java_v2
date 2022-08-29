@@ -612,7 +612,7 @@ public class Mapper {
                 com.getIdtransaccion(), com.getTipoComprobante(), com.getFechaPedido(), 
                 com.getEstado(), com.getIgv(), com.getMontoEnvio(), com.getSubTotal(), 
                 com.getTotal(), com.getDescuento(), com.getFechaEntrega(), com.getNbolsa(),
-                com.getFormaEnvio(), com.getDireccionEnvio(), com.getDetallePago(), 
+                com.getFormaEnvio(), com.getRuc(), com.getDireccionEnvio(), com.getDetallePago(), 
                 com.getDetalleComprobantes());
         return mcom;
     }

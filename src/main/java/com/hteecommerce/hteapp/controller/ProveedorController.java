@@ -119,7 +119,7 @@ public class ProveedorController {
             password, roles);
 
         pro = new Proveedor(proveedor.getRuc(), proveedor.getRazonSocial(), 
-            proveedor.getTelefono(), proveedor.getDireccion(), proveedor.getEstado(), usuario);
+            proveedor.getTelefono(), proveedor.getDireccion(), proveedor.getSucursal(), usuario);
 
         Proveedor prov = new Proveedor();
         

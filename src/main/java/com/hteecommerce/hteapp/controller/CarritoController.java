@@ -61,60 +61,17 @@ public class CarritoController {
 
         if (carritos != null && carritos.size() != 0) {
 
-            List<MCarrito> mlista = carritos.stream()
-                    .map(carr -> new MCarrito(carr))
-                    .collect(Collectors.toList());
+            for(Carrito car : carritos){
+                if(car.getDetalleIngreso().getEstado() == false || car.getDetalleIngreso().getStockActual() == 0 
+                    || car.getCantidad() > car.getDetalleIngreso().getStockActual()){
 
-            return new ResponseEntity<List<MCarrito>>(mlista, HttpStatus.OK);
-        }
-
-        // resp.put("mensaje", "Sin datos que mostrar");
-        carritos = new ArrayList<>();
-        return new ResponseEntity<List<Carrito>>(carritos, HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasRole('CLIENT')")
-    @GetMapping("/edit/{idcli}")
-    public ResponseEntity<?> updateCarritos(@PathVariable(value = "idcli") Integer idcliente) {
-
-        Map<String, Object> resp = new HashMap<>();
-        List<Carrito> carritos = null;
-
-        try {
-            carritos = carritoService.getByCliente(idcliente);
-        } catch (DataAccessException e) {
-            resp.put("mensaje", "Error de consulta a la base de datos");
-            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
-        }
-
-        if (carritos != null && carritos.size() != 0) {
-            boolean cambio = false;
-            for (Carrito car : carritos) {
-                DetalleIngreso di = ingresoService
-                        .getDIByIdproducto(car.getDetalleIngreso().getProducto().getIdproducto(), car.getDetalleIngreso().getSucursal());
-
-                if (di.getEstado() == false || di.getStockActual() == 0) {
                     carritoService.deleteC(car.getIdcarrito());
-                    cambio = true;
-                } else {
-                    if (di.getIddetalleingreso() != car.getDetalleIngreso().getIddetalleingreso()
-                            || car.getCantidad() > di.getStockActual()) {
-                        car.setDetalleIngreso(di);
-                        car.setCantidad(1);
-                        car.setDescuento(0.00);
-                        car.setSubTotal(di.getPrecioVenta());
-
-                        carritoService.saveC(car);
-                        cambio = true;
-
-                    }
+                    carritos = carritos.stream()
+                        .filter(ca -> ca.getIdcarrito() != car.getIdcarrito())
+                        .collect(Collectors.toList());
                 }
             }
 
-            if (cambio) {
-                carritos = carritoService.getByCliente(idcliente);
-            }
-
             List<MCarrito> mlista = carritos.stream()
                     .map(carr -> new MCarrito(carr))
                     .collect(Collectors.toList());
@@ -125,7 +82,7 @@ public class CarritoController {
         // resp.put("mensaje", "Sin datos que mostrar");
         carritos = new ArrayList<>();
         return new ResponseEntity<List<Carrito>>(carritos, HttpStatus.OK);
-    }
+    }    
 
     @PreAuthorize("hasRole('CLIENT')")
     @PostMapping("/crear")
@@ -198,7 +155,7 @@ public class CarritoController {
     public ResponseEntity<?> createAllCarrito(@RequestBody List<Carrito> carritos) {
 
         Map<String, Object> resp = new HashMap<>();
-        List<MCompraRapida> compras = null;
+        List<MCompraRapida> compras = new ArrayList<>();
         List<Carrito> carrs = new ArrayList<>();
         
         for (Carrito car : carritos) {
@@ -231,9 +188,8 @@ public class CarritoController {
             }
             else{
                 MCompraRapida mcompra = new MCompraRapida();
-                mcompra.setCondicion("Stock insuficiente");
-                mcompra.setDetalleIngreso(Mapper.mapDetalleIngresoTienda(car.getDetalleIngreso()));
-                compras = new ArrayList<>();
+                mcompra.setCondicion("Producto no disponible");
+                mcompra.setDetalleIngreso(Mapper.mapDetalleIngresoTienda(car.getDetalleIngreso()));                
                 compras.add(mcompra);
             }            
         }       

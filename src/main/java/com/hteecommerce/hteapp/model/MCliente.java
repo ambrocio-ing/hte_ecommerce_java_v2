@@ -22,6 +22,8 @@ public class MCliente {
     private LocalDate fecha;  
     
     private Integer puntos;
+
+    private String sucursal;
     
     private Persona persona;    
     
@@ -40,6 +42,7 @@ public class MCliente {
         this.estado = cliente.getEstado();
         this.fecha = cliente.getFecha();
         this.puntos = cliente.getPuntos();
+        this.sucursal = cliente.getSucursal();
         this.persona = cliente.getPersona();
         this.usuario = new MUsuario(cliente.getUsuario());
         this.clienteProveedor = cliente.getClienteProveedor();
@@ -117,6 +120,14 @@ public class MCliente {
 
     public void setPuntos(Integer puntos) {
         this.puntos = puntos;
+    }
+
+    public String getSucursal() {
+        return sucursal;
+    }
+
+    public void setSucursal(String sucursal) {
+        this.sucursal = sucursal;
     }   
 
 }

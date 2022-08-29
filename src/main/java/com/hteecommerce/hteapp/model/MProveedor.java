@@ -37,6 +37,9 @@ public class MProveedor {
     private LocalDate fecha;
 
     @NotNull
+    private String sucursal;
+
+    @NotNull
     private MUsuario usuario;    
 
     public MProveedor(){
@@ -52,6 +55,7 @@ public class MProveedor {
         this.estado = proveedor.getEstado();
         this.fotoPerfil = proveedor.getFotoPerfil();
         this.fecha = proveedor.getFecha();
+        this.sucursal = proveedor.getSucursal();
         this.usuario = new MUsuario(proveedor.getUsuario());
     }        
 
@@ -136,6 +140,14 @@ public class MProveedor {
 
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
+    }
+
+    public String getSucursal() {
+        return sucursal;
+    }
+
+    public void setSucursal(String sucursal) {
+        this.sucursal = sucursal;
     }   
    
 }

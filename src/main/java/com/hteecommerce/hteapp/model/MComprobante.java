@@ -34,13 +34,15 @@ public class MComprobante {
 
     private Double descuento;
 
-    private LocalDateTime fechaEntrega;  
+    private LocalDateTime fechaEntrega;
 
-    private String nbolsa;  
+    private String nbolsa;
 
     private String formaEnvio;
 
-    private MDireccionEnvio direccionEnvio;    
+    private String ruc;
+
+    private MDireccionEnvio direccionEnvio;
 
     private MDetallePago detallePago;
 
@@ -61,24 +63,24 @@ public class MComprobante {
         this.montoEnvio = comprobante.getMontoEnvio();
         this.subTotal = comprobante.getSubTotal();
         this.total = comprobante.getTotal();
-        this.descuento = comprobante.getDescuento();        
-        this.fechaEntrega = comprobante.getFechaEntrega();  
+        this.descuento = comprobante.getDescuento();
+        this.fechaEntrega = comprobante.getFechaEntrega();
         this.nbolsa = comprobante.getNbolsa();
-        this.formaEnvio = comprobante.getFormaEnvio();      
+        this.formaEnvio = comprobante.getFormaEnvio();
+        this.ruc = comprobante.getRuc();
         this.detallePago = Mapper.mapDetallePago(comprobante.getDetallePago());
-        this.direccionEnvio = new MDireccionEnvio(comprobante.getDireccionEnvio()); 
+        this.direccionEnvio = new MDireccionEnvio(comprobante.getDireccionEnvio());
         this.detalleComprobantes = comprobante.getDetalleComprobantes().stream()
                 .map(dc -> {
-                    return new MDetalleComprobante(dc.getIddetallecomprobante(), dc.getVariedades() ,dc.getCantidad(), dc.getDescuento(),
+                    return new MDetalleComprobante(dc.getIddetallecomprobante(), dc.getVariedades(), dc.getCantidad(),
+                            dc.getDescuento(),
                             dc.getSubTotal(), dc.getDetalleIngreso(), dc.getComprobanteId());
                 }).collect(Collectors.toList());
     }
 
-    
-
     public MComprobante(Integer idcomprobante, String numero, String idtransaccion, String tipoComprobante,
             LocalDateTime fechaPedido, String estado, double igv, Double montoEnvio, Double subTotal, Double total,
-            Double descuento, LocalDateTime fechaEntrega, String nbolsa, String formaEnvio,
+            Double descuento, LocalDateTime fechaEntrega, String nbolsa, String formaEnvio, String ruc,
             DireccionEnvio direccionEnvio, DetallePago detallePago, List<DetalleComprobante> detalleComprobantes) {
         this.idcomprobante = idcomprobante;
         this.numero = numero;
@@ -94,11 +96,13 @@ public class MComprobante {
         this.fechaEntrega = fechaEntrega;
         this.nbolsa = nbolsa;
         this.formaEnvio = formaEnvio;
+        this.ruc = ruc;
         this.detallePago = new MDetallePago(detallePago);
-        this.direccionEnvio = new MDireccionEnvio(direccionEnvio); 
+        this.direccionEnvio = new MDireccionEnvio(direccionEnvio);
         this.detalleComprobantes = detalleComprobantes.stream()
                 .map(dc -> {
-                    return new MDetalleComprobante(dc.getIddetallecomprobante(), dc.getVariedades() ,dc.getCantidad(), dc.getDescuento(),
+                    return new MDetalleComprobante(dc.getIddetallecomprobante(), dc.getVariedades(), dc.getCantidad(),
+                            dc.getDescuento(),
                             dc.getSubTotal(), dc.getDetalleIngreso(), dc.getComprobanteId());
                 }).collect(Collectors.toList());
     }
@@ -183,8 +187,6 @@ public class MComprobante {
         this.total = total;
     }
 
-      
-
     public MDireccionEnvio getDireccionEnvio() {
         return direccionEnvio;
     }
@@ -207,7 +209,7 @@ public class MComprobante {
 
     public void setDescuento(Double descuento) {
         this.descuento = descuento;
-    }        
+    }
 
     public String getNbolsa() {
         return nbolsa;
@@ -240,6 +242,13 @@ public class MComprobante {
     public void setDetallePago(MDetallePago detallePago) {
         this.detallePago = detallePago;
     }
-    
+
+    public String getRuc() {
+        return ruc;
+    }
+
+    public void setRuc(String ruc) {
+        this.ruc = ruc;
+    }
 
 }

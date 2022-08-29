@@ -163,7 +163,9 @@ public class ClienteController {
         } else {
             cli.setClienteCaracteristica(null);
         }
+
         Cliente clien = null;
+        
         try {
             clien = clienteService.saveCli(cli);
         } catch (DataAccessException e) {

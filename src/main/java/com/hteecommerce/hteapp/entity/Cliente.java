@@ -34,6 +34,9 @@ public class Cliente implements Serializable {
 
     private Integer puntos;
 
+    @NotNull
+    private String sucursal;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "dni", nullable = false)
     private Persona persona;
@@ -42,11 +45,11 @@ public class Cliente implements Serializable {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @OneToOne(cascade = { CascadeType.MERGE, CascadeType.REMOVE })
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cp_id", nullable = true)
     private ClienteProveedor clienteProveedor;
 
-    @OneToOne(cascade = { CascadeType.MERGE, CascadeType.REMOVE })
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "caracteristica_id", nullable = true)
     private ClienteCaracteristica clienteCaracteristica;
 
@@ -121,6 +124,14 @@ public class Cliente implements Serializable {
 
     public void setPuntos(Integer puntos) {
         this.puntos = puntos;
+    }
+
+    public String getSucursal() {
+        return sucursal;
+    }
+
+    public void setSucursal(String sucursal) {
+        this.sucursal = sucursal;
     }
 
     private static final long serialVersionUID = 1L;
