@@ -14,7 +14,7 @@ import com.hteecommerce.hteapp.entity.DetalleComprobante;
 import com.hteecommerce.hteapp.entity.DetalleIngreso;
 import com.hteecommerce.hteapp.mapper.Mapper;
 import com.hteecommerce.hteapp.model.MComprobante;
-
+import com.hteecommerce.hteapp.model.MResumenVenta;
 import com.hteecommerce.hteapp.service.IComprobanteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -456,6 +456,71 @@ public class ComprobanteController {
 
         resp.put("mensaje", "Venta anulado con éxito");
         return new ResponseEntity<Map<String, String>>(resp, HttpStatus.OK);
+    }
+
+    //Resumen de vanta aqui
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/resumen/venta")
+    public ResponseEntity<?> listResumen(){
+
+        Map<String, String> resp = new HashMap<>();        
+        List<Comprobante> comprobantes = null;   
+        List<DetalleComprobante> dcs = null;
+        List<MResumenVenta> resumens = null;
+        
+        try {
+            comprobantes = comprobanteService.getByEstado("Entrega pendiente");
+        } catch (DataAccessException e) {
+            resp.put("mensaje", "Error de servidor");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if(comprobantes == null){
+            resp.put("mensaje", "No se encontró entregas pendientes");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
+        }
+
+        dcs = Mapper.unirDetalleComprobantes(comprobantes);
+        resumens = Mapper.agruparDetalleComprobantes(comprobantes, dcs);
+
+        if(resumens != null && resumens.size() != 0){
+            return new ResponseEntity< List<MResumenVenta>>(resumens, HttpStatus.OK);
+        }
+
+        resp.put("mensaje", "No se encontró entregas pendientes");
+        return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/resumen/venta/by/{fecha}")
+    public ResponseEntity<?> listResumenPorFecha(@PathVariable(value = "fecha") LocalDate fecha){
+
+        Map<String, String> resp = new HashMap<>();        
+        List<Comprobante> comprobantes = null;   
+        List<DetalleComprobante> dcs = null;
+        List<MResumenVenta> resumens = null;
+        
+        try {
+            comprobantes = comprobanteService.getByFechaPedido(fecha);
+        } catch (DataAccessException e) {
+            resp.put("mensaje", "Error de servidor");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if(comprobantes == null){
+            resp.put("mensaje", "No se encontró entregas pendientes");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
+        }
+
+        dcs = Mapper.unirDetalleComprobantes(comprobantes);
+        resumens = Mapper.agruparDetalleComprobantes(comprobantes, dcs);
+
+        if(resumens != null && resumens.size() != 0){
+            return new ResponseEntity< List<MResumenVenta>>(resumens, HttpStatus.OK);
+        }
+
+        resp.put("mensaje", "No se encontró entregas pendientes");
+        return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
     }
 
 }

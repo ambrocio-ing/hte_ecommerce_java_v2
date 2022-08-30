@@ -85,7 +85,7 @@ public class AdminClienteController {
         }   
       
         if (Mapper.isPresentClienteProveedor(cliente.getClienteProveedor())) {
-            if(cliente.getClienteProveedor().getIdcp() != null){
+            if(cliente.getClienteProveedor().getIdcp() == null){
                 if(clienteProveedorService.isExistsRuc(cliente.getClienteProveedor().getRuc())){
 
                     resp.put("mensaje", "El ruc que ingresó ya existe en el sistema");

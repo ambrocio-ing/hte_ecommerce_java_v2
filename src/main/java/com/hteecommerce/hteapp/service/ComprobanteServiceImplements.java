@@ -149,6 +149,13 @@ public class ComprobanteServiceImplements implements IComprobanteService {
     public List<Comprobante> getByClienteByIdcliente(Integer idcliente) {
         
         return comprobanteRepository.listByClienteByIdcliente(idcliente);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Comprobante> getByEstado(String estado) {
+        
+        return comprobanteRepository.findByEstado(estado);
     }     
     
 }

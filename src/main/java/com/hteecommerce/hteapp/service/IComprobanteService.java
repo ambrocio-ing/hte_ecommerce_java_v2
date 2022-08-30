@@ -32,6 +32,9 @@ public interface IComprobanteService {
 
     public Comprobante getByNumero(String numero);
 
+    //lista para resumen
+    public List<Comprobante> getByEstado(String estado);
+
     //detalle comprobante
     public DetalleComprobante updateDC(DetalleComprobante dc);
     public void deleteDC(Integer iddc, DetalleIngreso di);    

@@ -23,6 +23,8 @@ public class MCliente {
     
     private Integer puntos;
 
+    @NotNull
+    @Size(max = 20)
     private String sucursal;
     
     private Persona persona;    

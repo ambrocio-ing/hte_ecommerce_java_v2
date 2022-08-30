@@ -31,6 +31,13 @@ public class Comprobante implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idcomprobante;
 
+    @Size(max = 12)
+    private String ruc;
+
+    @Size(max = 100)
+    @Column(name = "razon_social")
+    private String razonSocial;
+
     @Column(unique = true)
     @Size(max = 10, min = 10)
     private String numero;
@@ -76,10 +83,7 @@ public class Comprobante implements Serializable {
     @NotNull
     @Column(name = "forma_envio")
     @Size(max = 50)
-    private String formaEnvio;
-
-    @Size(max = 12)
-    private String ruc;
+    private String formaEnvio;    
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
@@ -246,6 +250,14 @@ public class Comprobante implements Serializable {
 
     public void setRuc(String ruc) {
         this.ruc = ruc;
+    }
+
+    public String getRazonSocial() {
+        return razonSocial;
+    }
+
+    public void setRazonSocial(String razonSocial) {
+        this.razonSocial = razonSocial;
     }
 
     private static final long serialVersionUID = 1L;

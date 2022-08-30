@@ -1,5 +1,7 @@
 package com.hteecommerce.hteapp.security.model;
 
+//import java.io.Serializable;
+
 public class JwtDto {
 
     private int id;
@@ -7,22 +9,22 @@ public class JwtDto {
     private String nombre;    
     private String fotoPerfil;
     private String email;
-    private boolean isProveedor;  
     private String sucursal;  
+    private boolean esProveedor;      
 
     public JwtDto() {
 
     }         
 
-    public JwtDto(int id, String documento, String nombre, String fotoPerfil, String email, boolean isProveedor,
-            String sucursal) {
+    public JwtDto(int id, String documento, String nombre, String fotoPerfil, String email, 
+        String sucursal, boolean esProveedor) {
         this.id = id;
         this.documento = documento;
         this.nombre = nombre;
         this.fotoPerfil = fotoPerfil;
         this.email = email;
-        this.isProveedor = isProveedor;
         this.sucursal = sucursal;
+        this.esProveedor = esProveedor;        
     }
 
     public int getId() {
@@ -63,15 +65,7 @@ public class JwtDto {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public boolean isProveedor() {
-        return isProveedor;
-    }
-
-    public void setProveedor(boolean isProveedor) {
-        this.isProveedor = isProveedor;
-    }
+    }   
 
     public String getSucursal() {
         return sucursal;
@@ -79,6 +73,16 @@ public class JwtDto {
 
     public void setSucursal(String sucursal) {
         this.sucursal = sucursal;
-    }    
+    }
+
+    public boolean isEsProveedor() {
+        return esProveedor;
+    }
+
+    public void setEsProveedor(boolean esProveedor) {
+        this.esProveedor = esProveedor;
+    }       
+
+    //private static final long serialVersionUID = 1L;
 
 }

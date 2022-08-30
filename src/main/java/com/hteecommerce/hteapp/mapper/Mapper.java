@@ -1,7 +1,9 @@
 package com.hteecommerce.hteapp.mapper;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -13,6 +15,7 @@ import com.hteecommerce.hteapp.entity.Color;
 import com.hteecommerce.hteapp.entity.Comentario;
 import com.hteecommerce.hteapp.entity.Comprobante;
 import com.hteecommerce.hteapp.entity.Destinatario;
+import com.hteecommerce.hteapp.entity.DetalleComprobante;
 import com.hteecommerce.hteapp.entity.DetalleIngreso;
 import com.hteecommerce.hteapp.entity.DetallePago;
 import com.hteecommerce.hteapp.entity.DireccionEnvio;
@@ -26,9 +29,12 @@ import com.hteecommerce.hteapp.model.HistoricoPrecio;
 import com.hteecommerce.hteapp.model.MCarrito;
 import com.hteecommerce.hteapp.model.MComentario;
 import com.hteecommerce.hteapp.model.MComprobante;
+import com.hteecommerce.hteapp.model.MDetalleComprobante;
 import com.hteecommerce.hteapp.model.MDetalleIngreso;
 import com.hteecommerce.hteapp.model.MDetallePago;
+import com.hteecommerce.hteapp.model.MDetalleResumenVenta;
 import com.hteecommerce.hteapp.model.MDireccionEnvio;
+import com.hteecommerce.hteapp.model.MResumenVenta;
 import com.hteecommerce.hteapp.security.model.MUsuario;
 import com.hteecommerce.hteapp.util.UClienteOferta;
 import com.hteecommerce.hteapp.util.UClienteProveedor;
@@ -612,9 +618,101 @@ public class Mapper {
                 com.getIdtransaccion(), com.getTipoComprobante(), com.getFechaPedido(), 
                 com.getEstado(), com.getIgv(), com.getMontoEnvio(), com.getSubTotal(), 
                 com.getTotal(), com.getDescuento(), com.getFechaEntrega(), com.getNbolsa(),
-                com.getFormaEnvio(), com.getRuc(), com.getDireccionEnvio(), com.getDetallePago(), 
+                com.getFormaEnvio(), com.getRuc(), com.getRazonSocial(), com.getDireccionEnvio(), com.getDetallePago(), 
                 com.getDetalleComprobantes());
         return mcom;
+    }
+
+    public static List<MDetalleComprobante> mapDetalleComprobantes(List<DetalleComprobante> lista){
+        List<MDetalleComprobante> mlista = new ArrayList<>();
+        for(DetalleComprobante dc : lista){
+            MDetalleComprobante mdc = new MDetalleComprobante(dc.getIddetallecomprobante(), dc.getCantidad(), dc.getDescuento(), 
+                dc.getPrecioUnitario(), dc.getSubTotal(), dc.getVariedades(), dc.getComprobanteId());
+            mlista.add(mdc);
+        }
+
+        return mlista;
+    }
+
+    public static List<DetalleComprobante> unirDetalleComprobantes(List<Comprobante> lista){
+        List<DetalleComprobante> dcs = new ArrayList<>();
+        for(Comprobante com : lista){
+            dcs.addAll(com.getDetalleComprobantes());
+        }
+
+        return dcs;
+    }
+
+    public static List<MResumenVenta> agruparDetalleComprobantes(List<Comprobante> coms, List<DetalleComprobante> lista){
+
+        List<MResumenVenta> mresumenes = new ArrayList<>(); 
+        
+        Map<String, List<DetalleComprobante>> result = lista.stream()
+            .collect(Collectors.groupingBy(dc -> dc.getDetalleIngreso().getProducto().getNombre()));
+        
+        for(Map.Entry<String, List<DetalleComprobante>> pair : result.entrySet()){
+            mresumenes.add(new MResumenVenta(pair.getKey(), asignarNombreImagen(pair.getValue()), asignarComprobante(coms, pair.getValue())));
+        }        
+
+        List<MResumenVenta> m_resumenes = new ArrayList<>(); 
+
+        for(MResumenVenta rm : mresumenes){
+
+            Map<String, List<MDetalleResumenVenta>> resultTwo = rm.getDetalleResumenVentas().stream().collect(Collectors.groupingBy(drv -> drv.getFechaEntrega().toString().split("T")[0]));
+            for(Map.Entry<String, List<MDetalleResumenVenta>> pair : resultTwo.entrySet()){
+
+                m_resumenes.add(new MResumenVenta(rm.getNombreProducto(), rm.getImagenProducto(), LocalDate.parse(pair.getKey()), pair.getValue()));
+            }
+        }
+
+        return m_resumenes;        
+    }        
+
+    public static List<MDetalleResumenVenta> asignarComprobante(List<Comprobante> coms, List<DetalleComprobante> dcs){
+
+        List<MDetalleResumenVenta> detalleResumenVentas = new ArrayList<>();
+
+        for(DetalleComprobante dc : dcs){
+            for(Comprobante com : coms){
+                if(com.getIdcomprobante() == dc.getComprobanteId()){
+                    MDetalleResumenVenta mdetalleResumen = new MDetalleResumenVenta(obtenerDocumento(com.getDireccionEnvio()),
+                                        obtenerNombres(com.getDireccionEnvio()), com.getNumero(), 
+                                        com.getFechaPedido(), com.getFechaEntrega(), dc);
+                    
+                    detalleResumenVentas.add(mdetalleResumen);
+                    break;
+                }
+            }
+        }        
+
+
+        return detalleResumenVentas;
+    }    
+
+    public static String asignarNombreImagen(List<DetalleComprobante> lista){
+        return lista.get(0).getDetalleIngreso().getProducto().getProductoImagenes().get(0).getImagen();
+    }
+
+    public static String obtenerDocumento(DireccionEnvio de){
+
+        if(de.getDestinatario() != null){
+            return de.getDestinatario().getDni();
+        }
+        else{
+            return de.getCliente().getPersona().getDni();
+        }
+
+    }
+
+    public static String obtenerNombres(DireccionEnvio de){
+
+        if(de.getDestinatario() != null){
+            return de.getDestinatario().getNombre() + " " + de.getDestinatario().getApellidos();
+        }
+        else{
+            return de.getCliente().getPersona().getNombre() + " " + de.getCliente().getPersona().getApellidos();
+        }
+
     }
 
 }

@@ -19,4 +19,6 @@ public interface ILibroReclamoService {
     public void saveSU(Sujerencia sujerencia);
     public void deleteSU(Integer idsujerencia);
     public Sujerencia getByIdsujerencia(Integer idsujerencia);
+
+    public Sujerencia getByDetalle(String detalle);
 }

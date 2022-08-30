@@ -1,5 +1,6 @@
 package com.hteecommerce.hteapp.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.hteecommerce.hteapp.entity.Publicacion;
@@ -44,9 +45,17 @@ public class PublicacionServiceImplements implements IPublicacionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Publicacion> getByEstado(String estado) {
         
         return publicacionRepository.findByEstado(estado);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Publicacion> listByEstadoAndDates(LocalDate fechaFin) {
+        
+        return publicacionRepository.listByEstadoAndDates(fechaFin);
     }
     
 }

@@ -91,6 +91,13 @@ public class LibroReclamoServiceImplements implements ILibroReclamoService {
     public Sujerencia getByIdsujerencia(Integer idsujerencia) {
         
         return sujerenciaRepository.findById(idsujerencia).orElse(null);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Sujerencia getByDetalle(String detalle) {
+        
+        return sujerenciaRepository.findByDetalle(detalle).orElse(null);
     }    
     
 

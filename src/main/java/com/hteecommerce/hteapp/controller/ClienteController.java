@@ -146,9 +146,9 @@ public class ClienteController {
         Usuario usuario = new Usuario(cliente.getUsuario().getUsername(), cliente.getUsuario().getEmail(),
                 cliente.getUsuario().getEstado(), password, roles);
 
-        cli.setEstado(cliente.getEstado());
-        cli.setFecha(cliente.getFecha());
+        cli.setEstado("Activo");        
         cli.setPuntos(0);
+        cli.setSucursal(cliente.getSucursal());
         cli.setPersona(cliente.getPersona());
         cli.setUsuario(usuario);
 

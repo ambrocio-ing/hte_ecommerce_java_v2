@@ -33,6 +33,10 @@ public class DetalleComprobante implements Serializable {
     private Double descuento;
 
     @NotNull
+    @Column(name = "precio_unitario")
+    private Double precioUnitario;
+
+    @NotNull
     @Column(name = "sub_total")
     private Double subTotal;
 
@@ -132,6 +136,14 @@ public class DetalleComprobante implements Serializable {
 
     public void setVariedades(List<Variedad> variedades) {
         this.variedades = variedades;
+    }
+
+    public Double getPrecioUnitario() {
+        return precioUnitario;
+    }
+
+    public void setPrecioUnitario(Double precioUnitario) {
+        this.precioUnitario = precioUnitario;
     }
 
     private static final long serialVersionUID = 1L;

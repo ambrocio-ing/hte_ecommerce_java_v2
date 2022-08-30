@@ -1,5 +1,6 @@
 package com.hteecommerce.hteapp.controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -386,14 +387,16 @@ public class TiendaController {
     }
 
     // LISTA DE PUBLICACIONES
-    @GetMapping("/by/es/{estado}")
-    public ResponseEntity<?> listByEstado(@PathVariable(value = "estado") String estado) {
+    @GetMapping("/by/es")
+    public ResponseEntity<?> listByEstado() {
 
         Map<String, String> resp = new HashMap<>();
         List<Publicacion> lista = null;
 
+        LocalDate fecha = LocalDate.now();
+
         try {
-            lista = publicacionService.getByEstado(estado);
+            lista = publicacionService.listByEstadoAndDates(fecha);
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error de consulta a la base de datos");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -437,6 +440,7 @@ public class TiendaController {
     public ResponseEntity<?> createSU(@Valid @RequestBody Sujerencia sujerencia, BindingResult result){
 
         Map<String,String> resp = new HashMap<>();
+        Sujerencia suje = null;
 
         if(result.hasErrors()){
             List<String> errors = result.getFieldErrors().stream()
@@ -447,11 +451,30 @@ public class TiendaController {
         }
 
         try {
-            libroReclamoService.saveSU(sujerencia);
+            suje = libroReclamoService.getByDetalle(sujerencia.getDetalle());
         } catch (Exception e) {
             resp.put("mensaje", "Error: No fue posible enviar sujerencia");
             return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
-        }        
+        }  
+
+        if(suje != null){
+            suje.setCantidad(suje.getCantidad() + 1);
+
+            try {
+                libroReclamoService.saveSU(sujerencia);
+            } catch (Exception e) {
+                resp.put("mensaje", "Error: No fue posible enviar sujerencia");
+                return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+            }  
+        }
+        else{
+            try {
+                libroReclamoService.saveSU(sujerencia);
+            } catch (Exception e) {
+                resp.put("mensaje", "Error: No fue posible enviar sujerencia");
+                return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+            }  
+        }             
 
         resp.put("mensaje", "Sujerencia enviado con éxito");
         return new ResponseEntity<Map<String,String>>(resp, HttpStatus.CREATED);

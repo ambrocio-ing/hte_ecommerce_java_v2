@@ -35,6 +35,7 @@ public class Cliente implements Serializable {
     private Integer puntos;
 
     @NotNull
+    @Size(max = 20)
     private String sucursal;
 
     @OneToOne(cascade = CascadeType.ALL)

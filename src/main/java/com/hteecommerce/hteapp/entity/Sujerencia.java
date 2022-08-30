@@ -22,6 +22,8 @@ public class Sujerencia implements Serializable {
     @NotNull
     private String detalle;
 
+    private Integer cantidad;
+
     private LocalDate fecha;
 
     public Sujerencia() {
@@ -55,6 +57,14 @@ public class Sujerencia implements Serializable {
 
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
+    }
+
+    public Integer getCantidad(){
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad){
+        this.cantidad = cantidad;
     }
 
     private static final long serialVersionUID = 1L;

@@ -15,6 +15,8 @@ public class MDetalleComprobante {
 
     private Double descuento;
 
+    private Double precioUnitario;
+
     private Double subTotal;
 
     private MDetalleIngreso detalleIngreso;
@@ -33,6 +35,7 @@ public class MDetalleComprobante {
         this.variedades = dc.getVariedades();
         this.cantidad = dc.getCantidad();
         this.descuento = dc.getDescuento();
+        this.precioUnitario = dc.getPrecioUnitario();
         this.subTotal = dc.getSubTotal();
         this.detalleIngreso = new MDetalleIngreso(
                 dc.getDetalleIngreso().getIddetalleingreso(), dc.getDetalleIngreso().getPrecioVenta(),
@@ -46,18 +49,29 @@ public class MDetalleComprobante {
     }
 
     public MDetalleComprobante(Integer iddetallecomprobante, List<Variedad> variedades, Integer cantidad,
-            Double descuento,
-            Double subTotal,
+            Double descuento, Double subTotal, Double precioUnitario,
             DetalleIngreso detalleIngreso, Integer comprobanteId) {
         this.iddetallecomprobante = iddetallecomprobante;
         this.variedades = variedades;
         this.cantidad = cantidad;
         this.descuento = descuento;
+        this.precioUnitario = precioUnitario;
         this.subTotal = subTotal;
         this.detalleIngreso = new MDetalleIngreso(detalleIngreso.getIddetalleingreso(),
                 detalleIngreso.getPrecioVenta(),
                 detalleIngreso.getSucursal(), detalleIngreso.getProducto(),
                 detalleIngreso.getVariedades(), detalleIngreso.getIngresoId());
+        this.comprobanteId = comprobanteId;
+    }    
+
+    public MDetalleComprobante(Integer iddetallecomprobante, Integer cantidad, Double descuento, Double precioUnitario,
+            Double subTotal, List<Variedad> variedades, Integer comprobanteId) {
+        this.iddetallecomprobante = iddetallecomprobante;
+        this.cantidad = cantidad;
+        this.descuento = descuento;
+        this.precioUnitario = precioUnitario;
+        this.subTotal = subTotal;
+        this.variedades = variedades;
         this.comprobanteId = comprobanteId;
     }
 
@@ -115,6 +129,14 @@ public class MDetalleComprobante {
 
     public void setVariedades(List<Variedad> variedades) {
         this.variedades = variedades;
+    }
+
+    public Double getPrecioUnitario() {
+        return precioUnitario;
+    }
+
+    public void setPrecioUnitario(Double precioUnitario) {
+        this.precioUnitario = precioUnitario;
     }
 
 }

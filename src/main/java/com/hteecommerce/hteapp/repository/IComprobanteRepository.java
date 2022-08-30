@@ -42,4 +42,7 @@ public interface IComprobanteRepository extends JpaRepository<Comprobante, Integ
 
     public Optional<Comprobante> findTopByOrderByIdcomprobanteDesc();
 
+    //consulta para resumen de pedido
+    public List<Comprobante> findByEstado(String estado);
+
 }

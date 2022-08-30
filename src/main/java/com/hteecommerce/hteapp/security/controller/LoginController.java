@@ -97,7 +97,7 @@ public class LoginController {
                     cliente.getPersona().getDni(), 
                     cliente.getPersona().getNombre()+" "+cliente.getPersona().getApellidos(), 
                     cliente.getPersona().getFotoPerfil(), cliente.getUsuario().getEmail(), 
-                    ispro, cliente.getSucursal());
+                    cliente.getSucursal(), ispro);
             }
             else{
                 Proveedor proveedor = proveedorService.getByUsername(userDetails.getUsername());
@@ -113,7 +113,8 @@ public class LoginController {
 
                     jwtDto = new JwtDto(proveedor.getIdproveedor(), 
                         proveedor.getRuc(), proveedor.getRazonSocial(), 
-                        proveedor.getFotoPerfil(), proveedor.getUsuario().getEmail(), false, proveedor.getSucursal());
+                        proveedor.getFotoPerfil(), proveedor.getUsuario().getEmail(), 
+                        proveedor.getSucursal(), false);
                 }
             }
             
@@ -179,7 +180,7 @@ public class LoginController {
                     personal.getPersona().getDni(), 
                     personal.getPersona().getNombre()+" "+personal.getPersona().getApellidos(), 
                     personal.getPersona().getFotoPerfil(), personal.getUsuario().getEmail(), 
-                    false, null);
+                    null, false);
             }          
             
         }
