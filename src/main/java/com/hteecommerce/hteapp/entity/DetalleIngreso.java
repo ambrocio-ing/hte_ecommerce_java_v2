@@ -91,11 +91,7 @@ public class DetalleIngreso implements Serializable {
     @PrePersist
     public void prePersist() {
         this.createAt = LocalDate.now();
-    }
-
-    /* public Integer calculateStockActual(Integer stock_actual) {
-        return this.stockInicial + stock_actual;
-    } */
+    }    
 
     public Integer getIddetalleingreso() {
         return iddetalleingreso;

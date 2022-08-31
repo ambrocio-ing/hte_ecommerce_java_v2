@@ -26,12 +26,12 @@ import com.hteecommerce.hteapp.entity.Delivery;
 import com.hteecommerce.hteapp.entity.DetalleIngreso;
 import com.hteecommerce.hteapp.entity.HoraEntrega;
 import com.hteecommerce.hteapp.entity.Membresia;
-import com.hteecommerce.hteapp.entity.Producto;
+//import com.hteecommerce.hteapp.entity.Producto;
 import com.hteecommerce.hteapp.entity.Publicacion;
 import com.hteecommerce.hteapp.entity.Sujerencia;
 import com.hteecommerce.hteapp.entity.Tipo;
 import com.hteecommerce.hteapp.mapper.Mapper;
-import com.hteecommerce.hteapp.model.HistoricoPrecio;
+//import com.hteecommerce.hteapp.model.HistoricoPrecio;
 import com.hteecommerce.hteapp.model.MComentario;
 import com.hteecommerce.hteapp.model.MDetalleIngreso;
 import com.hteecommerce.hteapp.service.ICategoriaTipoService;
@@ -178,7 +178,7 @@ public class TiendaController {
     }
 
     // historico de precios
-    @PostMapping("/history")
+   /*  @PostMapping("/history")
     public ResponseEntity<?> historicoPrecio(@RequestBody Producto producto) {
 
         Map<String, String> resp = new HashMap<>();       
@@ -200,7 +200,7 @@ public class TiendaController {
         resp.put("mensaje", "Sin datos que mostrar");
         return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
 
-    }
+    } */
 
     // Mostrar todos los detalles de ingreso --> todos los productos
     @GetMapping("/all/{sucursal}")
@@ -352,7 +352,7 @@ public class TiendaController {
         try {
             lista = categoriaTipoService.getTipos();
         } catch (DataAccessException e) {
-            resp.put("mensaje", "Error de consulta a la base de datos");
+            resp.put("mensaje", "Error de servidor");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

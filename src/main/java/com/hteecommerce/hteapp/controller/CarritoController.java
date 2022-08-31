@@ -60,17 +60,23 @@ public class CarritoController {
         }
 
         if (carritos != null && carritos.size() != 0) {
-
+            List<Integer> ids = new ArrayList<>();
             for(Carrito car : carritos){
                 if(car.getDetalleIngreso().getEstado() == false || car.getDetalleIngreso().getStockActual() == 0 
                     || car.getCantidad() > car.getDetalleIngreso().getStockActual()){
 
-                    carritoService.deleteC(car.getIdcarrito());
-                    carritos = carritos.stream()
-                        .filter(ca -> ca.getIdcarrito() != car.getIdcarrito())
-                        .collect(Collectors.toList());
+                    carritoService.deleteC(car.getIdcarrito());    
+                    ids.add(car.getIdcarrito());                
                 }
             }
+
+            if(ids.size() > 0){
+                for(Integer id : ids){
+                    carritos = carritos.stream()
+                            .filter(ca -> ca.getIdcarrito() != id)
+                            .collect(Collectors.toList());
+                }   
+            }                    
 
             List<MCarrito> mlista = carritos.stream()
                     .map(carr -> new MCarrito(carr))
@@ -78,7 +84,6 @@ public class CarritoController {
 
             return new ResponseEntity<List<MCarrito>>(mlista, HttpStatus.OK);
         }
-
         // resp.put("mensaje", "Sin datos que mostrar");
         carritos = new ArrayList<>();
         return new ResponseEntity<List<Carrito>>(carritos, HttpStatus.OK);
@@ -164,7 +169,7 @@ public class CarritoController {
             DetalleIngreso di = null;
 
             try {
-                di = ingresoService.getDIByIdproducto(car.getDetalleIngreso().getProducto().getIdproducto(), car.getDetalleIngreso().getSucursal());
+                di = ingresoService.getByIddetalleingreso(car.getDetalleIngreso().getIddetalleingreso());
             } catch (DataAccessException e) {
                 resp.put("mensaje", "Error de consulta");
                 return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
@@ -236,12 +241,11 @@ public class CarritoController {
         try {
             carr = carritoService.saveC(carr);
         } catch (Exception e) {
-            resp.put("mensaje", "Errores al agregar producto al carrito");
+            resp.put("mensaje", "Errores al actualizar carrito");
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
         }
 
-        resp.put("mensaje", "Orden actualizado con éxito");
-        resp.put("carrito", carr);
+        resp.put("mensaje", "Orden actualizado con éxito");        
         return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.OK);
     }
 

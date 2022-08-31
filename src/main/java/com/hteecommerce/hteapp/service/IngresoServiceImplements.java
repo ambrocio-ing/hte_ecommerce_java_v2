@@ -2,11 +2,11 @@ package com.hteecommerce.hteapp.service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
+//import java.util.stream.Collectors;
 
 import com.hteecommerce.hteapp.entity.DetalleIngreso;
 import com.hteecommerce.hteapp.entity.Ingreso;
-import com.hteecommerce.hteapp.entity.Producto;
+//import com.hteecommerce.hteapp.entity.Producto;
 import com.hteecommerce.hteapp.repository.IDetalleIngresoRepository;
 import com.hteecommerce.hteapp.repository.IIngresoRepository;
 
@@ -34,48 +34,29 @@ public class IngresoServiceImplements implements IIngresoService {
 
     @Override
     @Transactional
-    public Ingreso saveIN(Ingreso ingreso, List<DetalleIngreso> dis) {
+    public Ingreso saveIN(Ingreso ingreso) {
 
-        if(dis.size() != 0){
+        /* if(dis.size() != 0){
             detalleIngresoRepository.saveAll(dis);
-        }
+        } */
         
         return ingresoRepository.save(ingreso);
     }    
 
     @Override
     @Transactional
-    public void deleteIN(Integer idingreso, List<Producto> productos, String sucursal) {
+    public void deleteIN(Integer idingreso) {
         
-        ingresoRepository.deleteById(idingreso);
-        for(Producto pro : productos){
-            DetalleIngreso di = detalleIngresoRepository.findTopByProductoAndSucursalOrderByIddetalleingresoDesc(pro, sucursal).orElse(null);
-            if(di != null){
-                di.setEstado(true);
-                detalleIngresoRepository.save(di);
-            }
-        }        
+        ingresoRepository.deleteById(idingreso);          
     }
 
     @Override
     @Transactional
-    public void deleteDI(Integer iddi, Producto producto, String sucursal) {
+    public void deleteDI(Integer iddi) {
         
-        detalleIngresoRepository.deleteById(iddi);
-        DetalleIngreso di = detalleIngresoRepository.findTopByProductoAndSucursalOrderByIddetalleingresoDesc(producto, sucursal).orElse(null);
-        if(di != null){
-            di.setEstado(true);
-            detalleIngresoRepository.save(di);
-        }        
+        detalleIngresoRepository.deleteById(iddi);              
         
-    }  
-
-    @Override
-    @Transactional(readOnly = true)
-    public DetalleIngreso getTopByProductoAndSucursalOrderByIddetalleingresoDesc(Producto producto, String sucursal) {
-        
-        return detalleIngresoRepository.findTopByProductoAndSucursalOrderByIddetalleingresoDesc(producto, sucursal).orElse(null);
-    } 
+    }     
 
     @Override
     @Transactional(readOnly = true)
@@ -99,7 +80,7 @@ public class IngresoServiceImplements implements IIngresoService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true) 
     public Page<DetalleIngreso> pageAllDetalleIngreso(Pageable pageable) {
         
         return detalleIngresoRepository.pageAll(pageable);
@@ -162,13 +143,13 @@ public class IngresoServiceImplements implements IIngresoService {
         return detalleIngresoRepository.listByTipoToMarca(idtipo, sucursal, marca);
     }   
 
-    @Override
+    /* @Override
     @Transactional(readOnly = true)
     public List<DetalleIngreso> getLast12ByProducto(Producto producto) {
         
         List<DetalleIngreso> lista = detalleIngresoRepository.list12Ultimos(producto.getIdproducto());
         return lista.stream().limit(12).collect(Collectors.toList());
-    }
+    } */
 
     @Override
     @Transactional(readOnly = true)

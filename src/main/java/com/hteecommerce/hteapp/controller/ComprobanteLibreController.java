@@ -45,105 +45,8 @@ public class ComprobanteLibreController {
     private IComprobanteService comprobanteService;   
 
     @Autowired
-    private IDireccionEnvioService direccionEnvioService;    
+    private IDireccionEnvioService direccionEnvioService;       
     
-    /* @PostMapping("/com/crear")
-    public ResponseEntity<?> comCreate(@Valid @RequestBody Comprobante comprobante, BindingResult result) {
-
-        Map<String, Object> resp = new HashMap<>();   
-        DireccionEnvio direccionEnvio = null;     
-        String numero = null;
-
-        if(result.hasErrors()){
-            List<String> errors = result.getFieldErrors().stream()
-                .map(err -> "El campo: "+err.getField()+" "+err.getDefaultMessage())
-                .collect(Collectors.toList());
-
-            resp.put("mensaje", errors);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }     
-                       
-        List<String> errorsDC = comprobante.getDetalleComprobantes().stream()
-                .flatMap(dc -> UDetalleComprobante.isValidDC(dc.getCantidad(), dc.getSubTotal()))
-                .collect(Collectors.toList());
-
-        if (errorsDC != null && errorsDC.size() != 0) {
-            resp.put("mensaje", errorsDC);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        try {
-            direccionEnvio = direccionEnvioService.getByIddireccionenvio(comprobante.getDireccionEnvio().getIddireccion());
-        } catch (DataAccessException e) {
-            resp.put("mensaje", "Error de consulta a la base de datos");
-            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        
-        List<DetalleComprobante> dcs = new ArrayList<>();
-        for (DetalleComprobante dc : comprobante.getDetalleComprobantes()) {
-
-            DetalleIngreso di = null;
-            try {
-                di = ingresoService.getByIddetalleingreso(dc.getDetalleIngreso().getIddetalleingreso());
-            } catch (DataAccessException e) {
-                resp.put("mensaje", "Error de consulta a la base de datos");
-                return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
-            }           
- 
-            if (di != null) { 
-                di.setStockActual(dc.getDetalleIngreso().getStockActual());
-                dc.setDetalleIngreso(di);
-                dcs.add(dc);
-            }
-        }       
-
-        if (comprobante.getDetalleComprobantes().size() != dcs.size()) {
-            resp.put("mensaje", "Error al crear orden, no fue posible validar existencias");
-            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
-        }
-
-        try {
-            numero = comprobanteService.getMaxId();
-        } catch (DataAccessException e) {
-            resp.put("mensaje", "Error de consulta a la base de datos");
-            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        if(numero == null){
-            String serie = "001";
-            String correlativo = "000001";
-            numero = serie+"-"+correlativo;
-        }
-        else{
-            String arrayNumero[] = numero.split("-");
-            String serie = arrayNumero[0];
-            String correlativo = arrayNumero[1];
-            if(Integer.parseInt(correlativo) < 999999){
-                numero = serie+"-"+Mapper.generateNumero(correlativo, 6);
-            }
-            else if(Integer.parseInt(correlativo) == 999999){
-                serie = Mapper.generateNumero(serie, 3);
-                numero = serie+"-000001";
-            }            
-        }       
-        
-        comprobante.setNumero(numero);
-        comprobante.setDireccionEnvio(direccionEnvio);        
-        comprobante.setDetalleComprobantes(dcs);
-
-        Comprobante com = null;
-        try {
-            com = comprobanteService.saveCOM(comprobante);
-        } catch (DataAccessException e) {
-            resp.put("mensaje", "Error al guardar datos");
-            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        resp.put("mensaje", "Orden creado con éxito");
-        resp.put("id", com.getIdcomprobante());
-        return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.CREATED);
-    } */
-
     @PostMapping("/com/crear")
     public ResponseEntity<?> createComprobante(@Valid @RequestBody Comprobante comprobante, BindingResult result) {
 
@@ -188,15 +91,19 @@ public class ComprobanteLibreController {
             }           
  
             if (di != null) { 
-                //di.setStockActual(dc.getDetalleIngreso().getStockActual());                
-                dc.setDetalleIngreso(di);
+                //di.setStockActual(dc.getDetalleIngreso().getStockActual());   
+                if(di.getVariedades() != null){
+                    di.setVariedades(Mapper.actualizarVariedades(dc.getVariedades(), di.getVariedades()));
+                }
+
+                dc.setDetalleIngreso(di);                
 
                 try {
                     dc.decreaseStockActual();
                 } catch (InsufficientStockError e) {
                     resp.put("mensaje", "Stock insuficiente por compra simultanea, por favor quite el producto: " + di.getProducto().getNombre() + " de su carrito y vuelva e intentar");
                     return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-                }
+                }                
 
                 dcs.add(dc);
             }
@@ -332,8 +239,12 @@ public class ComprobanteLibreController {
         }
 
         for(DetalleComprobante dc : com.getDetalleComprobantes()){
-            Integer cantidad = dc.getDetalleIngreso().getStockActual() + dc.getCantidad();
+            Integer cantidad = dc.getDetalleIngreso().getStockActual() + dc.getCantidad();            
             dc.getDetalleIngreso().setStockActual(cantidad);
+            if(dc.getVariedades() != null){
+                dc.getDetalleIngreso().setVariedades(Mapper.restablecerVariedades(dc.getVariedades(), dc.getDetalleIngreso().getVariedades()));
+            }
+            
             dis.add(dc.getDetalleIngreso());
         }
 

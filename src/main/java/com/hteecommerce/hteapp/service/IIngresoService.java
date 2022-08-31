@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.hteecommerce.hteapp.entity.DetalleIngreso;
 import com.hteecommerce.hteapp.entity.Ingreso;
-import com.hteecommerce.hteapp.entity.Producto;
+//import com.hteecommerce.hteapp.entity.Producto;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,10 +13,10 @@ import org.springframework.data.domain.Pageable;
 public interface IIngresoService {
     
     public Page<Ingreso> getAll(Pageable pageable);
-    public Ingreso saveIN(Ingreso ingreso, List<DetalleIngreso> dis);
+    public Ingreso saveIN(Ingreso ingreso);
     public void updateIN(Ingreso ingreso);
-    public void deleteDI(Integer iddi, Producto producto, String sucursal);  
-    public void deleteIN(Integer idingreso, List<Producto> productos, String sucursal);    
+    public void deleteDI(Integer iddi);  
+    public void deleteIN(Integer idingreso);    
     public Ingreso getByIdngreso(Integer idingreso);
     public List<Ingreso> getByFecha(LocalDate fecha);
 
@@ -24,7 +24,7 @@ public interface IIngresoService {
     public Page<DetalleIngreso> pageAllDetalleIngreso(Pageable pageable);
     public DetalleIngreso getByIddetalleingreso(Integer iddi);
     public DetalleIngreso getDetalleIngresoByIdproducto(Integer idproducto);
-    public DetalleIngreso getTopByProductoAndSucursalOrderByIddetalleingresoDesc(Producto producto, String sucursal);
+    //public DetalleIngreso getTopByProductoAndSucursalOrderByIddetalleingresoDesc(Producto producto, String sucursal);
 
     //LISTA Y FILTRO DESDE VISTA DEL CLIENTE
     public DetalleIngreso getDIByIdproducto(Integer idproducto, String sucursal);
@@ -37,7 +37,7 @@ public interface IIngresoService {
     public List<DetalleIngreso> getByTipo(Integer idtipo, String sucursal);
     public List<DetalleIngreso> getByTipoToMarca(Integer idtipo, String sucursal, String marca);
 
-    public List<DetalleIngreso> getLast12ByProducto(Producto producto);
+    //public List<DetalleIngreso> getLast12ByProducto(Producto producto);
 
     //productos mas vendidos
     public List<DetalleIngreso> getMasVendidos(Integer idtipo, String sucursal);

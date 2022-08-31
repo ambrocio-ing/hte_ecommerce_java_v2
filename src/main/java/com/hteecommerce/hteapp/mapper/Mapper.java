@@ -508,7 +508,7 @@ public class Mapper {
         return hps;
     }
 
-    // agregando variedades del ingreso anterior
+    /* // agregando variedades del ingreso anterior
     public static List<Variedad> mapVariedadesNuevos(List<Variedad> vasNuevos, List<Variedad> anteriores) {
 
         List<Variedad> vasAnteriores = anteriores.stream()
@@ -603,7 +603,7 @@ public class Mapper {
 
             return cosNuevos;
         }
-    }
+    } */
 
     //map degalle pago
     public static MDetallePago mapDetallePago(DetallePago dp){
@@ -713,6 +713,67 @@ public class Mapper {
             return de.getCliente().getPersona().getNombre() + " " + de.getCliente().getPersona().getApellidos();
         }
 
+    }
+
+    public static List<Variedad> actualizarVariedades(List<Variedad> vendidos, List<Variedad> variedades) {
+        
+        for(Variedad variedad : variedades){
+            for(Variedad vendido : vendidos){
+
+                if(variedad.getNombreTalla().equals(vendido.getNombreTalla())){
+                    variedad.setCantidadTalla(variedad.getCantidadTalla() - vendido.getCantidadTalla());
+                    variedad.setColores(actualizarColores(variedad.getColores(), vendido.getColores()));
+                    break;
+                }
+
+            }
+        }
+        
+        return variedades;
+    }
+
+    private static List<Color> actualizarColores(List<Color> colores, List<Color> vendidos) {
+
+        for(Color color : colores){
+            for(Color vendido : vendidos){
+                if(color.getNombreColor().equals(vendido.getNombreColor())){
+                    color.setCantidadColor(color.getCantidadColor() - vendido.getCantidadColor());
+                    break;
+                }
+            }
+        }
+
+        return colores;
+    }
+
+    public static List<Variedad> restablecerVariedades(List<Variedad> reponers, List<Variedad> variedades) {
+        for(Variedad variedad : variedades){
+            for(Variedad reponer : reponers){
+
+                if(variedad.getNombreTalla().equals(reponer.getNombreTalla())){
+                    variedad.setCantidadTalla(variedad.getCantidadTalla() + reponer.getCantidadTalla());
+                    variedad.setColores(restablecerColores(variedad.getColores(), reponer.getColores()));
+                    break;
+                }
+
+            }
+        }
+        
+        return variedades;
+    }
+
+    private static List<Color> restablecerColores(List<Color> colores, List<Color> reponers) {
+
+        for(Color color : colores){
+            for(Color reponer : reponers){
+                if(color.getNombreColor().equals(reponer.getNombreColor())){
+                    color.setCantidadColor(color.getCantidadColor() + reponer.getCantidadColor());
+                    break;
+                }
+            }
+        }
+
+        return colores;
     }
 
 }

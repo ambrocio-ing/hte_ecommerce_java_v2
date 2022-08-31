@@ -1,7 +1,7 @@
 package com.hteecommerce.hteapp.controller;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+//import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -308,6 +308,9 @@ public class ComprobanteController {
         for(DetalleComprobante dc : com.getDetalleComprobantes()){
             Integer cantidad = dc.getDetalleIngreso().getStockActual() + dc.getCantidad();
             dc.getDetalleIngreso().setStockActual(cantidad);
+            if(dc.getVariedades() != null){
+                dc.getDetalleIngreso().setVariedades(Mapper.restablecerVariedades(dc.getVariedades(), dc.getDetalleIngreso().getVariedades()));
+            }
             dis.add(dc.getDetalleIngreso());
         }
 
@@ -324,7 +327,7 @@ public class ComprobanteController {
     }
 
     //metodo incompleto
-    @PostMapping("/dc/editar")
+    /* @PostMapping("/dc/editar")
     public ResponseEntity<?> comUpdateEstado(@RequestBody DetalleComprobante decom) {
 
         Map<String, String> resp = new HashMap<>();
@@ -361,9 +364,9 @@ public class ComprobanteController {
         resp.put("mensaje", "Orden creado con éxito");
         resp.put("id", com.getIdcomprobante().toString());
         return new ResponseEntity<Map<String, String>>(resp, HttpStatus.OK);
-    }
+    } */
 
-    @PreAuthorize("hasRole('ADMIN')")
+    /* @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/dc/eliminar/{iddc}/{idc}")
     public ResponseEntity<?> deleteDC(@PathVariable(value = "iddc") Integer iddc,
         @PathVariable(value = "idc") Integer idc) {
@@ -411,7 +414,7 @@ public class ComprobanteController {
 
         resp.put("mensaje", "Comprobante anulado con éxito");
         return new ResponseEntity<Map<String, String>>(resp, HttpStatus.OK);
-    }
+    } */
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/anular")
@@ -441,7 +444,9 @@ public class ComprobanteController {
         } */
 
         for(DetalleComprobante dc : com.getDetalleComprobantes()){          
-            
+            if(dc.getVariedades() != null){
+                dc.getDetalleIngreso().setVariedades(Mapper.restablecerVariedades(dc.getVariedades(), dc.getDetalleIngreso().getVariedades()));
+            }
             dc.getDetalleIngreso().setStockActual(dc.replenishStockActual());
         }
 

@@ -2,7 +2,6 @@ package com.hteecommerce.hteapp.controller;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -222,56 +221,45 @@ public class IngresoController {
         }
 
         if (per == null) {
-            resp.put("mensaje", "Error al guardar ingresos");
+            resp.put("mensaje", "Datos del personal no encontrados");
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
         }
+        
+        boolean isExistDi = false;
+        String productoNombre = "";
 
-        List<DetalleIngreso> dis = new ArrayList<>();
-        List<DetalleIngreso> dis_anterior = new ArrayList<>();
         for (DetalleIngreso di_nuevo : ingreso.getDetalleIngresos()) {
 
             Producto pro = productoService.getByIdproducto(di_nuevo.getProducto().getIdproducto());
-            DetalleIngreso di_anterior = ingresoService.getDIByIdproducto(di_nuevo.getProducto().getIdproducto(), di_nuevo.getSucursal());
-            if (pro != null) {
+            DetalleIngreso di_existe = ingresoService.getDIByIdproducto(di_nuevo.getProducto().getIdproducto(), di_nuevo.getSucursal());
+            if (pro != null && di_existe == null) {
 
                 if(pro.getProductoVestimenta() == null){
                     di_nuevo.setVariedades(null);
                 } 
 
                 di_nuevo.setProducto(pro);
-
-                if (di_anterior != null) {
-
-                    di_anterior.setEstado(false);
-                    if(di_anterior.getProducto().getProductoVestimenta() != null && di_anterior.getStockActual() > 0){
-
-                        di_nuevo.setStockActual(di_nuevo.getStockInicial() + di_anterior.getStockActual());
-                        di_nuevo.setVariedades(Mapper.mapVariedadesNuevos(di_nuevo.getVariedades(), di_anterior.getVariedades()));
-                    }
-
-                    dis_anterior.add(di_anterior);
-
-                } else {
-                    di_nuevo.setStockActual(di_nuevo.getStockInicial());
-                }
-
-                dis.add(di_nuevo);
+                di_nuevo.setStockActual(di_nuevo.getStockInicial());                
+            }
+            else{
+                isExistDi = true;
+                productoNombre = pro.getNombre();
+                break;
             }
         }
 
-        if (ingreso.getDetalleIngresos().size() != dis.size()) {
-            resp.put("mensaje", "Error al guardar ingresos");
-            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
+        if (isExistDi) {
+            resp.put("mensaje", "El producto: " + productoNombre + " ya fue ingresado");
+            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.BAD_REQUEST);
         }
 
-        ingreso.setPersonal(per);
-        ingreso.setDetalleIngresos(dis);
+        ingreso.setPersonal(per);        
 
         try {
-            ingresoService.saveIN(ingreso, dis_anterior);
+            ingresoService.saveIN(ingreso);
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error al guardar ingresos");
-            resp.put("error", e.getMessage().concat(" : ").concat(e.getMostSpecificCause().getMessage()));
+            //resp.put("error", e.getMessage().concat(" : ").concat(e.getMostSpecificCause().getMessage()));
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -324,33 +312,32 @@ public class IngresoController {
         
         for (DetalleIngreso di : ingre.getDetalleIngresos()) {          
             
-            for(DetalleIngreso diAnterior : ingreso.getDetalleIngresos()){
+            for(DetalleIngreso diNuevo : ingreso.getDetalleIngresos()){
 
-                if(di.getIddetalleingreso() == diAnterior.getIddetalleingreso()){
+                if(di.getIddetalleingreso() == diNuevo.getIddetalleingreso()){
 
-                    di.setFechaProduccion(diAnterior.getFechaProduccion());
-                    di.setFechaVencimiento(diAnterior.getFechaVencimiento());
-                    di.setPorcentajeDescuento(diAnterior.getPorcentajeDescuento());
-                    di.setPrecioCompra(diAnterior.getPrecioCompra());
-                    di.setPrecioVenta(diAnterior.getPrecioVenta());
-                    di.setPrecioVentaAnterior(diAnterior.getPrecioVentaAnterior());
-                    di.setStockActual(diAnterior.getStockActual());
-                    di.setStockInicial(diAnterior.getStockInicial());
+                    di.setFechaProduccion(diNuevo.getFechaProduccion());
+                    di.setFechaVencimiento(diNuevo.getFechaVencimiento());
+                    di.setPorcentajeDescuento(diNuevo.getPorcentajeDescuento());
+                    di.setPrecioCompra(diNuevo.getPrecioCompra());
+                    di.setPrecioVenta(diNuevo.getPrecioVenta());
+                    di.setPrecioVentaAnterior(diNuevo.getPrecioVentaAnterior());
+                    di.setStockActual(diNuevo.getStockActual());
+                    di.setStockInicial(diNuevo.getStockInicial());
 
                     if(di.getVariedades() != null){
-                        di.setVariedades(diAnterior.getVariedades());
-                    }                  
+                        di.setVariedades(diNuevo.getVariedades());
+                    } 
 
+                    break;
                 }
             }
-        }        
-
-        ingre.setEstado(ingreso.getEstado());        
+        }  
 
         try {
             ingresoService.updateIN(ingre);
         } catch (Exception e) {
-            resp.put("mensaje", "Error al guardar ingresos");
+            resp.put("mensaje", "Error al actualizar ingresos");
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -363,30 +350,22 @@ public class IngresoController {
     public ResponseEntity<?> deleteIn(@PathVariable(value = "id") Integer idingreso) {
 
         Map<String, String> resp = new HashMap<>();
-        Ingreso ingreso = null;
-        String sucursal;
+        Ingreso ingreso = null;        
 
         try {
             ingreso = ingresoService.getByIdngreso(idingreso);
         } catch (Exception e) {
-            resp.put("mensaje", "Error de consulta a la base de datos");
+            resp.put("mensaje", "Error de servicio");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        }        
 
-        sucursal = ingreso.getDetalleIngresos().get(0).getSucursal();
-
-        if (ingreso == null || sucursal == null) {
+        if (ingreso == null) {
             resp.put("mensaje", "Error, no se encontraron coincidencias");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-        }
-
-        List<Producto> productos = new ArrayList<>();
-        for (DetalleIngreso di : ingreso.getDetalleIngresos()) {
-            productos.add(di.getProducto());
-        }
+        }        
 
         try {
-            ingresoService.deleteIN(ingreso.getIdingreso(), productos, sucursal);
+            ingresoService.deleteIN(ingreso.getIdingreso());
         } catch (Exception e) {
             resp.put("mensaje", "Error, es posible que algún producto del ingreso ya fue vendido");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -394,7 +373,6 @@ public class IngresoController {
 
         resp.put("mensaje", "Ingreso eliminado con éxito");
         return new ResponseEntity<Map<String, String>>(resp, HttpStatus.OK);
-
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -417,9 +395,9 @@ public class IngresoController {
         }        
 
         try {
-            ingresoService.deleteDI(di.getIddetalleingreso(), di.getProducto(), di.getSucursal());
+            ingresoService.deleteDI(di.getIddetalleingreso());
         } catch (Exception e) {
-            resp.put("mensaje", "No se a podido eliminar el detalle de ingreso");
+            resp.put("mensaje", "Error, es posible que el producto asociado al ingreso ya fue vendido");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
