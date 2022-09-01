@@ -230,296 +230,7 @@ public class ProductoController {
 
         resp.put("mensaje", "Producto creado con éxito");
         return new ResponseEntity<Map<String, String>>(resp, HttpStatus.CREATED);
-    }
-
-    /*
-     * @PreAuthorize("hasRole('ADMIN')")
-     * 
-     * @PostMapping("/img/tres")
-     * public ResponseEntity<?> saveImageOneInverse(@RequestParam(name = "id")
-     * Integer id,
-     * 
-     * @RequestParam(name = "imagen") MultipartFile imagen) {
-     * 
-     * Map<String, String> resp = new HashMap<>();
-     * String ruta = RutaActual.RUTA_PRODUCTO;
-     * Producto producto = null;
-     * ProductoImagen pi = new ProductoImagen();
-     * 
-     * if (imagen.isEmpty()) {
-     * resp.put("mensaje", "La imagen no es válida");
-     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-     * }
-     * 
-     * try {
-     * producto = productoService.getByIdproducto(id);
-     * } catch (DataAccessException e) {
-     * resp.put("mensaje", "Error de consulta a la base de datos");
-     * return new ResponseEntity<Map<String, String>>(resp,
-     * HttpStatus.INTERNAL_SERVER_ERROR);
-     * }
-     * 
-     * if (producto == null) {
-     * resp.put("mensaje", "No fue posible cotejar sus datos");
-     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-     * }
-     * 
-     * pi.setIdpimagen(producto.getProductoImagen().getIdpimagen());
-     * pi.setImagenUno(producto.getProductoImagen().getImagenUno());
-     * pi.setImagenDos(producto.getProductoImagen().getImagenDos());
-     * pi.setImagenTres(producto.getProductoImagen().getImagenTres());
-     * 
-     * String nombreImagen = null;
-     * 
-     * try {
-     * nombreImagen = fileService.copiar(ruta, imagen);
-     * } catch (IOException e) {
-     * resp.put("mensaje", "No fue posible guardar imagenes del producto");
-     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-     * }
-     * 
-     * if (nombreImagen == null) {
-     * resp.put("mensaje", "No fue posible guardar imagenes del producto");
-     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-     * }
-     * 
-     * fileService.eliminar(ruta, pi.getImagenTres());
-     * 
-     * try {
-     * pi.setImagenTres(nombreImagen);
-     * productoService.savePI(pi);
-     * } catch (DataAccessException e) {
-     * resp.put("mensaje", "Error al guardar imagen");
-     * return new ResponseEntity<Map<String, String>>(resp,
-     * HttpStatus.INTERNAL_SERVER_ERROR);
-     * }
-     * 
-     * resp.put("mensaje", "Datos del producto actualizados con éxito");
-     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.CREATED);
-     * }
-     * 
-     * @PreAuthorize("hasRole('ADMIN')")
-     * 
-     * @PostMapping("/imagen/dos")
-     * public ResponseEntity<?> saveImageTwo(@RequestParam(name = "id") Integer id,
-     * 
-     * @RequestParam(name = "imagen1") MultipartFile imagen1,
-     * 
-     * @RequestParam(name = "imagen2") MultipartFile imagen2) {
-     * 
-     * Map<String, String> resp = new HashMap<>();
-     * String ruta = RutaActual.RUTA_PRODUCTO;
-     * Producto producto = null;
-     * ProductoImagen pi = null;
-     * 
-     * if (imagen1.isEmpty() || imagen2.isEmpty()) {
-     * resp.put("mensaje", "Una de las imagenes no es válida");
-     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-     * }
-     * 
-     * try {
-     * producto = productoService.getByIdproducto(id);
-     * } catch (DataAccessException e) {
-     * resp.put("mensaje", "Error de consulta a la base de datos");
-     * return new ResponseEntity<Map<String, String>>(resp,
-     * HttpStatus.INTERNAL_SERVER_ERROR);
-     * }
-     * 
-     * if (producto == null) {
-     * resp.put("mensaje", "No fue posible cotejar sus datos");
-     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-     * }
-     * 
-     * pi = new ProductoImagen();
-     * pi.setIdpimagen(producto.getProductoImagen().getIdpimagen());
-     * pi.setImagenUno(producto.getProductoImagen().getImagenUno());
-     * pi.setImagenDos(producto.getProductoImagen().getImagenDos());
-     * pi.setImagenTres(producto.getProductoImagen().getImagenTres());
-     * 
-     * String nombreImagen1 = null;
-     * String nombreImagen2 = null;
-     * 
-     * try {
-     * nombreImagen1 = fileService.copiar(ruta, imagen1);
-     * nombreImagen2 = fileService.copiar(ruta, imagen2);
-     * } catch (IOException e) {
-     * resp.put("mensaje", "No fue posible guardar imagenes del producto");
-     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-     * }
-     * 
-     * if (nombreImagen1 == null || nombreImagen2 == null) {
-     * resp.put("mensaje", "No fue posible guardar imagenes del producto");
-     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-     * }
-     * 
-     * fileService.eliminar(ruta, producto.getProductoImagen().getImagenUno());
-     * fileService.eliminar(ruta, producto.getProductoImagen().getImagenDos());
-     * 
-     * try {
-     * pi.setImagenUno(nombreImagen1);
-     * pi.setImagenDos(nombreImagen2);
-     * productoService.savePI(pi);
-     * } catch (DataAccessException e) {
-     * resp.put("mensaje", "Error al guardar imagenes");
-     * return new ResponseEntity<Map<String, String>>(resp,
-     * HttpStatus.INTERNAL_SERVER_ERROR);
-     * }
-     * 
-     * resp.put("mensaje", "Producto creado con éxito");
-     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.CREATED);
-     * }
-     * 
-     * @PreAuthorize("hasRole('ADMIN')")
-     * 
-     * @PostMapping("/img/dos")
-     * public ResponseEntity<?> saveImageTwoInverse(@RequestParam(name = "id")
-     * Integer id,
-     * 
-     * @RequestParam(name = "imagen2") MultipartFile imagen2,
-     * 
-     * @RequestParam(name = "imagen3") MultipartFile imagen3) {
-     * 
-     * Map<String, String> resp = new HashMap<>();
-     * String ruta = RutaActual.RUTA_PRODUCTO;
-     * Producto producto = null;
-     * ProductoImagen pi = null;
-     * 
-     * if (imagen2.isEmpty() || imagen3.isEmpty()) {
-     * resp.put("mensaje", "Una de las imagenes no es válida");
-     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-     * }
-     * 
-     * try {
-     * producto = productoService.getByIdproducto(id);
-     * } catch (DataAccessException e) {
-     * resp.put("mensaje", "Error de consulta a la base de datos");
-     * return new ResponseEntity<Map<String, String>>(resp,
-     * HttpStatus.INTERNAL_SERVER_ERROR);
-     * }
-     * 
-     * if (producto == null) {
-     * resp.put("mensaje", "No fue posible cotejar sus datos");
-     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-     * }
-     * 
-     * pi = new ProductoImagen();
-     * pi.setIdpimagen(producto.getProductoImagen().getIdpimagen());
-     * pi.setImagenUno(producto.getProductoImagen().getImagenUno());
-     * pi.setImagenDos(producto.getProductoImagen().getImagenDos());
-     * pi.setImagenTres(producto.getProductoImagen().getImagenTres());
-     * 
-     * String nombreImagen2 = null;
-     * String nombreImagen3 = null;
-     * 
-     * try {
-     * nombreImagen2 = fileService.copiar(ruta, imagen2);
-     * nombreImagen3 = fileService.copiar(ruta, imagen3);
-     * } catch (IOException e) {
-     * resp.put("mensaje", "No fue posible guardar imagenes del producto");
-     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-     * }
-     * 
-     * if (nombreImagen2 == null || nombreImagen3 == null) {
-     * resp.put("mensaje", "No fue posible guardar imagenes del producto");
-     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-     * }
-     * 
-     * fileService.eliminar(ruta, pi.getImagenDos());
-     * fileService.eliminar(ruta, pi.getImagenTres());
-     * 
-     * try {
-     * pi.setImagenDos(nombreImagen2);
-     * pi.setImagenTres(nombreImagen3);
-     * productoService.savePI(pi);
-     * } catch (DataAccessException e) {
-     * resp.put("mensaje", "Error al guardar imagenes");
-     * return new ResponseEntity<Map<String, String>>(resp,
-     * HttpStatus.INTERNAL_SERVER_ERROR);
-     * }
-     * 
-     * resp.put("mensaje", "Datos del producto actualizados con éxito");
-     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.CREATED);
-     * }
-     * 
-     * @PreAuthorize("hasRole('ADMIN')")
-     * 
-     * @PostMapping("/imagen/tres")
-     * public ResponseEntity<?> saveImageThree(@RequestParam(name = "id") Integer
-     * id,
-     * 
-     * @RequestParam(name = "imagen1") MultipartFile imagen1,
-     * 
-     * @RequestParam(name = "imagen2") MultipartFile imagen2,
-     * 
-     * @RequestParam(name = "imagen3") MultipartFile imagen3) {
-     * 
-     * Map<String, String> resp = new HashMap<>();
-     * String ruta = RutaActual.RUTA_PRODUCTO;
-     * Producto producto = null;
-     * ProductoImagen pi = null;
-     * 
-     * if (imagen1.isEmpty() || imagen2.isEmpty() || imagen3.isEmpty()) {
-     * resp.put("mensaje", "Una de las imagenes no es válida");
-     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-     * }
-     * 
-     * try {
-     * producto = productoService.getByIdproducto(id);
-     * } catch (DataAccessException e) {
-     * resp.put("mensaje", "Error de consulta a la base de datos");
-     * return new ResponseEntity<Map<String, String>>(resp,
-     * HttpStatus.INTERNAL_SERVER_ERROR);
-     * }
-     * 
-     * if (producto == null) {
-     * resp.put("mensaje", "No fue posible cotejar sus datos");
-     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-     * }
-     * 
-     * pi = new ProductoImagen();
-     * pi.setIdpimagen(producto.getProductoImagen().getIdpimagen());
-     * pi.setImagenUno(producto.getProductoImagen().getImagenUno());
-     * pi.setImagenDos(producto.getProductoImagen().getImagenDos());
-     * pi.setImagenTres(producto.getProductoImagen().getImagenTres());
-     * 
-     * String nombreImagen1 = null;
-     * String nombreImagen2 = null;
-     * String nombreImagen3 = null;
-     * 
-     * try {
-     * nombreImagen1 = fileService.copiar(ruta, imagen1);
-     * nombreImagen2 = fileService.copiar(ruta, imagen2);
-     * nombreImagen3 = fileService.copiar(ruta, imagen3);
-     * } catch (IOException e) {
-     * resp.put("mensaje", "No fue posible guardar imagenes del producto");
-     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-     * }
-     * 
-     * if (nombreImagen1 == null || nombreImagen2 == null || nombreImagen3 == null)
-     * {
-     * resp.put("mensaje", "No fue posible guardar imagenes del producto");
-     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-     * }
-     * 
-     * fileService.eliminar(ruta, producto.getProductoImagen().getImagenUno());
-     * fileService.eliminar(ruta, producto.getProductoImagen().getImagenDos());
-     * fileService.eliminar(ruta, producto.getProductoImagen().getImagenTres());
-     * 
-     * try {
-     * pi.setImagenUno(nombreImagen1);
-     * pi.setImagenDos(nombreImagen2);
-     * pi.setImagenTres(nombreImagen3);
-     * productoService.savePI(pi);
-     * } catch (DataAccessException e) {
-     * resp.put("mensaje", "Error al guardar imagenes");
-     * return new ResponseEntity<Map<String, String>>(resp,
-     * HttpStatus.INTERNAL_SERVER_ERROR);
-     * }
-     * 
-     * resp.put("mensaje", "Datos del producto guardado con éxito");
-     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.CREATED);
-     * }
-    */
+    }    
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/obtener/{id}")
@@ -651,6 +362,39 @@ public class ProductoController {
         producto.getProductoImagenes().forEach(pi -> fileService.eliminar(ruta, pi.getImagen()));
 
         resp.put("mensaje", "Registro eliminado con éxito");
+        return new ResponseEntity<Map<String, String>>(resp, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/img/eliminar/{id}")
+    public ResponseEntity<?> deleteImagen(@PathVariable(value = "id") Integer idimagen) {
+
+        Map<String, String> resp = new HashMap<>();
+        ProductoImagen productoImg = null;
+        String ruta = RutaActual.RUTA_PRODUCTO;
+
+        try {
+            productoImg = productoService.getByIdimagen(idimagen);
+        } catch (DataAccessException e) {
+            resp.put("mensaje", "Error de consulta a la base de datos");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if (productoImg == null) {
+            resp.put("mensaje", "No fue posible cotejar datos del producto");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
+        }
+
+        try {
+            productoService.deleteImg(productoImg.getIdpimagen());
+        } catch (DataAccessException e) {
+            resp.put("mensaje", "Error al eliminar imagen");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        fileService.eliminar(ruta, productoImg.getImagen());
+
+        resp.put("mensaje", "Imagen eliminado con éxito");
         return new ResponseEntity<Map<String, String>>(resp, HttpStatus.OK);
     }
 

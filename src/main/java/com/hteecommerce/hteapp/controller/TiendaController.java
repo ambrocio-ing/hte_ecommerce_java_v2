@@ -272,7 +272,7 @@ public class TiendaController {
 
         }
 
-        MDetalleIngreso mdi = Mapper.mapDetalleIngresoTienda(di);
+        MDetalleIngreso mdi = Mapper.mapDetalleIngreso(di);
         return new ResponseEntity<MDetalleIngreso>(mdi, HttpStatus.OK);
     }
 
@@ -332,7 +332,7 @@ public class TiendaController {
             
             List<MDetalleIngreso> mlista = dis.stream()
                 .limit(50)
-                .map(di -> Mapper.mapDetalleIngresoTienda(di))
+                .map(di -> Mapper.mapDetalleIngreso(di))
                 .collect(Collectors.toList());
 
             return new ResponseEntity<List<MDetalleIngreso>>(mlista, HttpStatus.OK);

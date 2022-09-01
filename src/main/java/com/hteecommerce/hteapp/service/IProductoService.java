@@ -24,4 +24,6 @@ public interface IProductoService {
     //imagen
     public void savePI(ProductoImagen pi);
     public void saveAllPI(List<ProductoImagen> pis);
+    public ProductoImagen getByIdimagen(Integer idimagen);
+    public void deleteImg(Integer idimagen);
 }

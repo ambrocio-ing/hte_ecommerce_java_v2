@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hteecommerce.hteapp.entity.DetalleComprobante;
-import com.hteecommerce.hteapp.entity.DetalleIngreso;
 import com.hteecommerce.hteapp.entity.Variedad;
 
 public class MDetalleComprobante {
@@ -32,48 +31,17 @@ public class MDetalleComprobante {
 
     public MDetalleComprobante(DetalleComprobante dc) {
         this.iddetallecomprobante = dc.getIddetallecomprobante();
-        this.variedades = dc.getVariedades();
         this.cantidad = dc.getCantidad();
         this.descuento = dc.getDescuento();
         this.precioUnitario = dc.getPrecioUnitario();
         this.subTotal = dc.getSubTotal();
-        this.detalleIngreso = new MDetalleIngreso(
-                dc.getDetalleIngreso().getIddetalleingreso(), dc.getDetalleIngreso().getPrecioVenta(),
-                dc.getDetalleIngreso().getPrecioVentaAnterior(), dc.getDetalleIngreso().getPorcentajeDescuento(),
-                dc.getDetalleIngreso().getStockInicial(), dc.getDetalleIngreso().getStockActual(),
-                dc.getDetalleIngreso().getFechaProduccion(), dc.getDetalleIngreso().getFechaVencimiento(),
-                dc.getDetalleIngreso().getEstado(), dc.getDetalleIngreso().getSucursal(),
-                dc.getDetalleIngreso().getProducto(),
-                dc.getDetalleIngreso().getVariedades(), dc.getDetalleIngreso().getIngresoId());
+        this.detalleIngreso = new MDetalleIngreso(dc.getDetalleIngreso().getIddetalleingreso(),
+                dc.getDetalleIngreso().getPrecioVenta(), dc.getDetalleIngreso().getSucursal(),
+                dc.getDetalleIngreso().getProducto());
+
+        this.variedades = dc.getVariedades();
         this.comprobanteId = dc.getComprobanteId();
-    }
-
-    public MDetalleComprobante(Integer iddetallecomprobante, List<Variedad> variedades, Integer cantidad,
-            Double descuento, Double subTotal, Double precioUnitario,
-            DetalleIngreso detalleIngreso, Integer comprobanteId) {
-        this.iddetallecomprobante = iddetallecomprobante;
-        this.variedades = variedades;
-        this.cantidad = cantidad;
-        this.descuento = descuento;
-        this.precioUnitario = precioUnitario;
-        this.subTotal = subTotal;
-        this.detalleIngreso = new MDetalleIngreso(detalleIngreso.getIddetalleingreso(),
-                detalleIngreso.getPrecioVenta(),
-                detalleIngreso.getSucursal(), detalleIngreso.getProducto(),
-                detalleIngreso.getVariedades(), detalleIngreso.getIngresoId());
-        this.comprobanteId = comprobanteId;
-    }    
-
-    public MDetalleComprobante(Integer iddetallecomprobante, Integer cantidad, Double descuento, Double precioUnitario,
-            Double subTotal, List<Variedad> variedades, Integer comprobanteId) {
-        this.iddetallecomprobante = iddetallecomprobante;
-        this.cantidad = cantidad;
-        this.descuento = descuento;
-        this.precioUnitario = precioUnitario;
-        this.subTotal = subTotal;
-        this.variedades = variedades;
-        this.comprobanteId = comprobanteId;
-    }
+    }        
 
     public Integer getIddetallecomprobante() {
         return iddetallecomprobante;

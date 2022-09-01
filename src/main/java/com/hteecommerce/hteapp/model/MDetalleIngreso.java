@@ -44,6 +44,7 @@ public class MDetalleIngreso {
 
     }
 
+    //constructor para vista del lado administrativo
     public MDetalleIngreso(DetalleIngreso di) {
         this.iddetalleingreso = di.getIddetalleingreso();
         this.precioCompra = di.getPrecioCompra();
@@ -59,27 +60,9 @@ public class MDetalleIngreso {
         this.producto = di.getProducto();
         this.variedades = di.getVariedades();
         this.ingresoId = di.getIngresoId();
-    }
+    }    
 
-    public MDetalleIngreso(Integer iddetalleingreso, Double precioVenta, Double precioVentaAnterior,
-            Double porcentajeDescuento, Integer stockInicial, Integer stockActual,
-            LocalDate fechaProduccion, LocalDate fechaVencimiento, Boolean estado,
-            String sucursal, Producto producto, List<Variedad> variedades, Integer ingresoId) {
-        this.iddetalleingreso = iddetalleingreso;
-        this.precioVenta = precioVenta;
-        this.precioVentaAnterior = precioVentaAnterior;
-        this.porcentajeDescuento = porcentajeDescuento;
-        this.stockInicial = stockInicial;
-        this.stockActual = stockActual;
-        this.fechaProduccion = fechaProduccion;
-        this.fechaVencimiento = fechaVencimiento;
-        this.estado = estado;
-        this.sucursal = sucursal;
-        this.producto = producto;
-        this.variedades = variedades;
-        this.ingresoId = ingresoId;
-    }
-
+    //constructor para vista del lado ecommerce
     public MDetalleIngreso(Integer iddetalleingreso, Double precioVenta, Double precioVentaAnterior,
             Double porcentajeDescuento, Integer stockActual, LocalDate fechaProduccion,
             LocalDate fechaVencimiento, Boolean estado, String sucursal, Producto producto, List<Variedad> variedades) {
@@ -94,29 +77,14 @@ public class MDetalleIngreso {
         this.sucursal = sucursal;
         this.producto = producto;
         this.variedades = variedades;
-    }
+    }       
 
-    public MDetalleIngreso(Integer iddetalleingreso, Double precioVenta, Double precioVentaAnterior,
-            Double porcentajeDescuento, Integer stockInicial, Integer stockActual,
-            Boolean estado, String sucursal, List<Variedad> variedades) {
-        this.iddetalleingreso = iddetalleingreso;
-        this.precioVenta = precioVenta;
-        this.precioVentaAnterior = precioVentaAnterior;
-        this.porcentajeDescuento = porcentajeDescuento;
-        this.stockInicial = stockInicial;
-        this.stockActual = stockActual;
-        this.estado = estado;
-        this.sucursal = sucursal;
-        this.variedades = variedades;
-    }
-
-    public MDetalleIngreso(Integer iddetalleingreso, Double precioVenta, String sucursal, Producto producto, List<Variedad> variedades, Integer ingresoId) {
+    //para que retorne con comprobante
+    public MDetalleIngreso(Integer iddetalleingreso, Double precioVenta, String sucursal, Producto producto) {
         this.iddetalleingreso = iddetalleingreso;
         this.precioVenta = precioVenta;
         this.sucursal = sucursal;
         this.producto = producto;
-        this.variedades = variedades;
-        this.ingresoId = ingresoId;
     }
 
     public Integer getIddetalleingreso() {

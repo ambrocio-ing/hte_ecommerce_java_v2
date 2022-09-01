@@ -63,7 +63,6 @@ public class ComprobanteController {
             resp.put("mensaje", "Sin datos que mostrar");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
         }
-
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -139,7 +138,7 @@ public class ComprobanteController {
         }
 
         if (coms != null && coms.size() != 0) {
-            List<MComprobante> mlista = Mapper.mapComprobantes(coms);
+            List<MComprobante> mlista = coms.stream().map(com -> Mapper.mapComprobante(com)).collect(Collectors.toList());
             return new ResponseEntity<List<MComprobante>>(mlista, HttpStatus.OK);
         } else {
             resp.put("mensaje", "Sin datos que mostrar");
@@ -166,7 +165,7 @@ public class ComprobanteController {
         }
 
         if (coms != null && coms.size() != 0) {
-            List<MComprobante> mlista = Mapper.mapComprobantes(coms);
+            List<MComprobante> mlista = coms.stream().map(com -> Mapper.mapComprobante(com)).collect(Collectors.toList());
             return new ResponseEntity<List<MComprobante>>(mlista, HttpStatus.OK);
         } else {
             resp.put("mensaje", "Sin datos que mostrar");
@@ -191,7 +190,7 @@ public class ComprobanteController {
 
         if (coms != null && coms.size() != 0) {
 
-            List<MComprobante> mlista = Mapper.mapComprobantes(coms);
+            List<MComprobante> mlista = coms.stream().map(com -> Mapper.mapComprobante(com)).collect(Collectors.toList());
             mlista = mlista.stream().limit(10).collect(Collectors.toList());
             return new ResponseEntity<List<MComprobante>>(mlista, HttpStatus.OK);
             

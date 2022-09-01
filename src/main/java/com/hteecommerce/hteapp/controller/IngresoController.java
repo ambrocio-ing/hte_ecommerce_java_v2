@@ -14,7 +14,6 @@ import com.hteecommerce.hteapp.entity.Ingreso;
 import com.hteecommerce.hteapp.entity.Personal;
 import com.hteecommerce.hteapp.entity.Producto;
 import com.hteecommerce.hteapp.mapper.Mapper;
-import com.hteecommerce.hteapp.model.MDetalleIngreso;
 import com.hteecommerce.hteapp.model.MIngreso;
 import com.hteecommerce.hteapp.service.IIngresoService;
 import com.hteecommerce.hteapp.service.IPersonalService;
@@ -68,8 +67,8 @@ public class IngresoController {
 
         if (dis.getContent().size() != 0) {
 
-            Page<MDetalleIngreso> mpage = dis.map(di -> new MDetalleIngreso(di));
-            return new ResponseEntity<Page<MDetalleIngreso>>(mpage, HttpStatus.OK);
+            //Page<MDetalleIngreso> mpage = dis.map(di -> new MDetalleIngreso(di));
+            return new ResponseEntity<Page<DetalleIngreso>>(dis, HttpStatus.OK);
         } else {
             resp.put("mensaje", "Sin datos que mostrar");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
@@ -92,8 +91,8 @@ public class IngresoController {
         }
 
         if (dis != null && dis.size() != 0) {
-            List<MDetalleIngreso> mlista = Mapper.mapDetalleIngresos(dis);
-            return new ResponseEntity<List<MDetalleIngreso>>(mlista, HttpStatus.OK);
+            //List<MDetalleIngreso> mlista = dis.stream().map(di -> Mapper.mapDetalleIngreso(di)).collect(Collectors.toList()) ;
+            return new ResponseEntity<List<DetalleIngreso>>(dis, HttpStatus.OK);
         } else {
             resp.put("mensaje", "Sin datos que mostrar");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
@@ -122,12 +121,7 @@ public class IngresoController {
 
         }
 
-        MDetalleIngreso mdi = new MDetalleIngreso(di.getIddetalleingreso(), di.getPrecioVenta(),
-                di.getPrecioVentaAnterior(),
-                di.getPorcentajeDescuento(),
-                di.getStockInicial(), di.getStockActual(),
-                di.getEstado(), di.getSucursal(), di.getVariedades());
-        return new ResponseEntity<MDetalleIngreso>(mdi, HttpStatus.OK);
+        return new ResponseEntity<DetalleIngreso>(di, HttpStatus.OK);
 
     }    
 
@@ -269,7 +263,7 @@ public class IngresoController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/obtener/{id}")
-    public ResponseEntity<?> getDI(@PathVariable(value = "id") Integer idingreso) {
+    public ResponseEntity<?> getIngreso(@PathVariable(value = "id") Integer idingreso) {
 
         Map<String, String> resp = new HashMap<>();
         Ingreso ingreso = null;

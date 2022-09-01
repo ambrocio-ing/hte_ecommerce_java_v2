@@ -22,9 +22,9 @@ public class MCompraRapida {
     public MCompraRapida(CompraRapida compraRapida){
         this.idcompra = compraRapida.getIdcompra();
         this.condicion = compraRapida.getCondicion();
-        this.sucursal = compraRapida.getCondicion();
+        this.sucursal = compraRapida.getSucursal();
         this.idcliente = compraRapida.getIdcliente();
-        this.detalleIngreso = Mapper.mapDetalleIngresoTienda(compraRapida.getDetalleIngreso());
+        this.detalleIngreso = Mapper.mapDetalleIngreso(compraRapida.getDetalleIngreso());
     }
 
     public Integer getIdcompra() {

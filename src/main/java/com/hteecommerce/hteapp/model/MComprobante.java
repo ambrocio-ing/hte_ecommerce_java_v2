@@ -54,6 +54,7 @@ public class MComprobante {
 
     }
 
+    //este para mostrar en lado cliente
     public MComprobante(Comprobante comprobante) {
         this.idcomprobante = comprobante.getIdcomprobante();
         this.ruc = comprobante.getRuc();
@@ -74,19 +75,17 @@ public class MComprobante {
         this.detallePago = Mapper.mapDetallePago(comprobante.getDetallePago());
         this.direccionEnvio = new MDireccionEnvio(comprobante.getDireccionEnvio());
         this.detalleComprobantes = comprobante.getDetalleComprobantes().stream()
-                .map(dc -> {
-                    return new MDetalleComprobante(dc.getIddetallecomprobante(), dc.getVariedades(), dc.getCantidad(),
-                            dc.getDescuento(), dc.getPrecioUnitario(),
-                            dc.getSubTotal(), dc.getDetalleIngreso(), dc.getComprobanteId());
-                }).collect(Collectors.toList());
+                .map(dc -> new MDetalleComprobante(dc)).collect(Collectors.toList());
     }
-
-    public MComprobante(Integer idcomprobante, String numero, String idtransaccion, String tipoComprobante,
-            LocalDateTime fechaPedido, String estado, double igv, Double montoEnvio, Double subTotal, Double total,
-            Double descuento, LocalDateTime fechaEntrega, String nbolsa, String formaEnvio, String ruc,
-            String razonSocial,
-            DireccionEnvio direccionEnvio, DetallePago detallePago, List<DetalleComprobante> detalleComprobantes) {
+   
+    public MComprobante(Integer idcomprobante, String ruc, String razonSocial, String numero, String idtransaccion,
+            String tipoComprobante, LocalDateTime fechaPedido, String estado, double igv, Double montoEnvio,
+            Double subTotal, Double total, Double descuento, LocalDateTime fechaEntrega, String nbolsa,
+            String formaEnvio, DireccionEnvio direccionEnvio, DetallePago detallePago,
+            List<DetalleComprobante> detalleComprobantes) {
         this.idcomprobante = idcomprobante;
+        this.ruc = ruc;
+        this.razonSocial = razonSocial;
         this.numero = numero;
         this.idtransaccion = idtransaccion;
         this.tipoComprobante = tipoComprobante;
@@ -100,16 +99,10 @@ public class MComprobante {
         this.fechaEntrega = fechaEntrega;
         this.nbolsa = nbolsa;
         this.formaEnvio = formaEnvio;
-        this.ruc = ruc;
-        this.razonSocial = razonSocial;
-        this.detallePago = new MDetallePago(detallePago);
         this.direccionEnvio = new MDireccionEnvio(direccionEnvio);
+        this.detallePago = new MDetallePago(detallePago);
         this.detalleComprobantes = detalleComprobantes.stream()
-                .map(dc -> {
-                    return new MDetalleComprobante(dc.getIddetallecomprobante(), dc.getVariedades(), dc.getCantidad(),
-                            dc.getDescuento(), dc.getPrecioUnitario(),
-                            dc.getSubTotal(), dc.getDetalleIngreso(), dc.getComprobanteId());
-                }).collect(Collectors.toList());
+                .map(dc -> new MDetalleComprobante(dc)).collect(Collectors.toList());
     }
 
     public Integer getIdcomprobante() {

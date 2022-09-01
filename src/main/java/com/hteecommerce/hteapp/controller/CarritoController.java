@@ -194,7 +194,7 @@ public class CarritoController {
             else{
                 MCompraRapida mcompra = new MCompraRapida();
                 mcompra.setCondicion("Producto no disponible");
-                mcompra.setDetalleIngreso(Mapper.mapDetalleIngresoTienda(car.getDetalleIngreso()));                
+                mcompra.setDetalleIngreso(Mapper.mapDetalleIngreso(car.getDetalleIngreso()));                
                 compras.add(mcompra);
             }            
         }       

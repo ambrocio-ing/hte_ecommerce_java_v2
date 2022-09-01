@@ -14,16 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ProductoServiceImplements implements IProductoService {
-
-    /* @Autowired
-    private IProductoDatoNutricionalRepository productoDatoNutricionalRepository;
-
-    @Autowired
-    private IProductoVestimentaRepository productoVestimentaRepository;
-
-    @Autowired
-    private IProductoOtrosRepository productoOtrosRepository; */
+public class ProductoServiceImplements implements IProductoService {   
 
     @Autowired
     private IProductoRepository productoRepository;
@@ -40,23 +31,8 @@ public class ProductoServiceImplements implements IProductoService {
 
     @Override
     @Transactional
-    public Producto savePto(Producto producto) {
-        
-       /*  if(producto.getProductoDatoNutricional() != null){
-            ProductoDatoNutricional pdn = productoDatoNutricionalRepository.save(producto.getProductoDatoNutricional());
-            producto.setProductoDatoNutricional(pdn);
-        }
-
-        if(producto.getProductoVestimenta() != null){
-            ProductoVestimenta pv = productoVestimentaRepository.save(producto.getProductoVestimenta());
-            producto.setProductoVestimenta(pv);
-        }
-
-        if(producto.getProductoOtros() != null){
-            ProductoOtros po = productoOtrosRepository.save(producto.getProductoOtros());
-            producto.setProductoOtros(po);
-        } */
-
+    public Producto savePto(Producto producto) {       
+       
         return productoRepository.save(producto);        
     }
 
@@ -115,6 +91,18 @@ public class ProductoServiceImplements implements IProductoService {
     public void saveAllPI(List<ProductoImagen> pis) {
         
         productoImagenRepository.saveAll(pis);        
+    }
+
+    @Override
+    public ProductoImagen getByIdimagen(Integer idimagen) {
+        
+        return productoImagenRepository.findById(idimagen).orElse(null);
+    }
+
+    @Override
+    public void deleteImg(Integer idimagen) {
+        
+        productoImagenRepository.deleteById(idimagen);
     }    
     
 }
