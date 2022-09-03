@@ -31,8 +31,12 @@ public class DireccionEnvioServiceImplements implements IDireccionEnvioService {
 
     @Override
     @Transactional
-    public DireccionEnvio saveDE(DireccionEnvio de) {       
-        
+    public DireccionEnvio saveDE(DireccionEnvio de) {    
+
+        if(de.getDestinatario() != null){            
+            de.setDestinatario(destinatarioRepository.save(de.getDestinatario()));            
+        }
+                
         return direccionEnvioRepository.save(de);
     }
 

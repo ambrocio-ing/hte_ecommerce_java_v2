@@ -121,7 +121,7 @@ public class ProductoController {
 
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/crear")
     public ResponseEntity<?> productoCreate(@Valid @RequestBody Producto producto, BindingResult result) {
 
@@ -178,7 +178,7 @@ public class ProductoController {
 
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/imgs")
     public ResponseEntity<?> saveImageOne(@RequestParam(name = "id") Integer id,
             @RequestParam(name = "imagenes") List<MultipartFile> imagenes) {
@@ -232,7 +232,7 @@ public class ProductoController {
         return new ResponseEntity<Map<String, String>>(resp, HttpStatus.CREATED);
     }    
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/obtener/{id}")
     public ResponseEntity<?> getProducto(@PathVariable(value = "id") Integer Idproducto) {
 
@@ -255,7 +255,7 @@ public class ProductoController {
 
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/editar")
     public ResponseEntity<?> productoUpdate(@Valid @RequestBody Producto producto, BindingResult result) {
 
@@ -332,7 +332,7 @@ public class ProductoController {
         return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<?> deleteProducto(@PathVariable(value = "id") Integer Idproducto) {
 
@@ -365,7 +365,7 @@ public class ProductoController {
         return new ResponseEntity<Map<String, String>>(resp, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/img/eliminar/{id}")
     public ResponseEntity<?> deleteImagen(@PathVariable(value = "id") Integer idimagen) {
 

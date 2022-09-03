@@ -2,7 +2,6 @@ package com.hteecommerce.hteapp.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -67,7 +66,7 @@ public class DireccionEnvio implements Serializable {
     private Cliente cliente;
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "destinatario_id", nullable = true)
     private Destinatario destinatario;   
 

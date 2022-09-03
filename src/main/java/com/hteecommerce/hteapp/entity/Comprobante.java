@@ -84,8 +84,7 @@ public class Comprobante implements Serializable {
     @Column(name = "forma_envio")
     @Size(max = 50)
     private String formaEnvio;    
-
-    @Size(max = 100)
+    
     private String imagen;
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })

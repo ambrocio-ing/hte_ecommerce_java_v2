@@ -164,6 +164,133 @@ public class ComprobanteLibreController {
         return new ResponseEntity<Map<String, String>>(resp, HttpStatus.CREATED);
     }
 
+    //nueva version para guardar imagen tambien
+    @PostMapping("/image/com/crear")
+    public ResponseEntity<?> createComprobanteConImagen(@Valid @RequestBody Comprobante comprobante, BindingResult result) {
+
+        Map<String, String> resp = new HashMap<>();   
+        DireccionEnvio direccionEnvio = null;     
+        String numero = null;
+
+        if(result.hasErrors()){
+            String errors = result.getFieldErrors().stream()
+                .map(err -> "El campo: " + err.getField() + " " + err.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+
+            resp.put("mensaje", errors);
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.BAD_REQUEST);
+        }     
+                       
+        String errorsDC = comprobante.getDetalleComprobantes().stream()
+                .flatMap(dc -> UDetalleComprobante.isValidDC(dc.getCantidad(), dc.getSubTotal()))
+                .collect(Collectors.joining(", "));
+
+        if (errorsDC != null && errorsDC.length() != 0) {
+            resp.put("mensaje", errorsDC);
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            direccionEnvio = direccionEnvioService.getByIddireccionenvio(comprobante.getDireccionEnvio().getIddireccion());
+        } catch (DataAccessException e) {
+            resp.put("mensaje", "Error del sistema: Inténtelo mas tarde");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+        List<DetalleComprobante> dcs = new ArrayList<>();
+        for (DetalleComprobante dc : comprobante.getDetalleComprobantes()) {
+
+            DetalleIngreso di = null;
+            try {
+                di = ingresoService.getByIddetalleingreso(dc.getDetalleIngreso().getIddetalleingreso());
+            } catch (DataAccessException e) {
+                resp.put("mensaje", "Error del sistema: Intentelo mas tarde");
+                return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+            }           
+ 
+            if (di != null) { 
+                //di.setStockActual(dc.getDetalleIngreso().getStockActual());   
+                if(di.getVariedades() != null){
+                    di.setVariedades(Mapper.actualizarVariedades(dc.getVariedades(), di.getVariedades()));
+                }
+
+                dc.setDetalleIngreso(di);                
+
+                try {
+                    dc.decreaseStockActual();
+                } catch (InsufficientStockError e) {
+                    resp.put("mensaje", "Stock insuficiente por compra simultanea, por favor quite el producto: " + di.getProducto().getNombre() + " de su carrito y vuelva e intentar");
+                    return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
+                }                
+
+                dcs.add(dc);
+            }
+        }       
+
+        if (comprobante.getDetalleComprobantes().size() != dcs.size()) {
+            resp.put("mensaje", "Error al crear orden, no fue posible validar existencias");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
+        }
+
+        try {
+            numero = comprobanteService.getMaxId();
+        } catch (DataAccessException e) {
+            resp.put("mensaje", "Error de consulta a la base de datos");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if(numero == null){
+            String serie = "001";
+            String correlativo = "000001";
+            numero = serie+"-"+correlativo;
+        }
+        else{
+            String arrayNumero[] = numero.split("-");
+            String serie = arrayNumero[0];
+            String correlativo = arrayNumero[1];
+            if(Integer.parseInt(correlativo) < 999999){
+                numero = serie+"-"+Mapper.generateNumero(correlativo, 6);
+            }
+            else if(Integer.parseInt(correlativo) == 999999){
+                serie = Mapper.generateNumero(serie, 3);
+                numero = serie+"-000001";
+            }            
+        }               
+
+        String nombreImagen = null;
+        String ruta = RutaActual.RUTA_COMPROBANTE;
+
+        try {
+            nombreImagen = fileService.convertirBase64(comprobante.getImagen(), ruta, "comprobante");
+        } catch (IOException e1) {
+            resp.put("mensaje", "Error al crear orden, no fue posible validar existencias");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
+        }
+
+        if(nombreImagen == null){
+            resp.put("mensaje", "Error al crear orden, no fue posible validar existencias");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
+        }
+        
+        comprobante.setImagen(nombreImagen);
+        comprobante.setNumero(numero);
+        comprobante.setDireccionEnvio(direccionEnvio);        
+        comprobante.setDetalleComprobantes(dcs);
+
+        Comprobante com = null;
+
+        try {
+            com = comprobanteService.saveCOM(comprobante);
+        } catch (Exception e) {
+            resp.put("mensaje", "Error al guardar datos");            
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        resp.put("mensaje", "Orden creado con éxito");
+        resp.put("id", com.getIdcomprobante().toString());        
+        return new ResponseEntity<Map<String, String>>(resp, HttpStatus.CREATED);
+    }
+
     @PostMapping("/img/com")
     public ResponseEntity<?> saveImg(@RequestParam(name = "idcom") Integer idcomprobante,
          @RequestParam(name = "imagen") MultipartFile file){
@@ -338,14 +465,7 @@ public class ComprobanteLibreController {
 
             resp.put("mensaje", errors);
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.BAD_REQUEST);
-        }
-
-        if (die.getDestinatario().getIddestinatario() == null &&
-                direccionEnvioService.isExistsByDni(die.getDestinatario().getDni())) {
-
-            resp.put("mensaje", "El documento ingresado para destinatario ya existe en el sistema");
-            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
-        }        
+        }               
 
         die.setCliente(null);        
 
@@ -353,7 +473,7 @@ public class ComprobanteLibreController {
             de = direccionEnvioService.saveDE(die);
         } catch (Exception e) {
             resp.put("mensaje", "Error.. no fue posible guardar nueva dirección");
-            // resp.put("error", e.getMessage());
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

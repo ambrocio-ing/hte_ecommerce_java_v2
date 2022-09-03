@@ -28,6 +28,7 @@ public class ComprobanteServiceImplements implements IComprobanteService {
     @Autowired
     private IDetalleIngresoRepository detalleIngresoRepository;
 
+    //OTRAS TAREAS
     @Override
     @Transactional(readOnly = true)
     public boolean isExistsByNumero(String numero) {
@@ -40,14 +41,7 @@ public class ComprobanteServiceImplements implements IComprobanteService {
     public Comprobante saveCOM(Comprobante comprobante) {
         
         return comprobanteRepository.save(comprobante);
-    }
-
-    @Override
-    @Transactional
-    public DetalleComprobante updateDC(DetalleComprobante dc) {
-        
-        return detalleComprobanteRepository.save(dc);
-    }  
+    }    
 
     @Override
     @Transactional
@@ -56,16 +50,7 @@ public class ComprobanteServiceImplements implements IComprobanteService {
         detalleIngresoRepository.saveAll(dis);
         comprobanteRepository.deleteById(idcom);
         
-    }
-
-    @Override
-    @Transactional
-    public void deleteDC(Integer iddc, DetalleIngreso di) {
-       
-        detalleComprobanteRepository.deleteById(iddc);
-        detalleIngresoRepository.save(di);
-        
-    }
+    }    
 
     @Override
     @Transactional(readOnly = true)
@@ -90,18 +75,26 @@ public class ComprobanteServiceImplements implements IComprobanteService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Comprobante> getByFechaPedido(LocalDate fecha) {
+    public Comprobante getByNumero(String numero) {
         
-        return comprobanteRepository.listByFechaByEstadoPedido(fecha);
+        return comprobanteRepository.findByNumero(numero).orElse(null);
+    }
+
+    //BUSQUEDAS
+    @Override
+    @Transactional(readOnly = true)
+    public List<Comprobante> getByFechaByEstadoPedido(LocalDate fecha, String sucursal) {
+        
+        return comprobanteRepository.listByFechaByEstadoPedido(fecha, sucursal);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Comprobante> getByFechaByEstadoEntregado(LocalDate fecha) {
+    public List<Comprobante> getByFechaByEstadoEntregado(LocalDate fecha, String sucursal) {
         
-        return comprobanteRepository.listByFechaByEstadoEntregado(fecha);
+        return comprobanteRepository.listByFechaByEstadoEntregado(fecha, sucursal);
     }
-
+    
     @Override
     @Transactional(readOnly = true)
     public List<Comprobante> getByClienteByDniOrNombre(String dniOrNombre) {
@@ -111,63 +104,109 @@ public class ComprobanteServiceImplements implements IComprobanteService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Comprobante> getByEstadoEntregado(Pageable pageable) {
+    public List<Comprobante> getByClienteByIdcliente(Integer idcliente) {
         
-        return comprobanteRepository.listByEstadoEntregado(pageable);
+        return comprobanteRepository.listByClienteByIdcliente(idcliente);
+    }
+
+    //lista paginada para sucursal huacho
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Comprobante> getByEstadoEntregadoHuacho(Pageable pageable) {
+        
+        return comprobanteRepository.listByEstadoEntregadoHuacho(pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Comprobante> getByEstadoPedido(Pageable pageable) {
+    public Page<Comprobante> getByEstadoPedidoHuacho(Pageable pageable) {
         
-        return comprobanteRepository.listByEstadoPedido(pageable);
+        return comprobanteRepository.listByEstadoPedidoHuacho(pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Comprobante> getByEstadoAnulado(Pageable pageable) {
+    public Page<Comprobante> getByEstadoAnuladoHuacho(Pageable pageable) {
         
-        return comprobanteRepository.listByEstadoAnulado(pageable);
+        return comprobanteRepository.listByEstadoAnuladoHuacho(pageable);
+    }
+
+    //lista paginada para sucursal barranca
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Comprobante> getByEstadoEntregadoBarranca(Pageable pageable) {
+        
+        return comprobanteRepository.listByEstadoEntregadoBarranca(pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Comprobante getByNumero(String numero) {
+    public Page<Comprobante> getByEstadoPedidoBarranca(Pageable pageable) {
         
-        return comprobanteRepository.findByNumero(numero).orElse(null);
+        return comprobanteRepository.listByEstadoPedidoBarranca(pageable);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Comprobante> getByEstadoAnuladoBarranca(Pageable pageable) {
+        
+        return comprobanteRepository.listByEstadoAnuladoBarranca(pageable);
+    }
+
+    //lista para resumen de productos vendidos
+    @Override
+    @Transactional(readOnly = true)
+    public List<Comprobante> getByEntregaPendienteSucursal(String sucursal) {
+        
+        return comprobanteRepository.listarPorEntregaPendienteSucursal(sucursal);
+    }
+
+    //buscar productos con estado en validacion pendiente por fecha y sucursal
+    @Override
+    @Transactional(readOnly = true)
+    public List<Comprobante> getByFechaByEstadoPedidoValidar(LocalDate fecha, String sucursal) {
+        
+        return comprobanteRepository.listByFechaByEstadoPedidoValidar(fecha, sucursal);
+    }
+
+    //lista paginada de ventas por validar en sucursal huacho
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Comprobante> getByEstadoPedidoValidarHuacho(Pageable pageable) {
+        
+        return comprobanteRepository.listByEstadoPedidoValidarHuacho(pageable);
+    }  
+
+    //lista paginada de ventas por validar en sucursal Barranca
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Comprobante> getByEstadoPedidoValidarBarranca(Pageable pageable) {
+        
+        return comprobanteRepository.listByEstadoPedidoValidarBarranca(pageable);
+    }  
+
+
+    //Detalle comprobante
     @Override
     @Transactional(readOnly = true)
     public DetalleComprobante getDCByIddetallecomprobante(Integer iddc) {
         
         return detalleComprobanteRepository.findById(iddc).orElse(null);
     }
+    
+    @Override
+    @Transactional
+    public DetalleComprobante updateDC(DetalleComprobante dc) {
+        
+        return detalleComprobanteRepository.save(dc);
+    }  
 
     @Override
-    @Transactional(readOnly = true)
-    public List<Comprobante> getByClienteByIdcliente(Integer idcliente) {
-        
-        return comprobanteRepository.listByClienteByIdcliente(idcliente);
+    @Transactional
+    public void deleteDC(Integer iddc, DetalleIngreso di) {
+       
+        detalleComprobanteRepository.deleteById(iddc);
+        detalleIngresoRepository.save(di);        
     }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Comprobante> getByEstado(String estado) {
-        
-        return comprobanteRepository.findByEstado(estado);
-    }
-
-    @Override
-    public List<Comprobante> getByFechaPedidoValidar(LocalDate fecha) {
-        
-        return comprobanteRepository.listByFechaByEstadoPedidoValidar(fecha);
-    }
-
-    @Override
-    public Page<Comprobante> getByEstadoPedidoValidar(Pageable pageable) {
-        
-        return comprobanteRepository.listByEstadoPedidoValidar(pageable);
-    }     
     
 }

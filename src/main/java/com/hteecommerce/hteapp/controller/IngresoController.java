@@ -182,7 +182,7 @@ public class IngresoController {
 
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/crear")
     public ResponseEntity<?> ingresoCreate(@Valid @RequestBody Ingreso ingreso, BindingResult result) {
 
@@ -261,7 +261,7 @@ public class IngresoController {
         return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/obtener/{id}")
     public ResponseEntity<?> getIngreso(@PathVariable(value = "id") Integer idingreso) {
 
@@ -285,7 +285,7 @@ public class IngresoController {
         return new ResponseEntity<MIngreso>(mIngreso, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/editar")
     public ResponseEntity<?> ingresoUpdate(@RequestBody Ingreso ingreso) {
 
@@ -339,7 +339,7 @@ public class IngresoController {
         return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<?> deleteIn(@PathVariable(value = "id") Integer idingreso) {
 
@@ -369,7 +369,7 @@ public class IngresoController {
         return new ResponseEntity<Map<String, String>>(resp, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/di/eliminar/{id}")
     public ResponseEntity<?> deleteDI(@PathVariable(value = "id") Integer iddi) {
 

@@ -2,7 +2,6 @@ package com.hteecommerce.hteapp.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,8 +28,7 @@ public class Destinatario implements Serializable {
     private String apellidos;
 
     @NotNull
-    @Size(max = 12)
-    @Column(unique = true)
+    @Size(max = 12)    
     private String dni;
 
     @NotNull

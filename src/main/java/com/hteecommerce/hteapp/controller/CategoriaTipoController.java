@@ -57,7 +57,7 @@ public class CategoriaTipoController {
         
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/cat-crear")
     public ResponseEntity<?> createCategoria(@Valid @RequestBody Categoria categoria, BindingResult result){
 
@@ -88,7 +88,7 @@ public class CategoriaTipoController {
         return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/cat-obtener/{id}")
     public ResponseEntity<?> getCategoria(@PathVariable(value = "id") Integer id){
 
@@ -112,7 +112,7 @@ public class CategoriaTipoController {
         
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/cat-editar")
     public ResponseEntity<?> updateCategoria(@Valid @RequestBody Categoria cat, BindingResult result){
 
@@ -154,7 +154,7 @@ public class CategoriaTipoController {
         return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/cat-eliminar/{id}")
     public ResponseEntity<?> deleteCategoria(@PathVariable(value = "id") Integer id){
 
@@ -233,7 +233,7 @@ public class CategoriaTipoController {
         
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/tip-crear")
     public ResponseEntity<?> createTipo(@Valid @RequestBody Tipo tipo, BindingResult result){
 
@@ -264,7 +264,7 @@ public class CategoriaTipoController {
         return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/tip-obtener/{id}")
     public ResponseEntity<?> getTipo(@PathVariable(value = "id") Integer id){
 
@@ -288,7 +288,7 @@ public class CategoriaTipoController {
         
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/tip-editar")
     public ResponseEntity<?> updateTipo(@Valid @RequestBody Tipo tipo, BindingResult result){
 
@@ -330,7 +330,7 @@ public class CategoriaTipoController {
         return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/tip-eliminar/{id}")
     public ResponseEntity<?> deleteTipo(@PathVariable(value = "id") Integer id){
 
