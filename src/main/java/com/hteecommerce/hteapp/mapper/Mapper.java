@@ -1,6 +1,7 @@
 package com.hteecommerce.hteapp.mapper;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,6 @@ import com.hteecommerce.hteapp.model.MComentario;
 import com.hteecommerce.hteapp.model.MComprobante;
 import com.hteecommerce.hteapp.model.MDetalleIngreso;
 import com.hteecommerce.hteapp.model.MDetallePago;
-import com.hteecommerce.hteapp.model.MDetalleResumenVenta;
 import com.hteecommerce.hteapp.model.MDireccionEnvio;
 import com.hteecommerce.hteapp.model.MResumenVenta;
 import com.hteecommerce.hteapp.security.model.MUsuario;
@@ -338,7 +338,7 @@ public class Mapper {
 
         return mensajes.stream();
 
-    }    
+    }
 
     // lista para busqueda detalle ingreso
     public static MDetalleIngreso mapDetalleIngreso(DetalleIngreso di) {
@@ -347,7 +347,7 @@ public class Mapper {
                 di.getIddetalleingreso(),
                 di.getPrecioVenta(),
                 di.getPrecioVentaAnterior(),
-                di.getPorcentajeDescuento(),                
+                di.getPorcentajeDescuento(),
                 di.getStockActual(),
                 di.getFechaProduccion(),
                 di.getFechaVencimiento(),
@@ -365,7 +365,7 @@ public class Mapper {
                 .collect(Collectors.toList());
 
         return mlista;
-    }    
+    }
 
     public static String generateNumero(String lastNumero, int size) {
         int num = Integer.parseInt(lastNumero) + 1;
@@ -478,115 +478,6 @@ public class Mapper {
         return hps;
     }
 
-    /*
-     * // agregando variedades del ingreso anterior
-     * public static List<Variedad> mapVariedadesNuevos(List<Variedad> vasNuevos,
-     * List<Variedad> anteriores) {
-     * 
-     * List<Variedad> vasAnteriores = anteriores.stream()
-     * .filter(va -> va.getCantidadTalla() > 0)
-     * .collect(Collectors.toList());
-     * 
-     * List<Variedad> lista_nueva = vasNuevos;
-     * 
-     * for(Variedad vaAnterior : vasAnteriores) {
-     * lista_nueva = mapVariedadesExistentes(lista_nueva, vaAnterior);
-     * }
-     * 
-     * return lista_nueva;
-     * 
-     * }
-     * 
-     * public static List<Variedad> mapVariedadesExistentes(List<Variedad>
-     * vasNuevos, Variedad variedad) {
-     * 
-     * List<Variedad> existeVariedades = vasNuevos.stream()
-     * .filter(va ->
-     * va.getNombreTalla().toLowerCase().equals(variedad.getNombreTalla().
-     * toLowerCase()))
-     * .collect(Collectors.toList());
-     * 
-     * if(existeVariedades.size() != 0){
-     * 
-     * for(Variedad va : vasNuevos){
-     * if(va.getNombreTalla().toLowerCase().equals(variedad.getNombreTalla().
-     * toLowerCase())){
-     * va = mapVariedad(va, variedad);
-     * }
-     * }
-     * 
-     * return vasNuevos;
-     * 
-     * }
-     * else{
-     * 
-     * List<Color> colores = variedad.getColores().stream()
-     * .filter(co -> co.getCantidadColor() > 0)
-     * .collect(Collectors.toList());
-     * 
-     * List<Color> colores_nuevos = colores.stream()
-     * .map(co -> new Color(co.getNombreColor(), co.getCantidadColor(),
-     * co.getNombreImagen()))
-     * .collect(Collectors.toList());
-     * 
-     * Variedad vari = new Variedad(variedad.getNombreTalla(),
-     * variedad.getCantidadTalla(), colores_nuevos);
-     * 
-     * vasNuevos.add(vari);
-     * return vasNuevos;
-     * }
-     * 
-     * }
-     * 
-     * public static Variedad mapVariedad(Variedad nuevo, Variedad anterior){
-     * 
-     * List<Color> coloresAnteriores = anterior.getColores().stream()
-     * .filter(co -> co.getCantidadColor() > 0)
-     * .collect(Collectors.toList());
-     * 
-     * List<Color> nueva_lista = nuevo.getColores();
-     * 
-     * for(Color color : coloresAnteriores){
-     * nueva_lista = mapColores(nueva_lista, color);
-     * }
-     * 
-     * return new Variedad(nuevo.getNombreTalla(),
-     * nuevo.getCantidadTalla() + anterior.getCantidadTalla(),
-     * nueva_lista);
-     * }
-     * 
-     * public static List<Color> mapColores(List<Color> cosNuevos, Color
-     * coAnterior){
-     * 
-     * List<Color> color_lista = cosNuevos.stream()
-     * .filter(co ->
-     * co.getNombreColor().toLowerCase().equals(coAnterior.getNombreColor().
-     * toLowerCase()))
-     * .collect(Collectors.toList());
-     * 
-     * if(color_lista.size() != 0){
-     * 
-     * for(Color co : cosNuevos){
-     * if(co.getNombreColor().toLowerCase().equals(coAnterior.getNombreColor().
-     * toLowerCase())){
-     * 
-     * co.setCantidadColor(co.getCantidadColor() + coAnterior.getCantidadColor());
-     * }
-     * }
-     * 
-     * return cosNuevos;
-     * 
-     * }
-     * else{
-     * Color col = new Color(coAnterior.getNombreColor(),
-     * coAnterior.getCantidadColor(), coAnterior.getNombreImagen());
-     * cosNuevos.add(col);
-     * 
-     * return cosNuevos;
-     * }
-     * }
-     */
-
     // map degalle pago
     public static MDetallePago mapDetallePago(DetallePago dp) {
         MDetallePago mdp = new MDetallePago(dp.getIddetallepago(), dp.getEstadoPago(),
@@ -595,89 +486,43 @@ public class Mapper {
         return mdp;
     }
 
-    public static List<DetalleComprobante> unirDetalleComprobantes(List<Comprobante> lista) {
-        List<DetalleComprobante> dcs = new ArrayList<>();
-        for (Comprobante com : lista) {
-            dcs.addAll(com.getDetalleComprobantes());
-        }
-
-        return dcs;
-    }
-
-    public static List<MResumenVenta> agruparDetalleComprobantes(List<Comprobante> coms,
-            List<DetalleComprobante> lista) {
+    public static List<MResumenVenta> agruparDetalleComprobantes(List<Comprobante> coms) {
 
         List<MResumenVenta> mresumenes = new ArrayList<>();
 
-        Map<String, List<DetalleComprobante>> result = lista.stream()
-                .collect(Collectors.groupingBy(dc -> dc.getDetalleIngreso().getProducto().getNombre()));
+        Map<String, List<Comprobante>> groupComs = coms.stream()
+                .collect(Collectors.groupingBy(com -> com.getFechaEntrega().toString().split("T")[0]));
 
-        for (Map.Entry<String, List<DetalleComprobante>> pair : result.entrySet()) {
-            mresumenes.add(new MResumenVenta(pair.getKey(), asignarNombreImagen(pair.getValue()),
-                    asignarComprobante(coms, pair.getValue())));
-        }
+        for (Map.Entry<String, List<Comprobante>> pair : groupComs.entrySet()) {
 
-        List<MResumenVenta> m_resumenes = new ArrayList<>();
+            List<DetalleComprobante> detComs = flatMapDetalleComprobantes(pair.getValue());
 
-        for (MResumenVenta rm : mresumenes) {
+            Map<String, List<DetalleComprobante>> groupDetComs = detComs.stream()
+                    .collect(Collectors.groupingBy(dc -> dc.getDetalleIngreso().getProducto().getNombre()));
 
-            Map<String, List<MDetalleResumenVenta>> resultTwo = rm.getDetalleResumenVentas().stream()
-                    .collect(Collectors.groupingBy(drv -> drv.getFechaEntrega().toString().split("T")[0]));
-            for (Map.Entry<String, List<MDetalleResumenVenta>> pair : resultTwo.entrySet()) {
+            for (Map.Entry<String, List<DetalleComprobante>> pairdc : groupDetComs.entrySet()) {
 
-                m_resumenes.add(new MResumenVenta(rm.getNombreProducto(), rm.getImagenProducto(),
-                        LocalDate.parse(pair.getKey()), pair.getValue()));
+                mresumenes.add(new MResumenVenta(pairdc.getKey(), pairdc.getValue(), LocalDate.parse(pair.getKey()),
+                        obtenerFechaHoraEntrega(pair.getValue())));
             }
+
         }
 
-        return m_resumenes;
+        return mresumenes;
     }
 
-    public static List<MDetalleResumenVenta> asignarComprobante(List<Comprobante> coms, List<DetalleComprobante> dcs) {
-
-        List<MDetalleResumenVenta> detalleResumenVentas = new ArrayList<>();
-
-        for (DetalleComprobante dc : dcs) {
-            for (Comprobante com : coms) {
-                if (com.getIdcomprobante() == dc.getComprobanteId()) {
-                    MDetalleResumenVenta mdetalleResumen = new MDetalleResumenVenta(
-                            obtenerDocumento(com.getDireccionEnvio()),
-                            obtenerNombres(com.getDireccionEnvio()), com.getNumero(),
-                            com.getFechaPedido(), com.getFechaEntrega(), dc);
-
-                    detalleResumenVentas.add(mdetalleResumen);
-                    break;
-                }
-            }
-        }
-
-        return detalleResumenVentas;
+    private static List<DetalleComprobante> flatMapDetalleComprobantes(List<Comprobante> coms) {
+        return coms.stream().map(com -> com.getDetalleComprobantes())
+                .flatMap(dcs -> dcs.stream())
+                .collect(Collectors.toList());
     }
 
-    public static String asignarNombreImagen(List<DetalleComprobante> lista) {
-        return lista.get(0).getDetalleIngreso().getProducto().getProductoImagenes().get(0).getImagen();
+    private static LocalDateTime obtenerFechaHoraEntrega(List<Comprobante> coms) {
+        return coms.stream().map(Comprobante::getFechaEntrega).findFirst().orElse(null);
     }
 
-    public static String obtenerDocumento(DireccionEnvio de) {
-
-        if (de.getDestinatario() != null) {
-            return de.getDestinatario().getDni();
-        } else {
-            return de.getCliente().getPersona().getDni();
-        }
-
-    }
-
-    public static String obtenerNombres(DireccionEnvio de) {
-
-        if (de.getDestinatario() != null) {
-            return de.getDestinatario().getNombre() + " " + de.getDestinatario().getApellidos();
-        } else {
-            return de.getCliente().getPersona().getNombre() + " " + de.getCliente().getPersona().getApellidos();
-        }
-
-    }
-
+    // metodos para restablecer existencias en base de datos al momento de editar
+    // vender eliminar productos   
     public static List<Variedad> actualizarVariedades(List<Variedad> vendidos, List<Variedad> variedades) {
 
         for (Variedad variedad : variedades) {
@@ -758,6 +603,7 @@ public class Mapper {
                 com.getFechaEntrega(),
                 com.getNbolsa(),
                 com.getFormaEnvio(),
+                com.getImagen(),
                 com.getDireccionEnvio(),
                 com.getDetallePago(),
                 com.getDetalleComprobantes());

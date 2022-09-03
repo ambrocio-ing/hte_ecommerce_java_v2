@@ -156,6 +156,18 @@ public class ComprobanteServiceImplements implements IComprobanteService {
     public List<Comprobante> getByEstado(String estado) {
         
         return comprobanteRepository.findByEstado(estado);
+    }
+
+    @Override
+    public List<Comprobante> getByFechaPedidoValidar(LocalDate fecha) {
+        
+        return comprobanteRepository.listByFechaByEstadoPedidoValidar(fecha);
+    }
+
+    @Override
+    public Page<Comprobante> getByEstadoPedidoValidar(Pageable pageable) {
+        
+        return comprobanteRepository.listByEstadoPedidoValidar(pageable);
     }     
     
 }

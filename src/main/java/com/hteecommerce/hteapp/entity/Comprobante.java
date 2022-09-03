@@ -85,6 +85,9 @@ public class Comprobante implements Serializable {
     @Size(max = 50)
     private String formaEnvio;    
 
+    @Size(max = 100)
+    private String imagen;
+
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "direccion_id", nullable = false)
@@ -258,6 +261,14 @@ public class Comprobante implements Serializable {
 
     public void setRazonSocial(String razonSocial) {
         this.razonSocial = razonSocial;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 
     private static final long serialVersionUID = 1L;

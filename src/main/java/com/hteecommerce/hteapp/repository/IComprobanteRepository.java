@@ -45,4 +45,11 @@ public interface IComprobanteRepository extends JpaRepository<Comprobante, Integ
     //consulta para resumen de pedido
     public List<Comprobante> findByEstado(String estado);
 
+    //lista y busqueda ventas por validar pago
+    @Query("from Comprobante com where com.estado = 'Validación pendiente' and date(com.fechaPedido) = date(?1)")
+    public List<Comprobante> listByFechaByEstadoPedidoValidar(LocalDate fecha);
+
+    @Query("from Comprobante com where com.estado = 'Validación pendiente' order by com.idcomprobante desc")
+    public Page<Comprobante> listByEstadoPedidoValidar(Pageable pageable);
+
 }

@@ -1,5 +1,6 @@
 package com.hteecommerce.hteapp.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hteecommerce.hteapp.entity.Comprobante;
 import com.hteecommerce.hteapp.entity.Destinatario;
@@ -27,11 +30,13 @@ import com.hteecommerce.hteapp.entity.DetalleComprobante;
 import com.hteecommerce.hteapp.entity.DetalleIngreso;
 import com.hteecommerce.hteapp.entity.DireccionEnvio;
 import com.hteecommerce.hteapp.exception.InsufficientStockError;
+import com.hteecommerce.hteapp.file_manager.IFileService;
 import com.hteecommerce.hteapp.mapper.Mapper;
 import com.hteecommerce.hteapp.model.MComprobante;
 import com.hteecommerce.hteapp.service.IComprobanteService;
 import com.hteecommerce.hteapp.service.IDireccionEnvioService;
 import com.hteecommerce.hteapp.service.IIngresoService;
+import com.hteecommerce.hteapp.util.RutaActual;
 import com.hteecommerce.hteapp.util.UDetalleComprobante;
 
 @RestController
@@ -45,7 +50,9 @@ public class ComprobanteLibreController {
     private IComprobanteService comprobanteService;   
 
     @Autowired
-    private IDireccionEnvioService direccionEnvioService;       
+    private IDireccionEnvioService direccionEnvioService;      
+    
+    @Autowired IFileService fileService;
     
     @PostMapping("/com/crear")
     public ResponseEntity<?> createComprobante(@Valid @RequestBody Comprobante comprobante, BindingResult result) {
@@ -155,6 +162,58 @@ public class ComprobanteLibreController {
         resp.put("mensaje", "Orden creado con éxito");
         resp.put("id", com.getIdcomprobante().toString());        
         return new ResponseEntity<Map<String, String>>(resp, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/img/com")
+    public ResponseEntity<?> saveImg(@RequestParam(name = "idcom") Integer idcomprobante,
+         @RequestParam(name = "imagen") MultipartFile file){
+
+        Map<String, String> resp = new HashMap<>();  
+        Comprobante com = null; 
+        String ruta = RutaActual.RUTA_COMPROBANTE;
+
+        if(file.isEmpty()){
+            resp.put("mensaje", "La imagen no es valida");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            com = comprobanteService.getByIdcomprobante(idcomprobante);
+        } catch (DataAccessException e) {
+            resp.put("mensaje", "Error de servidor");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if (com == null) {
+            resp.put("mensaje", "Error de servidor");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.BAD_REQUEST);
+        }
+
+        String nombreImagen = null;
+
+        try {
+            nombreImagen = fileService.copiar(ruta, file);
+        } catch (IOException e) {
+            resp.put("mensaje", "Error de servidor");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.BAD_REQUEST);
+        }
+
+        if(nombreImagen == null){
+            resp.put("mensaje", "Error de servidor");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.BAD_REQUEST);
+        }        
+
+        try {
+            com.setImagen(nombreImagen);
+            comprobanteService.saveCOM(com);
+        } catch (Exception e) {
+            resp.put("mensaje", "Error al guardar datos");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        resp.put("mensaje", "Comprobante creado con éxito");  
+        resp.put("id", com.getIdcomprobante().toString());       
+        return new ResponseEntity<Map<String, String>>(resp, HttpStatus.OK);        
     }
 
     @GetMapping("/com/obtener/{id}")

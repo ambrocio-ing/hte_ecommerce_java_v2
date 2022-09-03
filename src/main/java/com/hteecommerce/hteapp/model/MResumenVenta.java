@@ -1,53 +1,57 @@
 package com.hteecommerce.hteapp.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-//import com.hteecommerce.hteapp.entity.DetalleComprobante;
+import com.hteecommerce.hteapp.entity.Color;
+import com.hteecommerce.hteapp.entity.DetalleComprobante;
+import com.hteecommerce.hteapp.entity.Variedad;
 
 public class MResumenVenta {
 
     private String nombreProducto;
-    private String imagenProducto;    
     private Double cantidadTotal;
+    private Double percioVenta;
     private LocalDate fechaEntrega;
-    private List<MDetalleResumenVenta> detalleResumenVentas;
+    private LocalDateTime fechaHoraEntrega;
+    private List<Variedad> variedades;
 
-    public MResumenVenta(){
+    public MResumenVenta() {
 
-    }      
-
-    public MResumenVenta(String nombreProducto, String imagenProducto, List<MDetalleResumenVenta> detalleResumenes) {
-        this.nombreProducto = nombreProducto;
-        this.imagenProducto = imagenProducto;
-        this.cantidadTotal = detalleResumenes.stream().collect(Collectors.summingDouble(drm -> drm.getCantidadProducto()));        
-        this.detalleResumenVentas = detalleResumenes;
-    }    
-
-    public MResumenVenta(String nombreProducto, String imagenProducto,
-            LocalDate fechaEntrega, List<MDetalleResumenVenta> detalleResumenVentas) {
-        this.nombreProducto = nombreProducto;
-        this.imagenProducto = imagenProducto;
-        this.cantidadTotal = detalleResumenVentas.stream().collect(Collectors.summingDouble(drm -> drm.getCantidadProducto()));
-        this.fechaEntrega = fechaEntrega;
-        this.detalleResumenVentas = detalleResumenVentas;
     }
 
-    public String getNombreProducto() {
-        return nombreProducto;
+    public MResumenVenta(String nombreProducto, List<DetalleComprobante> dcs,
+            LocalDate fechaEntrega, LocalDateTime fechaHoraEntrega) {
+        this.nombreProducto = nombreProducto;
+        this.cantidadTotal = this.calcularCantidad(dcs);
+        this.percioVenta = this.obtenerPrecioVenta(dcs);
+        this.fechaEntrega = fechaEntrega;
+        this.fechaHoraEntrega = fechaHoraEntrega;
+        this.variedades = this.obtenerVariedades(dcs);
     }
 
     public void setNombreProducto(String nombreProducto) {
         this.nombreProducto = nombreProducto;
     }
 
-    public String getImagenProducto() {
-        return imagenProducto;
+    public Double getPercioVenta() {
+        return percioVenta;
     }
 
-    public void setImagenProducto(String imagenProducto) {
-        this.imagenProducto = imagenProducto;
+    public void setPercioVenta(Double percioVenta) {
+        this.percioVenta = percioVenta;
+    }
+
+    public LocalDateTime getFechaHoraEntrega() {
+        return fechaHoraEntrega;
+    }
+
+    public void setFechaHoraEntrega(LocalDateTime fechaHoraEntrega) {
+        this.fechaHoraEntrega = fechaHoraEntrega;
     }
 
     public Double getCantidadTotal() {
@@ -56,14 +60,6 @@ public class MResumenVenta {
 
     public void setCantidadTotal(Double cantidadTotal) {
         this.cantidadTotal = cantidadTotal;
-    }     
-
-    public List<MDetalleResumenVenta> getDetalleResumenVentas() {
-        return detalleResumenVentas;
-    }
-
-    public void setDetalleResumenVentas(List<MDetalleResumenVenta> detalleResumenVentas) {
-        this.detalleResumenVentas = detalleResumenVentas;
     }
 
     public LocalDate getFechaEntrega() {
@@ -72,6 +68,83 @@ public class MResumenVenta {
 
     public void setFechaEntrega(LocalDate fechaEntrega) {
         this.fechaEntrega = fechaEntrega;
-    }      
-    
+    }
+
+    public List<Variedad> getVariedades() {
+        return variedades;
+    }
+
+    public void setVariedades(List<Variedad> variedades) {
+        this.variedades = variedades;
+    }
+
+    public String getNombreProducto() {
+        return nombreProducto;
+    }
+
+    private Double calcularCantidad(List<DetalleComprobante> dcs) {
+        return dcs.stream().collect(Collectors.summingDouble(dc -> dc.getCantidad().doubleValue()));
+    }
+
+    private Double obtenerPrecioVenta(List<DetalleComprobante> dcs) {
+        return dcs.stream().map(dc -> dc.getPrecioUnitario()).findFirst().orElse(0.00);
+    }
+
+    private List<Variedad> obtenerVariedades(List<DetalleComprobante> dcs) {
+        List<DetalleComprobante> detcs = dcs.stream()
+                .filter(dc -> dc.getDetalleIngreso().getVariedades() != null)
+                .collect(Collectors.toList());
+
+        if (detcs == null || detcs.size() == 0) {
+
+            return null;
+        }
+
+        List<Variedad> variedades = detcs.stream()
+                .map(dc -> dc.getVariedades())
+                .flatMap(vas -> vas.stream())
+                .collect(Collectors.toList());
+
+        Map<String, List<Variedad>> grupos = variedades.stream()
+                .collect(Collectors.groupingBy(va -> va.getNombreTalla()));
+
+        List<Variedad> listVariedad = retornarNuevaLista(grupos);
+
+        return listVariedad;
+    }
+
+    private List<Variedad> retornarNuevaLista(Map<String, List<Variedad>> grupos) {
+        List<Variedad> listVariedad = new ArrayList<>();
+
+        for (Map.Entry<String, List<Variedad>> pair : grupos.entrySet()) {
+            List<Color> colores = pair.getValue().stream().map(va -> va.getColores()).flatMap(cos -> cos.stream())
+                    .collect(Collectors.toList());
+            listVariedad.add(
+                    new Variedad(pair.getKey(), calcularCantidadVariedad(pair.getValue()), obtenerColores(colores)));
+        }
+
+        return listVariedad;
+
+    }
+
+    private List<Color> obtenerColores(List<Color> colores) {
+
+        List<Color> colors = new ArrayList<>();
+        Map<String, List<Color>> result = colores.stream().collect(Collectors.groupingBy(co -> co.getNombreColor()));
+        for (Map.Entry<String, List<Color>> pair : result.entrySet()) {
+
+            colors.add(new Color(pair.getKey(), calcularCantidadColor(pair.getValue()), null));
+        }
+
+        return colors;
+    }
+
+    private Integer calcularCantidadVariedad(List<Variedad> vas) {
+        return vas.stream().collect(Collectors.summingInt(Variedad::getCantidadTalla));
+    }
+
+    private Integer calcularCantidadColor(List<Color> cols) {
+        return cols.stream().collect(Collectors.summingInt(Color::getCantidadColor));
+    }
+
 }

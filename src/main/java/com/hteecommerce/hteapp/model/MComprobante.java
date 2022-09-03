@@ -44,6 +44,8 @@ public class MComprobante {
 
     private String formaEnvio;    
 
+    private String imagen;
+
     private MDireccionEnvio direccionEnvio;
 
     private MDetallePago detallePago;
@@ -71,7 +73,8 @@ public class MComprobante {
         this.descuento = comprobante.getDescuento();
         this.fechaEntrega = comprobante.getFechaEntrega();
         this.nbolsa = comprobante.getNbolsa();
-        this.formaEnvio = comprobante.getFormaEnvio();        
+        this.formaEnvio = comprobante.getFormaEnvio(); 
+        this.imagen = comprobante.getImagen();       
         this.detallePago = Mapper.mapDetallePago(comprobante.getDetallePago());
         this.direccionEnvio = new MDireccionEnvio(comprobante.getDireccionEnvio());
         this.detalleComprobantes = comprobante.getDetalleComprobantes().stream()
@@ -81,7 +84,7 @@ public class MComprobante {
     public MComprobante(Integer idcomprobante, String ruc, String razonSocial, String numero, String idtransaccion,
             String tipoComprobante, LocalDateTime fechaPedido, String estado, double igv, Double montoEnvio,
             Double subTotal, Double total, Double descuento, LocalDateTime fechaEntrega, String nbolsa,
-            String formaEnvio, DireccionEnvio direccionEnvio, DetallePago detallePago,
+            String formaEnvio, String imagen, DireccionEnvio direccionEnvio, DetallePago detallePago,
             List<DetalleComprobante> detalleComprobantes) {
         this.idcomprobante = idcomprobante;
         this.ruc = ruc;
@@ -99,6 +102,7 @@ public class MComprobante {
         this.fechaEntrega = fechaEntrega;
         this.nbolsa = nbolsa;
         this.formaEnvio = formaEnvio;
+        this.imagen = imagen;
         this.direccionEnvio = new MDireccionEnvio(direccionEnvio);
         this.detallePago = new MDetallePago(detallePago);
         this.detalleComprobantes = detalleComprobantes.stream()
@@ -255,6 +259,14 @@ public class MComprobante {
 
     public void setRazonSocial(String razonSocial) {
         this.razonSocial = razonSocial;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 
 }

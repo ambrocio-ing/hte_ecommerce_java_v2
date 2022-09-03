@@ -25,10 +25,14 @@ public interface IComprobanteService {
     public List<Comprobante> getByClienteByDniOrNombre(String dniOrNombre);
     public List<Comprobante> getByClienteByIdcliente(Integer idcliente);
 
+    public List<Comprobante> getByFechaPedidoValidar(LocalDate fecha);
+
     //lista paginada
     public Page<Comprobante> getByEstadoEntregado(Pageable pageable);
     public Page<Comprobante> getByEstadoPedido(Pageable pageable);
     public Page<Comprobante> getByEstadoAnulado(Pageable pageable);
+
+    public Page<Comprobante> getByEstadoPedidoValidar(Pageable pageable);
 
     public Comprobante getByNumero(String numero);
 

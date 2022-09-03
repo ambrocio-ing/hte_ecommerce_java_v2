@@ -92,6 +92,63 @@ public class ComprobanteController {
 
     }
 
+    //ventas por validar
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/por/validar/{page}")
+    public ResponseEntity<?> comListEstadoPedidoValidar(@PathVariable(value = "page") int page) {
+
+        Map<String, String> resp = new HashMap<>();
+        Page<Comprobante> comPage = null;
+
+        Pageable pageable = PageRequest.of(page, 10);
+
+        try {
+            comPage = comprobanteService.getByEstadoPedidoValidar(pageable);
+        } catch (DataAccessException e) {
+            resp.put("mensaje", "Error de consulta a la base de datos");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if (comPage != null && comPage.getContent().size() != 0) {
+            Page<MComprobante> mpage = comPage.map(com -> Mapper.mapComprobante(com));
+            return new ResponseEntity<Page<MComprobante>>(mpage, HttpStatus.OK);
+        } 
+        else {
+            resp.put("mensaje", "Sin datos que mostrar");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    //buscar ventas por validar por fecha
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/validar/by/{fecha}")
+    public ResponseEntity<?> searchByFechaPedidoValidar(@PathVariable(value = "fecha") String fecha) {
+
+        Map<String, String> resp = new HashMap<>();
+        List<Comprobante> coms = null;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate ffecha = LocalDate.parse(fecha, formatter);
+
+        try {
+            coms = comprobanteService.getByFechaPedidoValidar(ffecha);
+        } catch (DataAccessException e) {
+            resp.put("mensaje", "Error de consulta a la base de datos");
+            resp.put("error", e.getMessage().concat(" : ").concat(e.getMostSpecificCause().getMessage()));
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if (coms != null && coms.size() != 0) {
+            List<MComprobante> mlista = coms.stream().map(com -> Mapper.mapComprobante(com)).collect(Collectors.toList());
+            return new ResponseEntity<List<MComprobante>>(mlista, HttpStatus.OK);
+        } else {
+            resp.put("mensaje", "Sin datos que mostrar");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
+        }
+
+    }
+
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/an/{page}")
     public ResponseEntity<?> comListEstadoAnulado(@PathVariable(value = "page") int page) {
@@ -468,10 +525,8 @@ public class ComprobanteController {
     public ResponseEntity<?> listResumen(){
 
         Map<String, String> resp = new HashMap<>();        
-        List<Comprobante> comprobantes = null;   
-        List<DetalleComprobante> dcs = null;
-        List<MResumenVenta> resumens = null;
-        
+        List<Comprobante> comprobantes = null;         
+                
         try {
             comprobantes = comprobanteService.getByEstado("Entrega pendiente");
         } catch (DataAccessException e) {
@@ -479,13 +534,12 @@ public class ComprobanteController {
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if(comprobantes == null){
+        if(comprobantes == null || comprobantes.size() == 0){
             resp.put("mensaje", "No se encontró entregas pendientes");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-        }
+        }        
 
-        dcs = Mapper.unirDetalleComprobantes(comprobantes);
-        resumens = Mapper.agruparDetalleComprobantes(comprobantes, dcs);
+        List<MResumenVenta> resumens = Mapper.agruparDetalleComprobantes(comprobantes);
 
         if(resumens != null && resumens.size() != 0){
             return new ResponseEntity< List<MResumenVenta>>(resumens, HttpStatus.OK);
@@ -497,27 +551,26 @@ public class ComprobanteController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/resumen/venta/by/{fecha}")
-    public ResponseEntity<?> listResumenPorFecha(@PathVariable(value = "fecha") LocalDate fecha){
+    public ResponseEntity<?> listResumenPorFecha(@PathVariable(value = "fecha") String fecha){
 
         Map<String, String> resp = new HashMap<>();        
-        List<Comprobante> comprobantes = null;   
-        List<DetalleComprobante> dcs = null;
-        List<MResumenVenta> resumens = null;
+        List<Comprobante> comprobantes = null;         
+
+        LocalDate fechachita = LocalDate.parse(fecha);  
         
         try {
-            comprobantes = comprobanteService.getByFechaPedido(fecha);
+            comprobantes = comprobanteService.getByFechaPedido(fechachita);
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error de servidor");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if(comprobantes == null){
+        if(comprobantes == null || comprobantes.size() == 0){
             resp.put("mensaje", "No se encontró entregas pendientes");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-        }
+        }        
 
-        dcs = Mapper.unirDetalleComprobantes(comprobantes);
-        resumens = Mapper.agruparDetalleComprobantes(comprobantes, dcs);
+        List<MResumenVenta> resumens = Mapper.agruparDetalleComprobantes(comprobantes);
 
         if(resumens != null && resumens.size() != 0){
             return new ResponseEntity< List<MResumenVenta>>(resumens, HttpStatus.OK);
