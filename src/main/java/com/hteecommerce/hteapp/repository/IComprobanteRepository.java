@@ -24,7 +24,7 @@ public interface IComprobanteRepository extends JpaRepository<Comprobante, Integ
     @Query("from Comprobante com join com.direccionEnvio de where com.estado = 'Entrega pendiente' and date(com.fechaPedido) = date(?1) and de.provincia = ?2")
     public List<Comprobante> listByFechaByEstadoPedido(LocalDate fecha, String sucursal);
 
-    @Query("from Comprobante com join com.direccionEnvio de where com.estado = 'Entregado' and date(com.fechaPedido) = date(?1) and de.provincia = 2?")
+    @Query("from Comprobante com join com.direccionEnvio de where com.estado = 'Entregado' and date(com.fechaPedido) = date(?1) and de.provincia = ?2")
     public List<Comprobante> listByFechaByEstadoEntregado(LocalDate fecha, String susursal);
 
     @Query("from Comprobante com join com.direccionEnvio de join de.cliente cli join cli.persona per where per.dni like %?1% or upper(replace(per.nombre, ' ', '')) like concat('%',upper(?2),'%') order by com.idcomprobante desc")
@@ -59,7 +59,7 @@ public interface IComprobanteRepository extends JpaRepository<Comprobante, Integ
     public List<Comprobante> listarPorEntregaPendienteSucursal(String sucursal);
 
     //BUSCAR PRODUCTOS CON ESTADO EN VALIDACION PENDIENTE
-    @Query("from Comprobante com join com.direccionEnvio de where com.estado = 'Validación pendiente' and date(com.fechaPedido) = date(?1) and de.provincia = 2?")
+    @Query("from Comprobante com join com.direccionEnvio de where com.estado = 'Validación pendiente' and date(com.fechaPedido) = date(?1) and de.provincia = ?2")
     public List<Comprobante> listByFechaByEstadoPedidoValidar(LocalDate fecha, String sucursal);
 
     //PAGINAR VENTAS CON VALIDACION PENDIENTE EN SUCURSAL HUACHO
