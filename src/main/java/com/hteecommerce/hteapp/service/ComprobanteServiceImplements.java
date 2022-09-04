@@ -161,6 +161,13 @@ public class ComprobanteServiceImplements implements IComprobanteService {
         return comprobanteRepository.listarPorEntregaPendienteSucursal(sucursal);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<Comprobante> getByFechaEntregaByEstadoPedido(LocalDate fecha, String sucursal) {
+        
+        return comprobanteRepository.listByFechaEntregaByEstadoPedido(fecha, sucursal);
+    }
+
     //buscar productos con estado en validacion pendiente por fecha y sucursal
     @Override
     @Transactional(readOnly = true)
@@ -207,6 +214,6 @@ public class ComprobanteServiceImplements implements IComprobanteService {
        
         detalleComprobanteRepository.deleteById(iddc);
         detalleIngresoRepository.save(di);        
-    }
+    }    
     
 }

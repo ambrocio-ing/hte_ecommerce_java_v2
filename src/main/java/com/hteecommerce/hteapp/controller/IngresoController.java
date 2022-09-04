@@ -101,6 +101,30 @@ public class IngresoController {
     }
 
     @PreAuthorize("hasRole('USER')")
+    @GetMapping("/di/por/categoria/{texto}")
+    public ResponseEntity<?> searchByCategoriaProducto(@PathVariable(value = "texto") String texto) {
+
+        Map<String, String> resp = new HashMap<>();
+        List<DetalleIngreso> dis = null;
+
+        try {
+            dis = ingresoService.getDetalleIngresoByCategoria(texto);
+        } catch (DataAccessException e) {
+            resp.put("mensaje", "Error de consulta a la base de datos");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if (dis != null && dis.size() != 0) {
+            //List<MDetalleIngreso> mlista = dis.stream().map(di -> Mapper.mapDetalleIngreso(di)).collect(Collectors.toList()) ;
+            return new ResponseEntity<List<DetalleIngreso>>(dis, HttpStatus.OK);
+        } else {
+            resp.put("mensaje", "Sin datos que mostrar");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/di/por/idp/{idproducto}")
     public ResponseEntity<?> getDIByIdproducto(@PathVariable(value = "idproducto") Integer idproducto) {
 

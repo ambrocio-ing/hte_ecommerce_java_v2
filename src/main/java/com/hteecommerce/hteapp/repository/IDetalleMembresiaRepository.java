@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IDetalleMembresiaRepository extends JpaRepository<DetalleMembresia,Integer> {
 
-    @Query("from DetalleMembresia dm join dm.cliente cli where cli.idcliente = ?1 and ?2 between dm.fechaInicio and dm.fechaFin and dm.estado = 'Vigente'")
+    @Query("select dm from DetalleMembresia dm join dm.cliente cli where cli.idcliente = ?1 and ?2 between dm.fechaInicio and dm.fechaFin and dm.estado = 'Vigente'")
     public Optional<DetalleMembresia> findByIdcliente(Integer idcliente, LocalDate fecha);
     
 }

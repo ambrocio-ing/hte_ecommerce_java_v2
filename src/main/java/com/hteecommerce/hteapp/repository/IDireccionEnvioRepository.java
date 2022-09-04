@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IDireccionEnvioRepository extends JpaRepository<DireccionEnvio,Integer> {
     
-    @Query("from DireccionEnvio de join de.cliente cli where cli.idcliente = ?1")
+    @Query("select de from DireccionEnvio de join de.cliente cli where cli.idcliente = ?1")
     public List<DireccionEnvio> listByIdcliente(Integer idcliente);
 }

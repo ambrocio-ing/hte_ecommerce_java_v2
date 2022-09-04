@@ -80,6 +80,13 @@ public class IngresoServiceImplements implements IIngresoService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<DetalleIngreso> getDetalleIngresoByCategoria(String nombreCategoria) {
+        
+        return detalleIngresoRepository.listByCategoriaProducto(nombreCategoria);
+    }   
+
+    @Override
     @Transactional(readOnly = true) 
     public Page<DetalleIngreso> pageAllDetalleIngreso(Pageable pageable) {
         

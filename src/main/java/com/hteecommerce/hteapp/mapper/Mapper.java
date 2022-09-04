@@ -533,7 +533,6 @@ public class Mapper {
                     variedad.setColores(actualizarColores(variedad.getColores(), vendido.getColores()));
                     break;
                 }
-
             }
         }
 
@@ -608,6 +607,6 @@ public class Mapper {
                 com.getDetallePago(),
                 com.getDetalleComprobantes());
 
-    }
-
+    }    
+    
 }

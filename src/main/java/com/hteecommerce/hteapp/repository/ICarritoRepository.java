@@ -14,6 +14,6 @@ public interface ICarritoRepository extends JpaRepository<Carrito,Integer> {
     
     public List<Carrito> findByIdcliente(Integer idcliente);
 
-    @Query("from Carrito carr join carr.detalleIngreso di join di.producto pro where pro.idproducto = ?1 and carr.idcliente = ?2")
+    @Query("select carr from Carrito carr join carr.detalleIngreso di join di.producto pro where pro.idproducto = ?1 and carr.idcliente = ?2")
     public Optional<Carrito> findByIdproductoAndIdcliente(Integer idproducto, Integer idcliente);
 }

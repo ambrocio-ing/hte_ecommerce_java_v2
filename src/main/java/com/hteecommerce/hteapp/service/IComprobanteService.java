@@ -39,6 +39,7 @@ public interface IComprobanteService {
 
     //lista para resumen de productos vendidos
     public List<Comprobante> getByEntregaPendienteSucursal(String sucursal);
+    public List<Comprobante> getByFechaEntregaByEstadoPedido(LocalDate fecha, String sucursal);
 
     //buscar productos con estado en validacion pendiente por fecha y sucursal
     public List<Comprobante> getByFechaByEstadoPedidoValidar(LocalDate fecha, String sucursal);
@@ -52,6 +53,6 @@ public interface IComprobanteService {
     //detalle comprobante
     public DetalleComprobante updateDC(DetalleComprobante dc);
     public void deleteDC(Integer iddc, DetalleIngreso di);    
-    public DetalleComprobante getDCByIddetallecomprobante(Integer iddc);   
+    public DetalleComprobante getDCByIddetallecomprobante(Integer iddc);       
     
 }

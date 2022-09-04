@@ -15,6 +15,6 @@ public interface ITipoRepository extends JpaRepository<Tipo,Integer> {
     public Optional<Tipo> findByNombre(String nombre);
     public boolean existsByNombre(String nombre);
 
-    @Query("from Tipo ti join ti.categoria cat where cat.idcategoria = ?1")
+    @Query("select ti from Tipo ti join ti.categoria cat where cat.idcategoria = ?1")
     List<Tipo> listByIdcategoria(Integer idcategoria);
 }

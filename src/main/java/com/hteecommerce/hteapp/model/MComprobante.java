@@ -107,7 +107,7 @@ public class MComprobante {
         this.detallePago = new MDetallePago(detallePago);
         this.detalleComprobantes = detalleComprobantes.stream()
                 .map(dc -> new MDetalleComprobante(dc)).collect(Collectors.toList());
-    }
+    }     
 
     public Integer getIdcomprobante() {
         return idcomprobante;

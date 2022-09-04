@@ -489,7 +489,7 @@ public class ComprobanteController {
         LocalDate fechachita = LocalDate.parse(fecha);
 
         try {
-            comprobantes = comprobanteService.getByFechaByEstadoPedido(fechachita, sucursal);
+            comprobantes = comprobanteService.getByFechaEntregaByEstadoPedido(fechachita, sucursal);
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error de servidor");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);

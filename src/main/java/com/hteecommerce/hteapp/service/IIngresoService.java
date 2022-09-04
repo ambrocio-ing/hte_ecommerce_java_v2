@@ -21,11 +21,12 @@ public interface IIngresoService {
     public List<Ingreso> getByFecha(LocalDate fecha);
 
     public List<DetalleIngreso> getDetalleIngresoByCodigoOrNombre(String codigoOrNombre);
+    public List<DetalleIngreso> getDetalleIngresoByCategoria(String nombreCategoria);
+
     public Page<DetalleIngreso> pageAllDetalleIngreso(Pageable pageable);
     public DetalleIngreso getByIddetalleingreso(Integer iddi);
     public DetalleIngreso getDetalleIngresoByIdproducto(Integer idproducto);
-    //public DetalleIngreso getTopByProductoAndSucursalOrderByIddetalleingresoDesc(Producto producto, String sucursal);
-
+    
     //LISTA Y FILTRO DESDE VISTA DEL CLIENTE
     public DetalleIngreso getDIByIdproducto(Integer idproducto, String sucursal);
     public List<DetalleIngreso> listDIAll(String sucursal);
