@@ -85,9 +85,15 @@ public class ComprobanteLibreController {
             resp.put("mensaje", "Error del sistema: Inténtelo mas tarde");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+        Integer puntos = 0;        
         
         List<DetalleComprobante> dcs = new ArrayList<>();
         for (DetalleComprobante dc : comprobante.getDetalleComprobantes()) {
+
+            if(direccionEnvio.getCliente() != null){
+                puntos += dc.getDetalleIngreso().getProducto().getPuntos() * dc.getCantidad();
+            }
 
             DetalleIngreso di = null;
             try {
@@ -103,6 +109,7 @@ public class ComprobanteLibreController {
                     di.setVariedades(Mapper.actualizarVariedades(dc.getVariedades(), di.getVariedades()));
                 }
 
+                di.getProducto().setNventas(di.getProducto().getNventas() + 1);
                 dc.setDetalleIngreso(di);                
 
                 try {
@@ -110,7 +117,7 @@ public class ComprobanteLibreController {
                 } catch (InsufficientStockError e) {
                     resp.put("mensaje", "Stock insuficiente por compra simultanea, por favor quite el producto: " + di.getProducto().getNombre() + " de su carrito y vuelva e intentar");
                     return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-                }                
+                }              
 
                 dcs.add(dc);
             }
@@ -146,6 +153,10 @@ public class ComprobanteLibreController {
             }            
         }       
         
+        if(direccionEnvio.getCliente() != null){
+            direccionEnvio.getCliente().setPuntos(direccionEnvio.getCliente().getPuntos() + puntos);
+        }
+
         comprobante.setNumero(numero);
         comprobante.setDireccionEnvio(direccionEnvio);        
         comprobante.setDetalleComprobantes(dcs);
@@ -154,8 +165,7 @@ public class ComprobanteLibreController {
         try {
             com = comprobanteService.saveCOM(comprobante);
         } catch (DataAccessException e) {
-            resp.put("mensaje", "Error al guardar datos");
-            
+            resp.put("mensaje", "Error al guardar datos");            
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -197,10 +207,17 @@ public class ComprobanteLibreController {
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         
+        Integer puntos = 0; 
+
         List<DetalleComprobante> dcs = new ArrayList<>();
         for (DetalleComprobante dc : comprobante.getDetalleComprobantes()) {
 
+            if(direccionEnvio.getCliente() != null){
+                puntos += (dc.getDetalleIngreso().getProducto().getPuntos() * dc.getCantidad());
+            }
+
             DetalleIngreso di = null;
+
             try {
                 di = ingresoService.getByIddetalleingreso(dc.getDetalleIngreso().getIddetalleingreso());
             } catch (DataAccessException e) {
@@ -214,6 +231,7 @@ public class ComprobanteLibreController {
                     di.setVariedades(Mapper.actualizarVariedades(dc.getVariedades(), di.getVariedades()));
                 }
 
+                di.getProducto().setNventas(di.getProducto().getNventas() + 1);
                 dc.setDetalleIngreso(di);                
 
                 try {
@@ -271,9 +289,13 @@ public class ComprobanteLibreController {
             resp.put("mensaje", "Error al crear orden, no fue posible validar existencias");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
         }
+
+        if(direccionEnvio.getCliente() != null){
+            direccionEnvio.getCliente().setPuntos(direccionEnvio.getCliente().getPuntos() + puntos);
+        }
         
         comprobante.setImagen(nombreImagen);
-        comprobante.setNumero(numero);
+        comprobante.setNumero(numero);        
         comprobante.setDireccionEnvio(direccionEnvio);        
         comprobante.setDetalleComprobantes(dcs);
 
@@ -382,12 +404,7 @@ public class ComprobanteLibreController {
         if (com == null) {
             resp.put("mensaje", "No fue posible actualizar comprobante");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-        }
-
-        if(com.getDireccionEnvio().getCliente() != null){
-            Integer puntos = com.getDireccionEnvio().getCliente().getPuntos() + 1;
-            com.getDireccionEnvio().getCliente().setPuntos(1 + puntos);
-        }                 
+        }                       
 
         com.setIdtransaccion(comprobante.getIdtransaccion());
         com.setTipoComprobante(comprobante.getTipoComprobante());

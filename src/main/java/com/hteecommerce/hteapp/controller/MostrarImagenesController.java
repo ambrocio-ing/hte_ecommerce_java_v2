@@ -195,5 +195,25 @@ public class MostrarImagenesController {
 
         return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
     }
+
+    @GetMapping("/detmem/imagen/{nombre:.+}")
+    public ResponseEntity<Resource> getImageDetMem(@PathVariable(value = "nombre") String nombre){
+
+        Resource resource = null;
+        String ruta = RutaActual.RUTA_DMEMBRESIA;
+        String archivoAhuxiliar = "fotologo.jpg";
+        
+        try {
+            resource = fileService.cargar(nombre, ruta, ruta, archivoAhuxiliar);
+        } catch (MalformedURLException e) {
+            
+            e.printStackTrace();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+resource.getFilename());
+
+        return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
+    }
     
 }

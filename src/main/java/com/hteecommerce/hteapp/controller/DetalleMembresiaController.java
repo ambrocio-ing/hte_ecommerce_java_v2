@@ -51,6 +51,52 @@ public class DetalleMembresiaController {
     @Autowired
     private IFileService fileService;
 
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/buscar/porcli/{texto}")
+    public ResponseEntity<?> getByClienteDniOrNombre(@PathVariable(value = "texto") String texto){
+
+        Map<String,Object> resp = new HashMap<>();
+        List<DetalleMembresia> dms = null;
+                
+        try {
+            dms = detalleMembresiaService.getByClienteDniOrNombre(texto);
+        } catch (DataAccessException e) {
+            resp.put("mensaje", "Error de consulta a la base de datos");
+            return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if(dms != null && dms.size() != 0){
+            List<MDetalleMembresia> mdms = dms.stream().map(dm -> new MDetalleMembresia(dm)).collect(Collectors.toList());
+            return new ResponseEntity<List<MDetalleMembresia>>(mdms, HttpStatus.OK);
+        }       
+
+        resp.put("mensaje", "Sin datos que mostrar");
+        return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.NOT_FOUND);        
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/by/{estado}")
+    public ResponseEntity<?> getByEstado(@PathVariable(value = "estado") String estado){
+
+        Map<String,Object> resp = new HashMap<>();
+        List<DetalleMembresia> dms = null;
+                
+        try {
+            dms = detalleMembresiaService.getAllByEstado(estado);
+        } catch (DataAccessException e) {
+            resp.put("mensaje", "Error de consulta a la base de datos");
+            return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if(dms != null && dms.size() != 0){
+            List<MDetalleMembresia> mdms = dms.stream().map(dm -> new MDetalleMembresia(dm)).collect(Collectors.toList());
+            return new ResponseEntity<List<MDetalleMembresia>>(mdms, HttpStatus.OK);
+        }       
+
+        resp.put("mensaje", "Sin datos que mostrar");
+        return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.NOT_FOUND);        
+    }
+
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping("/porcli/{idcliente}")
     public ResponseEntity<?> getByCliente(@PathVariable(value = "idcliente") Integer idcliente){
@@ -252,10 +298,9 @@ public class DetalleMembresiaController {
         
         MDetalleMembresia mdm = new MDetalleMembresia(demem);
         return new ResponseEntity<MDetalleMembresia>(mdm, HttpStatus.OK);
-
     }
 
-    @PreAuthorize("hasRole('CLIENT')")
+    @PreAuthorize("hasRole('CLIENT') or hasRole('USER')")
     @PostMapping("/editar")
     public ResponseEntity<?> updateDetalleMembresia(@RequestBody DetalleMembresia demem){
 

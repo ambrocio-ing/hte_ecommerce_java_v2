@@ -55,7 +55,7 @@ public interface IDetalleIngresoRepository extends JpaRepository<DetalleIngreso,
 
   @Query(nativeQuery = true, value = "select * from detalle_ingresos di inner join productos pro on di.producto_id = pro.idproducto where di.stock_actual > 0 and di.sucursal = ?1 and di.estado = true order by pro.nventas desc limit 50")
   public List<DetalleIngreso> listMasVendidosGeneral(String sucursal);
-
-  public List<DetalleIngreso> findTop20BySucursalOrderByIddetalleingresoDesc(String sucursal);
+  
+  public List<DetalleIngreso> findTop50BySucursalOrderByIddetalleingresoDesc(String sucursal);
 
 }

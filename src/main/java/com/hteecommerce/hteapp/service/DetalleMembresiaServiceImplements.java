@@ -1,6 +1,7 @@
 package com.hteecommerce.hteapp.service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.hteecommerce.hteapp.entity.DetalleMembresia;
 import com.hteecommerce.hteapp.repository.IDetalleMembresiaRepository;
@@ -41,6 +42,20 @@ public class DetalleMembresiaServiceImplements implements IDetalleMembresiaServi
     public DetalleMembresia getByIddetallemembresia(Integer iddm) {
         
         return detalleMembresiaRepository.findById(iddm).orElse(null);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DetalleMembresia> getAllByEstado(String estado) {
+        
+        return detalleMembresiaRepository.findByEstado(estado);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DetalleMembresia> getByClienteDniOrNombre(String dniOrNombre) {
+        
+        return detalleMembresiaRepository.listByCliente(dniOrNombre);
     }
     
 }

@@ -118,7 +118,8 @@ public class ComentarioController {
         }
 
         comens = comentarioSerivce.getByIdproducto(di.getProducto().getIdproducto());
-
+        comentario.setDetalleIngreso(di);
+        
         if (comens != null && comens.size() != 0) {
             comens.forEach(co -> {
                 puntos_list.add(co.getEstrellas());
@@ -131,8 +132,7 @@ public class ComentarioController {
                     + comentario.getEstrellas()) / 2);
         }
 
-        comentario.setCliente(cliente);
-        comentario.setDetalleIngreso(di);
+        comentario.setCliente(cliente);        
 
         if (punto_mayor > 0) {
             comentario.getDetalleIngreso().getProducto().setPuntos(punto_mayor);
