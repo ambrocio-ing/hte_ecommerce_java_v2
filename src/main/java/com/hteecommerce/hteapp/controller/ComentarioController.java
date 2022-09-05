@@ -46,14 +46,14 @@ public class ComentarioController {
     private IClienteService clienteService;
 
     @Autowired
-    private IComprobanteService comprobanteService;   
+    private IComprobanteService comprobanteService;
 
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping("/valid/comentario/{iddi}/{idcli}")
     public ResponseEntity<?> comValidComentario(@PathVariable(value = "iddi") Integer iddi,
-        @PathVariable(value = "idcli") Integer idcliente){
+            @PathVariable(value = "idcli") Integer idcliente) {
 
-        Map<String,String> resp = new HashMap<>();
+        Map<String, String> resp = new HashMap<>();
         List<Comprobante> coms = null;
         String condicion = "false";
 
@@ -61,92 +61,93 @@ public class ComentarioController {
             coms = comprobanteService.getByClienteByIdcliente(idcliente);
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error de consulta a la base de datos");
-            return new ResponseEntity< Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        for(Comprobante com : coms){
-            for(DetalleComprobante dc : com.getDetalleComprobantes()){
-                if(dc.getDetalleIngreso().getIddetalleingreso() == iddi){
+        for (Comprobante com : coms) {
+            for (DetalleComprobante dc : com.getDetalleComprobantes()) {
+                if (dc.getDetalleIngreso().getIddetalleingreso() == iddi) {
                     condicion = "true";
+                    break;
                 }
             }
         }
 
         resp.put("condicion", condicion);
-        return new ResponseEntity<Map<String,String>>(resp, HttpStatus.OK);
+        return new ResponseEntity<Map<String, String>>(resp, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('CLIENT')")
     @PostMapping("/crear")
-    public ResponseEntity<?> comCreate(@Valid @RequestBody Comentario comentario, BindingResult result){
+    public ResponseEntity<?> comCreate(@Valid @RequestBody Comentario comentario, BindingResult result) {
 
-        Map<String, Object> resp = new HashMap<>();
+        Map<String, String> resp = new HashMap<>();
         Cliente cliente = null;
         DetalleIngreso di = null;
         List<Comentario> comens = null;
         List<Integer> puntos_list = new ArrayList<>();
         Integer punto_mayor = 0;
-        
-        if(result.hasErrors()){
 
-            List<String> errors = result.getFieldErrors().stream()
-                .map(err -> "El campo: "+err.getField()+" "+err.getDefaultMessage())
-                .collect(Collectors.toList());
-            
+        if (result.hasErrors()) {
+
+            String errors = result.getFieldErrors().stream()
+                    .map(err -> "El campo: " + err.getField() + " " + err.getDefaultMessage())
+                    .collect(Collectors.joining(", "));
+
             resp.put("mensaje", errors);
-            return new ResponseEntity< Map<String,Object>>(resp, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.BAD_REQUEST);
         }
 
         try {
             cliente = clienteService.getByIdcliente(comentario.getCliente().getIdcliente());
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error de consulta");
-            return new ResponseEntity< Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         try {
             di = ingresoService.getByIddetalleingreso(comentario.getDetalleIngreso().getIddetalleingreso());
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error de consulta");
-            return new ResponseEntity< Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if(cliente == null || di == null){
+        if (cliente == null || di == null) {
             resp.put("mensaje", "Error de consulta");
-            return new ResponseEntity< Map<String,Object>>(resp, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
         }
 
-        comens = comentarioSerivce.getByIdproducto(di.getProducto().getIdproducto());     
+        comens = comentarioSerivce.getByIdproducto(di.getProducto().getIdproducto());
 
-        if(comens != null && comens.size() != 0){
+        if (comens != null && comens.size() != 0) {
             comens.forEach(co -> {
                 puntos_list.add(co.getEstrellas());
                 puntos_list.add(comentario.getEstrellas());
             });
             int nums[] = puntos_list.stream().mapToInt(num -> num).toArray();
-            punto_mayor = Mapper.masRepeticiones(nums);                      
+            punto_mayor = Mapper.masRepeticiones(nums);
+        } else {
+            punto_mayor = (Integer) ((comentario.getDetalleIngreso().getProducto().getPuntos()
+                    + comentario.getEstrellas()) / 2);
         }
-        else{
-            punto_mayor = (Integer) ((comentario.getDetalleIngreso().getProducto().getPuntos() + comentario.getEstrellas()) / 2);
-        }          
 
         comentario.setCliente(cliente);
         comentario.setDetalleIngreso(di);
 
-        if(punto_mayor > 0){
+        if (punto_mayor > 0) {
             comentario.getDetalleIngreso().getProducto().setPuntos(punto_mayor);
         }
 
         try {
             comentarioSerivce.saveCOM(comentario);
         } catch (DataAccessException e) {
-            resp.put("mensaje", "Error al guardar comentario");            
-            return new ResponseEntity< Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+            resp.put("mensaje", "Error al guardar comentario");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         resp.put("mensaje", "Comentario publicado con éxito");
-        return new ResponseEntity< Map<String,Object>>(resp, HttpStatus.CREATED);
+        return new ResponseEntity<Map<String, String>>(resp, HttpStatus.CREATED);
 
     }
-    
+
 }

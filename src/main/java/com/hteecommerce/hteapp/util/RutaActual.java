@@ -6,6 +6,7 @@ public class RutaActual {
         
     }
 
+    public static final String RUTA_DMEMBRESIA = "/home/kali-user/Visual-studio-workspace/visual-backend/hte_ecommerce_back/ecommerce_images/dmembresia_images";
     public static final String RUTA_COMPROBANTE = "/home/kali-user/Visual-studio-workspace/visual-backend/hte_ecommerce_back/ecommerce_images/comprobante_images";
     public static final String RUTA_PERSONA = "/home/kali-user/Visual-studio-workspace/visual-backend/hte_ecommerce_back/ecommerce_images/personal_images";
     public static final String RUTA_CLIENTE = "/home/kali-user/Visual-studio-workspace/visual-backend/hte_ecommerce_back/ecommerce_images/cliente_images";

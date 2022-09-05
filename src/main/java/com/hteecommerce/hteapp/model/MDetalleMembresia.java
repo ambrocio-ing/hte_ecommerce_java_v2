@@ -17,6 +17,8 @@ public class MDetalleMembresia {
 
     private LocalDate fechaFin;
 
+    private String imagen;
+
     private MCliente cliente;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -33,6 +35,7 @@ public class MDetalleMembresia {
         this.idtransaccion = dm.getIdtransaccion();
         this.fechaInicio = dm.getFechaInicio();
         this.fechaFin = dm.getFechaFin();
+        this.imagen = dm.getImagen();
         this.cliente = new MCliente(dm.getCliente().getIdcliente());
         this.membresia = dm.getMembresia();
         this.detallePago = Mapper.mapDetallePago(dm.getDetallePago());
@@ -92,6 +95,14 @@ public class MDetalleMembresia {
 
     public void setDetallePago(MDetallePago detallePago) {
         this.detallePago = detallePago;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 
 }

@@ -41,6 +41,9 @@ public class DetalleMembresia implements Serializable {
     @Column(name = "fecha_fin")
     private LocalDate fechaFin;
 
+    @Size(max = 100)
+    private String imagen;
+
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", nullable = false)
@@ -121,6 +124,14 @@ public class DetalleMembresia implements Serializable {
 
     public void setDetallePago(DetallePago detallePago) {
         this.detallePago = detallePago;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 
     private static final long serialVersionUID = 1L;
