@@ -3,7 +3,9 @@ package com.hteecommerce.hteapp.model;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.hteecommerce.hteapp.entity.Cliente;
 import com.hteecommerce.hteapp.entity.DetalleMembresia;
+import com.hteecommerce.hteapp.entity.DetallePago;
 import com.hteecommerce.hteapp.entity.Membresia;
 import com.hteecommerce.hteapp.mapper.Mapper;
 
@@ -39,6 +41,20 @@ public class MDetalleMembresia {
         this.cliente = new MCliente(dm.getCliente().getIdcliente());
         this.membresia = dm.getMembresia();
         this.detallePago = Mapper.mapDetallePago(dm.getDetallePago());
+    }
+
+    
+
+    public MDetalleMembresia(Integer iddetallemembresia, String idtransaccion, LocalDate fechaInicio,
+            LocalDate fechaFin, String imagen, Cliente cliente, Membresia membresia, DetallePago detallePago) {
+        this.iddetallemembresia = iddetallemembresia;
+        this.idtransaccion = idtransaccion;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.imagen = imagen;
+        this.cliente = new MCliente(cliente.getIdcliente(), cliente.getPersona());
+        this.membresia = membresia;
+        this.detallePago = Mapper.mapDetallePago(detallePago);
     }
 
     public Integer getIddetallemembresia() {

@@ -13,6 +13,7 @@ import com.hteecommerce.hteapp.entity.Cliente;
 import com.hteecommerce.hteapp.entity.DetalleMembresia;
 import com.hteecommerce.hteapp.entity.Membresia;
 import com.hteecommerce.hteapp.file_manager.IFileService;
+import com.hteecommerce.hteapp.mapper.Mapper;
 import com.hteecommerce.hteapp.model.MDetalleMembresia;
 import com.hteecommerce.hteapp.service.IClienteService;
 import com.hteecommerce.hteapp.service.IDetalleMembresiaService;
@@ -66,7 +67,7 @@ public class DetalleMembresiaController {
         }
 
         if(dms != null && dms.size() != 0){
-            List<MDetalleMembresia> mdms = dms.stream().map(dm -> new MDetalleMembresia(dm)).collect(Collectors.toList());
+            List<MDetalleMembresia> mdms = dms.stream().map(dm -> Mapper.mapDetalleMembresia(dm)).collect(Collectors.toList());
             return new ResponseEntity<List<MDetalleMembresia>>(mdms, HttpStatus.OK);
         }       
 
@@ -79,17 +80,23 @@ public class DetalleMembresiaController {
     public ResponseEntity<?> getByEstado(@PathVariable(value = "estado") String estado){
 
         Map<String,Object> resp = new HashMap<>();
-        List<DetalleMembresia> dms = null;
-                
+        List<DetalleMembresia> dms = null;      
+
+        String texto = estado.replace("-", " ").toString();
+
+        if(texto.equals("Validacion pendiente")){
+            texto = "Validación pendiente";
+        }
+
         try {
-            dms = detalleMembresiaService.getAllByEstado(estado);
+            dms = detalleMembresiaService.getAllByEstado(texto);
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error de consulta a la base de datos");
             return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         if(dms != null && dms.size() != 0){
-            List<MDetalleMembresia> mdms = dms.stream().map(dm -> new MDetalleMembresia(dm)).collect(Collectors.toList());
+            List<MDetalleMembresia> mdms = dms.stream().map(dm -> Mapper.mapDetalleMembresia(dm)).collect(Collectors.toList());
             return new ResponseEntity<List<MDetalleMembresia>>(mdms, HttpStatus.OK);
         }       
 

@@ -18,6 +18,7 @@ import com.hteecommerce.hteapp.entity.Comprobante;
 import com.hteecommerce.hteapp.entity.Destinatario;
 import com.hteecommerce.hteapp.entity.DetalleComprobante;
 import com.hteecommerce.hteapp.entity.DetalleIngreso;
+import com.hteecommerce.hteapp.entity.DetalleMembresia;
 import com.hteecommerce.hteapp.entity.DetallePago;
 import com.hteecommerce.hteapp.entity.DireccionEnvio;
 import com.hteecommerce.hteapp.entity.Persona;
@@ -31,6 +32,7 @@ import com.hteecommerce.hteapp.model.MCarrito;
 import com.hteecommerce.hteapp.model.MComentario;
 import com.hteecommerce.hteapp.model.MComprobante;
 import com.hteecommerce.hteapp.model.MDetalleIngreso;
+import com.hteecommerce.hteapp.model.MDetalleMembresia;
 import com.hteecommerce.hteapp.model.MDetallePago;
 import com.hteecommerce.hteapp.model.MDireccionEnvio;
 import com.hteecommerce.hteapp.model.MResumenVenta;
@@ -608,5 +610,10 @@ public class Mapper {
                 com.getDetalleComprobantes());
 
     }    
+
+    public static MDetalleMembresia mapDetalleMembresia(DetalleMembresia dm){
+        return new MDetalleMembresia(dm.getIddetallemembresia(), dm.getIdtransaccion(), 
+            dm.getFechaInicio(), dm.getFechaFin(), dm.getImagen(), dm.getCliente(), dm.getMembresia(), dm.getDetallePago());
+    }
     
 }
