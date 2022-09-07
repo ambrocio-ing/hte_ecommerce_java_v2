@@ -25,6 +25,7 @@ import com.hteecommerce.hteapp.entity.Comentario;
 import com.hteecommerce.hteapp.entity.Delivery;
 import com.hteecommerce.hteapp.entity.DetalleIngreso;
 import com.hteecommerce.hteapp.entity.HoraEntrega;
+import com.hteecommerce.hteapp.entity.LibroReclamo;
 import com.hteecommerce.hteapp.entity.Membresia;
 //import com.hteecommerce.hteapp.entity.Producto;
 import com.hteecommerce.hteapp.entity.Publicacion;
@@ -51,7 +52,7 @@ public class TiendaController {
     private IIngresoService ingresoService;
 
     @Autowired
-    private IMembresiaService membresiaService;   
+    private IMembresiaService membresiaService;
 
     @Autowired
     private ICategoriaTipoService categoriaTipoService;
@@ -74,7 +75,7 @@ public class TiendaController {
     // Buscar detalle de ingreso por nombre del producto
     @GetMapping("/buscar/{nombre}/{sucursal}")
     public ResponseEntity<?> diByProductName(@PathVariable(value = "nombre") String nombre,
-        @PathVariable(value = "sucursal") String sucursal) {
+            @PathVariable(value = "sucursal") String sucursal) {
 
         Map<String, String> resp = new HashMap<>();
         List<DetalleIngreso> dis = null;
@@ -100,8 +101,8 @@ public class TiendaController {
     // Buscar detalle de ingreso por nombre del producto por marca
     @GetMapping("/buscar-ma/{nombre}/{sucursal}/{marca}")
     public ResponseEntity<?> diByProductNameToMarca(@PathVariable(value = "nombre") String nombre,
-        @PathVariable(value = "sucursal") String sucursal, 
-        @PathVariable(value = "marca") String marca) {
+            @PathVariable(value = "sucursal") String sucursal,
+            @PathVariable(value = "marca") String marca) {
 
         Map<String, String> resp = new HashMap<>();
         List<DetalleIngreso> dis = null;
@@ -127,7 +128,7 @@ public class TiendaController {
     // Detalle de ingreso por tipo
     @GetMapping("/bytip/{id}/{sucursal}")
     public ResponseEntity<?> diByTipoToMarca(@PathVariable(value = "id") Integer idtipo,
-        @PathVariable(value = "sucursal") String sucursal) {
+            @PathVariable(value = "sucursal") String sucursal) {
 
         Map<String, String> resp = new HashMap<>();
         List<DetalleIngreso> dis = null;
@@ -153,8 +154,8 @@ public class TiendaController {
     // Detalle de ingreso por tipo, sucursal y marca
     @GetMapping("/bytip-ma/{id}/{sucursal}/{marca}")
     public ResponseEntity<?> diByTipo(@PathVariable(value = "id") Integer idtipo,
-        @PathVariable(value = "sucursal") String sucursal,
-        @PathVariable(value = "marca") String marca) {
+            @PathVariable(value = "sucursal") String sucursal,
+            @PathVariable(value = "marca") String marca) {
 
         Map<String, String> resp = new HashMap<>();
         List<DetalleIngreso> dis = null;
@@ -178,29 +179,32 @@ public class TiendaController {
     }
 
     // historico de precios
-   /*  @PostMapping("/history")
-    public ResponseEntity<?> historicoPrecio(@RequestBody Producto producto) {
-
-        Map<String, String> resp = new HashMap<>();       
-        List<DetalleIngreso> dis = null;
-
-        try {
-            dis = ingresoService.getLast12ByProducto(producto);
-        } catch (DataAccessException e) {
-            resp.put("mensaje", "Error de consulta a la base de datos");
-            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        if (dis != null && dis.size() != 0) {
-
-            List<HistoricoPrecio> hps = Mapper.mapHistoricoPrecios(dis);
-            return new ResponseEntity<List<HistoricoPrecio>>(hps, HttpStatus.OK);            
-        }
-        
-        resp.put("mensaje", "Sin datos que mostrar");
-        return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-
-    } */
+    /*
+     * @PostMapping("/history")
+     * public ResponseEntity<?> historicoPrecio(@RequestBody Producto producto) {
+     * 
+     * Map<String, String> resp = new HashMap<>();
+     * List<DetalleIngreso> dis = null;
+     * 
+     * try {
+     * dis = ingresoService.getLast12ByProducto(producto);
+     * } catch (DataAccessException e) {
+     * resp.put("mensaje", "Error de consulta a la base de datos");
+     * return new ResponseEntity<Map<String, String>>(resp,
+     * HttpStatus.INTERNAL_SERVER_ERROR);
+     * }
+     * 
+     * if (dis != null && dis.size() != 0) {
+     * 
+     * List<HistoricoPrecio> hps = Mapper.mapHistoricoPrecios(dis);
+     * return new ResponseEntity<List<HistoricoPrecio>>(hps, HttpStatus.OK);
+     * }
+     * 
+     * resp.put("mensaje", "Sin datos que mostrar");
+     * return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
+     * 
+     * }
+     */
 
     // Mostrar todos los detalles de ingreso --> todos los productos
     @GetMapping("/all/{sucursal}")
@@ -226,10 +230,10 @@ public class TiendaController {
         }
     }
 
-    //mostrar todos los productos disponibles por marca
+    // mostrar todos los productos disponibles por marca
     @GetMapping("/all-ma/{sucursal}/{marca}")
-    public ResponseEntity<?> diAllToMarca(@PathVariable(value = "sucursal") String sucursal, 
-        @PathVariable(value = "marca") String marca) {
+    public ResponseEntity<?> diAllToMarca(@PathVariable(value = "sucursal") String sucursal,
+            @PathVariable(value = "marca") String marca) {
 
         Map<String, String> resp = new HashMap<>();
         List<DetalleIngreso> dis = null;
@@ -303,7 +307,7 @@ public class TiendaController {
     // productos mas vendidos
     @GetMapping("/mas/ven/{idtipo}/{sucursal}")
     public ResponseEntity<?> listMasVendidos(@PathVariable(value = "idtipo") Integer idtipo,
-        @PathVariable(value = "sucursal") String sucursal) {
+            @PathVariable(value = "sucursal") String sucursal) {
 
         Map<String, String> resp = new HashMap<>();
         List<DetalleIngreso> dis = null;
@@ -312,13 +316,13 @@ public class TiendaController {
             switch (idtipo) {
                 case 0:
                     dis = ingresoService.getMasVendidosGeneral(sucursal);
-                    if(dis.size() < 15){
+                    if (dis.size() < 15) {
                         dis = ingresoService.getLastTwenty(sucursal);
                     }
                     break;
                 default:
                     dis = ingresoService.getMasVendidos(idtipo, sucursal);
-                    if(dis.size() < 15){
+                    if (dis.size() < 15) {
                         dis = ingresoService.getByTipo(idtipo, sucursal);
                     }
             }
@@ -328,15 +332,15 @@ public class TiendaController {
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if (dis != null && dis.size() != 0) {            
-            
+        if (dis != null && dis.size() != 0) {
+
             List<MDetalleIngreso> mlista = dis.stream()
-                .limit(50)
-                .map(di -> Mapper.mapDetalleIngreso(di))
-                .collect(Collectors.toList());
+                    .limit(50)
+                    .map(di -> Mapper.mapDetalleIngreso(di))
+                    .collect(Collectors.toList());
 
             return new ResponseEntity<List<MDetalleIngreso>>(mlista, HttpStatus.OK);
-        }       
+        }
 
         resp.put("mensaje", "Sin datos que mostrar");
         return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
@@ -362,7 +366,7 @@ public class TiendaController {
             resp.put("mensaje", "Sin datos que mostrar");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
         }
-    }    
+    }
 
     // LISTA DE DELIVERYS
     @GetMapping("/deli-lista/{sucursal}")
@@ -411,78 +415,76 @@ public class TiendaController {
         }
     }
 
-    //lista de comentarios para un producto
+    // lista de comentarios para un producto
     @GetMapping("/comens/{idproducto}")
-    public ResponseEntity<?> listComentario(@PathVariable(value = "idproducto") Integer idproducto){
+    public ResponseEntity<?> listComentario(@PathVariable(value = "idproducto") Integer idproducto) {
 
-        Map<String,String> resp = new HashMap<>();
+        Map<String, String> resp = new HashMap<>();
         List<Comentario> comentarios = null;
 
         try {
             comentarios = comentarioSerivce.getByIdproducto(idproducto);
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error de consulta");
-            return new ResponseEntity< Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if(comentarios != null && comentarios.size() != 0){
+        if (comentarios != null && comentarios.size() != 0) {
             List<MComentario> mlista = Mapper.mapComentarios(comentarios);
             return new ResponseEntity<List<MComentario>>(mlista, HttpStatus.OK);
-        }
-        else{
+        } else {
             comentarios = new ArrayList<>();
             return new ResponseEntity<List<Comentario>>(comentarios, HttpStatus.OK);
         }
     }
 
-    //CREAR SUJERENCIA    
+    // CREAR SUJERENCIA
     @PostMapping("/suje-crear")
-    public ResponseEntity<?> createSU(@Valid @RequestBody Sujerencia sujerencia, BindingResult result){
+    public ResponseEntity<?> createSU(@Valid @RequestBody Sujerencia sujerencia, BindingResult result) {
 
-        Map<String,String> resp = new HashMap<>();
+        Map<String, String> resp = new HashMap<>();
         Sujerencia suje = null;
 
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             List<String> errors = result.getFieldErrors().stream()
-                .map(err -> "El campo: "+err.getField()+" "+err.getDefaultMessage())
-                .collect(Collectors.toList());
+                    .map(err -> "El campo: " + err.getField() + " " + err.getDefaultMessage())
+                    .collect(Collectors.toList());
             resp.put("mensaje", errors.toString());
-            return new ResponseEntity< Map<String,String>>(resp, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.BAD_REQUEST);
         }
 
         try {
             suje = libroReclamoService.getByDetalle(sujerencia.getDetalle());
         } catch (Exception e) {
             resp.put("mensaje", "Error: No fue posible enviar sujerencia");
-            return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
-        }  
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
-        if(suje != null){
+        if (suje != null) {
             suje.setCantidad(suje.getCantidad() + 1);
 
             try {
                 libroReclamoService.saveSU(sujerencia);
             } catch (Exception e) {
                 resp.put("mensaje", "Error: No fue posible enviar sujerencia");
-                return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
-            }  
-        }
-        else{
+                return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
             try {
                 libroReclamoService.saveSU(sujerencia);
             } catch (Exception e) {
                 resp.put("mensaje", "Error: No fue posible enviar sujerencia");
-                return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
-            }  
-        }             
+                return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
 
         resp.put("mensaje", "Sujerencia enviado con éxito");
-        return new ResponseEntity<Map<String,String>>(resp, HttpStatus.CREATED);
+        return new ResponseEntity<Map<String, String>>(resp, HttpStatus.CREATED);
     }
 
-    //LISTA DE HORAS DE ENTREGA
+    // LISTA DE HORAS DE ENTREGA
     @GetMapping("/he/lista")
-    public ResponseEntity<?> getAllHE(){
+    public ResponseEntity<?> getAllHE() {
 
         Map<String, String> resp = new HashMap<>();
         List<HoraEntrega> hes = null;
@@ -494,13 +496,61 @@ public class TiendaController {
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if(hes != null && hes.size() != 0){
-            
+        if (hes != null && hes.size() != 0) {
+
             return new ResponseEntity<List<HoraEntrega>>(hes, HttpStatus.OK);
         }
 
         resp.put("mensaje", "Sin datos que mostrar");
         return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
+    }
+
+    //crear libro de reclamo
+    @PostMapping("/lib-re/crear")
+    public ResponseEntity<?> createLR(@Valid @RequestBody LibroReclamo libroReclamo, BindingResult result) {
+
+        Map<String, String> resp = new HashMap<>();
+        String numero = null;
+
+        if (result.hasErrors()) {
+            List<String> errors = result.getFieldErrors().stream()
+                    .map(err -> "El campo: " + err.getField() + " " + err.getDefaultMessage())
+                    .collect(Collectors.toList());
+            resp.put("mensaje", errors.toString());
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            numero = libroReclamoService.getLatestNumero();
+        } catch (Exception e) {
+            resp.put("mensaje", "Error, no fue posible guardar reclamo");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if (numero != null) {
+            String arrayNumero[] = numero.split("-");
+            String serie = arrayNumero[0];
+            String correlativo = arrayNumero[1];
+            if (Integer.parseInt(correlativo) < 999999) {
+                numero = serie + "-" + Mapper.generateNumero(correlativo, 6);
+            } else if (Integer.parseInt(correlativo) == 999999) {
+                numero = Mapper.generateNumero(serie, 3) + "-000001";
+            }
+        } else {
+            numero = "001-000001";
+        }
+
+        libroReclamo.setNumero(numero);
+
+        try {
+            libroReclamoService.saveLR(libroReclamo);
+        } catch (Exception e) {
+            resp.put("mensaje", "Error, no fue posible guardar reclamo");
+            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        resp.put("mensaje", "Su reclamo ha sido enviado con éxito");
+        return new ResponseEntity<Map<String, String>>(resp, HttpStatus.CREATED);
     }
 
 }
