@@ -17,24 +17,32 @@ public class ProductoDatoNutricional implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer iddnutricional;
 
-    private Double calorias;
+    @Size(max = 50)
+    private String calorias;
 
-    private Double grasa;
+    @Size(max = 50)
+    private String grasa;
 
-    private Double colesterol;
+    @Size(max = 50)
+    private String colesterol;
 
-    private Double sodio;
+    @Size(max = 50)
+    private String sodio;
 
-    private Double carbohidrato;
+    @Size(max = 50)
+    private String carbohidrato;
 
-    private Double proteina;
+    @Size(max = 50)
+    private String proteina;
 
-    @Size(max = 12)
+    @Size(max = 100)
     private String vitamina;
 
-    private Double calcio;
+    @Size(max = 50)
+    private String calcio;
 
-    private Double hierro;
+    @Size(max = 50)
+    private String hierro;
 
     @Size(max = 100)
     private String minerales;
@@ -43,9 +51,10 @@ public class ProductoDatoNutricional implements Serializable {
 
     }
 
-    public ProductoDatoNutricional(Integer iddnutricional, Double calorias, Double grasa, Double colesterol,
-            Double sodio, Double carbohidrato, Double proteina, @Size(max = 12) String vitamina, Double calcio,
-            Double hierro, @Size(max = 100) String minerales) {
+    public ProductoDatoNutricional(Integer iddnutricional, @Size(max = 50) String calorias,
+            @Size(max = 50) String grasa, @Size(max = 50) String colesterol, @Size(max = 50) String sodio,
+            @Size(max = 50) String carbohidrato, @Size(max = 50) String proteina, @Size(max = 50) String vitamina,
+            @Size(max = 50) String calcio, @Size(max = 50) String hierro, @Size(max = 100) String minerales) {
         this.iddnutricional = iddnutricional;
         this.calorias = calorias;
         this.grasa = grasa;
@@ -67,51 +76,51 @@ public class ProductoDatoNutricional implements Serializable {
         this.iddnutricional = iddnutricional;
     }
 
-    public Double getCalorias() {
+    public String getCalorias() {
         return calorias;
     }
 
-    public void setCalorias(Double calorias) {
+    public void setCalorias(String calorias) {
         this.calorias = calorias;
     }
 
-    public Double getGrasa() {
+    public String getGrasa() {
         return grasa;
     }
 
-    public void setGrasa(Double grasa) {
+    public void setGrasa(String grasa) {
         this.grasa = grasa;
     }
 
-    public Double getColesterol() {
+    public String getColesterol() {
         return colesterol;
     }
 
-    public void setColesterol(Double colesterol) {
+    public void setColesterol(String colesterol) {
         this.colesterol = colesterol;
     }
 
-    public Double getSodio() {
+    public String getSodio() {
         return sodio;
     }
 
-    public void setSodio(Double sodio) {
+    public void setSodio(String sodio) {
         this.sodio = sodio;
     }
 
-    public Double getCarbohidrato() {
+    public String getCarbohidrato() {
         return carbohidrato;
     }
 
-    public void setCarbohidrato(Double carbohidrato) {
+    public void setCarbohidrato(String carbohidrato) {
         this.carbohidrato = carbohidrato;
     }
 
-    public Double getProteina() {
+    public String getProteina() {
         return proteina;
     }
 
-    public void setProteina(Double proteina) {
+    public void setProteina(String proteina) {
         this.proteina = proteina;
     }
 
@@ -123,19 +132,19 @@ public class ProductoDatoNutricional implements Serializable {
         this.vitamina = vitamina;
     }
 
-    public Double getCalcio() {
+    public String getCalcio() {
         return calcio;
     }
 
-    public void setCalcio(Double calcio) {
+    public void setCalcio(String calcio) {
         this.calcio = calcio;
     }
 
-    public Double getHierro() {
+    public String getHierro() {
         return hierro;
     }
 
-    public void setHierro(Double hierro) {
+    public void setHierro(String hierro) {
         this.hierro = hierro;
     }
 
