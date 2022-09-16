@@ -28,7 +28,7 @@ public class DetalleComprobante implements Serializable {
     private Integer iddetallecomprobante;
 
     @NotNull
-    private Integer cantidad;
+    private Double cantidad;
 
     private Double descuento;
 
@@ -57,7 +57,7 @@ public class DetalleComprobante implements Serializable {
 
     }
 
-    public Integer decreaseStockActual() throws InsufficientStockError {
+    public Double decreaseStockActual() throws InsufficientStockError {
 
         if (this.detalleIngreso.getStockActual() == 0 || !this.detalleIngreso.getEstado()) {
             throw new InsufficientStockError(
@@ -66,7 +66,7 @@ public class DetalleComprobante implements Serializable {
         }
 
         if (this.detalleIngreso.getStockActual() >= this.cantidad) {
-            int stock = this.detalleIngreso.getStockActual() - this.cantidad;
+            double stock = this.detalleIngreso.getStockActual() - this.cantidad;
             this.detalleIngreso.setStockActual(stock);
             return this.detalleIngreso.getStockActual();
         } else {
@@ -76,8 +76,8 @@ public class DetalleComprobante implements Serializable {
 
     }
 
-    public Integer replenishStockActual() {
-        int stock = this.detalleIngreso.getStockActual() + this.cantidad;
+    public Double replenishStockActual() {
+        double stock = this.detalleIngreso.getStockActual() + this.cantidad;
         this.detalleIngreso.setStockActual(stock);
         return this.detalleIngreso.getStockActual();
     }
@@ -90,11 +90,11 @@ public class DetalleComprobante implements Serializable {
         this.iddetallecomprobante = iddetallecomprobante;
     }
 
-    public Integer getCantidad() {
+    public Double getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(Integer cantidad) {
+    public void setCantidad(Double cantidad) {
         this.cantidad = cantidad;
     }
 

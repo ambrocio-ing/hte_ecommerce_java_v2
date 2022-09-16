@@ -354,6 +354,7 @@ public class Mapper {
                 di.getFechaProduccion(),
                 di.getFechaVencimiento(),
                 di.getEstado(),
+                di.getVentaPorGramo(),
                 di.getSucursal(),
                 di.getProducto(),
                 di.getVariedades());

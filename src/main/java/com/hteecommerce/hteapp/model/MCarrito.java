@@ -5,12 +5,13 @@ import java.util.List;
 
 import com.hteecommerce.hteapp.entity.Carrito;
 import com.hteecommerce.hteapp.entity.Variedad;
+import com.hteecommerce.hteapp.mapper.Mapper;
 
 public class MCarrito {
 
     private Integer idcarrito;     
        
-    private Integer cantidad;
+    private Double cantidad;
 
     private Double descuento;    
    
@@ -35,18 +36,7 @@ public class MCarrito {
         this.subTotal = carrito.getSubTotal();
         this.idcliente = carrito.getIdcliente();
         this.createAt = carrito.getCreateAt();
-        this.detalleIngreso = new MDetalleIngreso(
-            carrito.getDetalleIngreso().getIddetalleingreso(),
-            carrito.getDetalleIngreso().getPrecioVenta(),
-            carrito.getDetalleIngreso().getPrecioVentaAnterior(), 
-            carrito.getDetalleIngreso().getPorcentajeDescuento(),
-            carrito.getDetalleIngreso().getStockActual(),
-            carrito.getDetalleIngreso().getFechaProduccion(),
-            carrito.getDetalleIngreso().getFechaVencimiento(),
-            carrito.getDetalleIngreso().getEstado(),
-            carrito.getDetalleIngreso().getSucursal(),
-            carrito.getDetalleIngreso().getProducto(),
-            carrito.getVariedades());
+        this.detalleIngreso = Mapper.mapDetalleIngreso(carrito.getDetalleIngreso());
         this.variedades = carrito.getVariedades();
     }
 
@@ -58,11 +48,11 @@ public class MCarrito {
         this.idcarrito = idcarrito;
     }
     
-    public Integer getCantidad() {
+    public Double getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(Integer cantidad) {
+    public void setCantidad(Double cantidad) {
         this.cantidad = cantidad;
     }
 

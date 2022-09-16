@@ -143,7 +143,7 @@ public class ComprobanteController {
         }
 
         for (DetalleComprobante dc : com.getDetalleComprobantes()) {
-            Integer cantidad = dc.getDetalleIngreso().getStockActual() + dc.getCantidad();
+            Double cantidad = dc.getDetalleIngreso().getStockActual() + dc.getCantidad();
             dc.getDetalleIngreso().setStockActual(cantidad);
             if (dc.getVariedades() != null) {
                 dc.getDetalleIngreso().setVariedades(

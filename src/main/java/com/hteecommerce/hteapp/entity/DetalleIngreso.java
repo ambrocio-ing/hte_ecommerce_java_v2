@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -53,7 +54,7 @@ public class DetalleIngreso implements Serializable {
     @NotNull
     @Column(name = "stock_actual")
     @Min(0)
-    private Integer stockActual;
+    private Double stockActual;
 
     @Column(name = "fecha_produccion")
     private LocalDate fechaProduccion;
@@ -63,6 +64,9 @@ public class DetalleIngreso implements Serializable {
 
     @NotNull
     private Boolean estado;
+
+    @NotBlank
+    private Boolean ventaPorGramo;
 
     @NotNull
     @Size(max = 30)
@@ -125,11 +129,11 @@ public class DetalleIngreso implements Serializable {
         this.stockInicial = stockInicial;
     }
 
-    public Integer getStockActual() {
+    public Double getStockActual() {
         return stockActual;
     }
 
-    public void setStockActual(Integer stockActual) {
+    public void setStockActual(Double stockActual) {
         this.stockActual = stockActual;
     }
 
@@ -211,6 +215,14 @@ public class DetalleIngreso implements Serializable {
 
     public void setVariedades(List<Variedad> variedades) {
         this.variedades = variedades;
+    }    
+
+    public Boolean getVentaPorGramo() {
+        return ventaPorGramo;
+    }
+
+    public void setVentaPorGramo(Boolean ventaPorGramo) {
+        this.ventaPorGramo = ventaPorGramo;
     }
 
     private static final long serialVersionUID = 1L;

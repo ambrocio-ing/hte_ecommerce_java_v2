@@ -46,7 +46,7 @@ public class Producto implements Serializable {
 
     private Integer nventas;
 
-    private Integer nestrellas;
+    private Integer nestrellas;   
 
     private String descripcion;
 

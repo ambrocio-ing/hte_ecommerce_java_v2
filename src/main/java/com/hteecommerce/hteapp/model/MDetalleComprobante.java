@@ -10,7 +10,7 @@ public class MDetalleComprobante {
 
     private Integer iddetallecomprobante;
 
-    private Integer cantidad;
+    private Double cantidad;
 
     private Double descuento;
 
@@ -51,11 +51,11 @@ public class MDetalleComprobante {
         this.iddetallecomprobante = iddetallecomprobante;
     }
 
-    public Integer getCantidad() {
+    public Double getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(Integer cantidad) {
+    public void setCantidad(Double cantidad) {
         this.cantidad = cantidad;
     }
 

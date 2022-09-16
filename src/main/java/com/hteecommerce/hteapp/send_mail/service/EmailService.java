@@ -18,7 +18,7 @@ import com.hteecommerce.hteapp.send_mail.dto.EmailValuesDto;
 
 @Service
 public class EmailService {
-    
+
     @Autowired
     private JavaMailSender javaMailSender;
 
@@ -31,35 +31,30 @@ public class EmailService {
     @Value("${mail.urlEcommerce}")
     private String urlEcommerce;
 
-    public void mailSend(EmailValuesDto dto){
+    public void mailSend(EmailValuesDto dto) throws MessagingException {
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-            Context context = new Context();
 
-            Map<String,Object> model = new HashMap<>();
-            model.put("username", dto.getUsername());
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+        Context context = new Context();
 
-            if(dto.getTypeUser().equals("Admin")){
-                model.put("url", urlAdmin + dto.getToken());
-            }
-            else{
-                model.put("url", urlEcommerce + dto.getToken());
-            }
+        Map<String, Object> model = new HashMap<>();
+        model.put("username", dto.getUsername());
 
-            context.setVariables(model);
-            String htmlText = templateEngine.process("email_template", context);
-            helper.setFrom(dto.getMailFrom());
-            helper.setTo(dto.getMailTo());
-            helper.setSubject(dto.getSubject());
-            helper.setText(htmlText, true);
-
-            javaMailSender.send(mimeMessage);
-
-        } catch (MessagingException e) {
-            e.printStackTrace();
+        if (dto.getTypeUser().equals("Admin")) {
+            model.put("url", urlAdmin + dto.getToken());
+        } else {
+            model.put("url", urlEcommerce + dto.getToken());
         }
+
+        context.setVariables(model);
+        String htmlText = templateEngine.process("email_template", context);
+        helper.setFrom(dto.getMailFrom());
+        helper.setTo(dto.getMailTo());
+        helper.setSubject(dto.getSubject());
+        helper.setText(htmlText, true);
+
+        javaMailSender.send(mimeMessage);
 
     }
 }

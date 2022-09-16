@@ -30,7 +30,7 @@ public class Carrito implements Serializable {
     private Integer idcarrito;    
     
     @NotNull
-    private Integer cantidad;
+    private Double cantidad;
 
     private Double descuento;
 
@@ -71,11 +71,11 @@ public class Carrito implements Serializable {
         this.idcarrito = idcarrito;
     }
 
-    public Integer getCantidad() {
+    public Double getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(Integer cantidad) {
+    public void setCantidad(Double cantidad) {
         this.cantidad = cantidad;
     }
 

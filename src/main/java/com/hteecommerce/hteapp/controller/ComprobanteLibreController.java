@@ -71,7 +71,7 @@ public class ComprobanteLibreController {
         }     
                        
         String errorsDC = comprobante.getDetalleComprobantes().stream()
-                .flatMap(dc -> UDetalleComprobante.isValidDC(dc.getCantidad(), dc.getSubTotal()))
+                .flatMap(dc -> UDetalleComprobante.isValidDC(dc.getCantidad(), dc.getPrecioUnitario(), dc.getSubTotal()))
                 .collect(Collectors.joining(", "));
 
         if (errorsDC != null && errorsDC.length() != 0) {
@@ -92,7 +92,7 @@ public class ComprobanteLibreController {
         for (DetalleComprobante dc : comprobante.getDetalleComprobantes()) {
 
             if(direccionEnvio.getCliente() != null){
-                puntos += dc.getDetalleIngreso().getProducto().getPuntos() * dc.getCantidad();
+                puntos += dc.getDetalleIngreso().getProducto().getPuntos() * dc.getCantidad().intValue();
             }
 
             DetalleIngreso di = null;
@@ -192,7 +192,7 @@ public class ComprobanteLibreController {
         }     
                        
         String errorsDC = comprobante.getDetalleComprobantes().stream()
-                .flatMap(dc -> UDetalleComprobante.isValidDC(dc.getCantidad(), dc.getSubTotal()))
+                .flatMap(dc -> UDetalleComprobante.isValidDC(dc.getCantidad(), dc.getPrecioUnitario() ,dc.getSubTotal()))
                 .collect(Collectors.joining(", "));
 
         if (errorsDC != null && errorsDC.length() != 0) {
@@ -213,7 +213,7 @@ public class ComprobanteLibreController {
         for (DetalleComprobante dc : comprobante.getDetalleComprobantes()) {
 
             if(direccionEnvio.getCliente() != null){
-                puntos += (dc.getDetalleIngreso().getProducto().getPuntos() * dc.getCantidad());
+                puntos += (dc.getDetalleIngreso().getProducto().getPuntos() * dc.getCantidad().intValue());
             }
 
             DetalleIngreso di = null;
@@ -442,7 +442,7 @@ public class ComprobanteLibreController {
         }
 
         for(DetalleComprobante dc : com.getDetalleComprobantes()){
-            Integer cantidad = dc.getDetalleIngreso().getStockActual() + dc.getCantidad();            
+            Double cantidad = dc.getDetalleIngreso().getStockActual() + dc.getCantidad();            
             dc.getDetalleIngreso().setStockActual(cantidad);
             if(dc.getVariedades() != null){
                 dc.getDetalleIngreso().setVariedades(Mapper.restablecerVariedades(dc.getVariedades(), dc.getDetalleIngreso().getVariedades()));

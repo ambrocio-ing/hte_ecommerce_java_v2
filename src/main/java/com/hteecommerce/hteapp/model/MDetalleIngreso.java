@@ -22,7 +22,7 @@ public class MDetalleIngreso {
 
     private Integer stockInicial;
 
-    private Integer stockActual;
+    private Double stockActual;
 
     private LocalDate fechaProduccion;
 
@@ -30,7 +30,9 @@ public class MDetalleIngreso {
 
     private Boolean estado;
 
-    private String sucursal;
+    private Boolean ventaPorGramo;
+
+    private String sucursal;   
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private Producto producto;
@@ -56,6 +58,7 @@ public class MDetalleIngreso {
         this.fechaProduccion = di.getFechaProduccion();
         this.fechaVencimiento = di.getFechaVencimiento();
         this.estado = di.getEstado();
+        this.ventaPorGramo = di.getVentaPorGramo();
         this.sucursal = di.getSucursal();
         this.producto = di.getProducto();
         this.variedades = di.getVariedades();
@@ -64,8 +67,8 @@ public class MDetalleIngreso {
 
     //constructor para vista del lado ecommerce
     public MDetalleIngreso(Integer iddetalleingreso, Double precioVenta, Double precioVentaAnterior,
-            Double porcentajeDescuento, Integer stockActual, LocalDate fechaProduccion,
-            LocalDate fechaVencimiento, Boolean estado, String sucursal, Producto producto, List<Variedad> variedades) {
+            Double porcentajeDescuento, Double stockActual, LocalDate fechaProduccion,
+            LocalDate fechaVencimiento, Boolean estado, Boolean ventaPorGramo, String sucursal, Producto producto, List<Variedad> variedades) {
         this.iddetalleingreso = iddetalleingreso;
         this.precioVenta = precioVenta;
         this.precioVentaAnterior = precioVentaAnterior;
@@ -74,6 +77,7 @@ public class MDetalleIngreso {
         this.fechaProduccion = fechaProduccion;
         this.fechaVencimiento = fechaVencimiento;
         this.estado = estado;
+        this.ventaPorGramo = ventaPorGramo;
         this.sucursal = sucursal;
         this.producto = producto;
         this.variedades = variedades;
@@ -119,11 +123,11 @@ public class MDetalleIngreso {
         this.stockInicial = stockInicial;
     }
 
-    public Integer getStockActual() {
+    public Double getStockActual() {
         return stockActual;
     }
 
-    public void setStockActual(Integer stockActual) {
+    public void setStockActual(Double stockActual) {
         this.stockActual = stockActual;
     }
 
@@ -197,6 +201,14 @@ public class MDetalleIngreso {
 
     public void setVariedades(List<Variedad> variedades) {
         this.variedades = variedades;
-    }    
+    }
+
+    public Boolean getVentaPorGramo() {
+        return ventaPorGramo;
+    }
+
+    public void setVentaPorGramo(Boolean ventaPorGramo) {
+        this.ventaPorGramo = ventaPorGramo;
+    }     
 
 }

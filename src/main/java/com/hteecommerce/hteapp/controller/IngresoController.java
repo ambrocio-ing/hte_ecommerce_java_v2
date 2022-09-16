@@ -257,7 +257,7 @@ public class IngresoController {
                 } 
 
                 di_nuevo.setProducto(pro);
-                di_nuevo.setStockActual(di_nuevo.getStockInicial());                
+                di_nuevo.setStockActual(di_nuevo.getStockInicial().doubleValue());                
             }
             else{
                 isExistDi = true;
