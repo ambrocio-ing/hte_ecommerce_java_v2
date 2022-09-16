@@ -257,7 +257,7 @@ public class IngresoController {
                 } 
 
                 di_nuevo.setProducto(pro);
-                di_nuevo.setStockActual(di_nuevo.getStockInicial().doubleValue());                
+                di_nuevo.setStockActual(di_nuevo.getStockInicial());                
             }
             else{
                 isExistDi = true;
@@ -342,6 +342,8 @@ public class IngresoController {
                     di.setPrecioVentaAnterior(diNuevo.getPrecioVentaAnterior());
                     di.setStockActual(diNuevo.getStockActual());
                     di.setStockInicial(diNuevo.getStockInicial());
+                    di.setEstado(diNuevo.getEstado());
+                    di.setVentaPorGramo(diNuevo.getVentaPorGramo());
 
                     if(di.getVariedades() != null){
                         di.setVariedades(diNuevo.getVariedades());

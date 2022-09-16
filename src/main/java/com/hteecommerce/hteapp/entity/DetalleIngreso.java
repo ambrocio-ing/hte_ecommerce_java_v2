@@ -49,7 +49,8 @@ public class DetalleIngreso implements Serializable {
 
     @NotNull
     @Column(name = "stock_inicial")
-    private Integer stockInicial;
+    @Min(0)
+    private Double stockInicial;
 
     @NotNull
     @Column(name = "stock_actual")
@@ -121,11 +122,11 @@ public class DetalleIngreso implements Serializable {
         this.precioVenta = precioVenta;
     }
 
-    public Integer getStockInicial() {
+    public Double getStockInicial() {
         return stockInicial;
     }
 
-    public void setStockInicial(Integer stockInicial) {
+    public void setStockInicial(Double stockInicial) {
         this.stockInicial = stockInicial;
     }
 

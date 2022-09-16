@@ -20,7 +20,7 @@ public class MDetalleIngreso {
 
     private Double porcentajeDescuento;
 
-    private Integer stockInicial;
+    private Double stockInicial;
 
     private Double stockActual;
 
@@ -115,11 +115,11 @@ public class MDetalleIngreso {
         this.precioVenta = precioVenta;
     }
 
-    public Integer getStockInicial() {
+    public Double getStockInicial() {
         return stockInicial;
     }
 
-    public void setStockInicial(Integer stockInicial) {
+    public void setStockInicial(Double stockInicial) {
         this.stockInicial = stockInicial;
     }
 
