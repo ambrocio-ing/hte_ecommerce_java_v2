@@ -36,7 +36,7 @@ public class Producto implements Serializable {
     private String codigo;
 
     @NotNull
-    @Size(max = 50)
+    @Size(max = 100)
     @Column(unique = true)
     private String nombre;
 

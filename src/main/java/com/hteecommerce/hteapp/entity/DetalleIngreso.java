@@ -67,6 +67,7 @@ public class DetalleIngreso implements Serializable {
     private Boolean estado;
 
     @NotBlank
+    @Column(name = "venta_por_gramo")
     private Boolean ventaPorGramo;
 
     @NotNull
