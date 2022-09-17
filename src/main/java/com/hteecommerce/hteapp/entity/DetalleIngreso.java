@@ -18,7 +18,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -66,7 +65,7 @@ public class DetalleIngreso implements Serializable {
     @NotNull
     private Boolean estado;
 
-    @NotBlank
+    @NotNull
     @Column(name = "venta_por_gramo")
     private Boolean ventaPorGramo;
 

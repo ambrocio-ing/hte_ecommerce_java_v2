@@ -39,7 +39,10 @@ public class MDetalleComprobante {
                 dc.getDetalleIngreso().getPrecioVenta(), dc.getDetalleIngreso().getSucursal(),
                 dc.getDetalleIngreso().getProducto());
 
-        this.variedades = dc.getVariedades();
+        if(dc.getVariedades() != null && dc.getVariedades().size() != 0){
+            this.variedades = dc.getVariedades();
+        }
+        
         this.comprobanteId = dc.getComprobanteId();
     }        
 

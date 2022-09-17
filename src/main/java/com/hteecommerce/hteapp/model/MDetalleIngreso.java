@@ -61,7 +61,11 @@ public class MDetalleIngreso {
         this.ventaPorGramo = di.getVentaPorGramo();
         this.sucursal = di.getSucursal();
         this.producto = di.getProducto();
-        this.variedades = di.getVariedades();
+
+        if(di.getVariedades() != null && di.getVariedades().size() != 0){
+            this.variedades = di.getVariedades();
+        }
+        
         this.ingresoId = di.getIngresoId();
     }    
 
@@ -80,7 +84,13 @@ public class MDetalleIngreso {
         this.ventaPorGramo = ventaPorGramo;
         this.sucursal = sucursal;
         this.producto = producto;
-        this.variedades = variedades;
+        
+        if(variedades != null && variedades.size() != 0){
+            this.variedades = variedades;
+        }
+        else{
+            this.variedades = null;
+        }
     }       
 
     //para que retorne con comprobante
