@@ -311,7 +311,7 @@ public class ProductoController {
                     producto.getProductoVestimenta().getIdpvestimenta(),
                     producto.getProductoVestimenta().getModelo(),
                     producto.getProductoVestimenta().getMaterial()));
-        } else {
+        } else if(producto.getProductoOtros() != null) {
             pro.setProductoOtros(new ProductoOtros(
                     producto.getProductoOtros().getIdpotros(),
                     producto.getProductoOtros().getModelo(),
