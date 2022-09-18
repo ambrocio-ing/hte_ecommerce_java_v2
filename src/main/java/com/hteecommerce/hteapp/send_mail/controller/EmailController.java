@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +77,7 @@ public class EmailController {
 
         try {
             emailService.mailSend(dto);
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error: no fue posible validar su correo registrado");
             resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,String>>(resp, HttpStatus.NOT_FOUND);
