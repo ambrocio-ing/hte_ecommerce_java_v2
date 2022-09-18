@@ -158,7 +158,7 @@ public class DireccionEnvioController {
             direccionEnvioService.saveDE(die);
         } catch (Exception e) {
             resp.put("mensaje", "Error.. no fue posible guardar nueva dirección");
-            // resp.put("error", e.getMessage());
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -214,8 +214,9 @@ public class DireccionEnvioController {
 
         try {
             de = direccionEnvioService.saveDE(die);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error de consulta a la base de datos");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -232,7 +233,7 @@ public class DireccionEnvioController {
         Map<String, String> resp = new HashMap<>();
         Page<Destinatario> des = null;
 
-        Pageable pageable = PageRequest.of(page, 20);
+        Pageable pageable = PageRequest.of(page, 50);
         try {
             des = direccionEnvioService.getAllDestinatario(pageable);
         } catch (DataAccessException e) {
@@ -293,8 +294,9 @@ public class DireccionEnvioController {
 
         try {
             direccionEnvioService.updateDES(des);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error: no fue posible actualizar estado");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

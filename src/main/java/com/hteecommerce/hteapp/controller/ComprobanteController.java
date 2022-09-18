@@ -113,8 +113,9 @@ public class ComprobanteController {
 
         try {
             comprobanteService.saveCOM(com);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al actualizar datos");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -154,8 +155,9 @@ public class ComprobanteController {
 
         try {
             comprobanteService.deleteCOM(idcom, dis);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al eliminar comporobante");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -195,8 +197,9 @@ public class ComprobanteController {
 
         try {
             comprobanteService.saveCOM(com);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error de consulta a la base de datos");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -300,7 +303,7 @@ public class ComprobanteController {
         Map<String, String> resp = new HashMap<>();
         Page<Comprobante> comPage = null;
 
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 25);
 
         try {
             comPage = comprobanteService.getByEstadoEntregadoHuacho(pageable);
@@ -325,7 +328,7 @@ public class ComprobanteController {
         Map<String, String> resp = new HashMap<>();
         Page<Comprobante> comPage = null;
 
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 25);
 
         try {
             comPage = comprobanteService.getByEstadoPedidoHuacho(pageable);
@@ -351,7 +354,7 @@ public class ComprobanteController {
         Map<String, String> resp = new HashMap<>();
         Page<Comprobante> comPage = null;
 
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 25);
 
         try {
             comPage = comprobanteService.getByEstadoAnuladoHuacho(pageable);
@@ -378,7 +381,7 @@ public class ComprobanteController {
         Map<String, String> resp = new HashMap<>();
         Page<Comprobante> comPage = null;
 
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 25);
 
         try {
             comPage = comprobanteService.getByEstadoEntregadoBarranca(pageable);
@@ -403,7 +406,7 @@ public class ComprobanteController {
         Map<String, String> resp = new HashMap<>();
         Page<Comprobante> comPage = null;
 
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 25);
 
         try {
             comPage = comprobanteService.getByEstadoPedidoBarranca(pageable);
@@ -429,7 +432,7 @@ public class ComprobanteController {
         Map<String, String> resp = new HashMap<>();
         Page<Comprobante> comPage = null;
 
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 25);
 
         try {
             comPage = comprobanteService.getByEstadoAnuladoBarranca(pageable);
@@ -549,7 +552,7 @@ public class ComprobanteController {
         Map<String, String> resp = new HashMap<>();
         Page<Comprobante> comPage = null;
 
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 25);
 
         try {
             comPage = comprobanteService.getByEstadoPedidoValidarHuacho(pageable);
@@ -575,7 +578,7 @@ public class ComprobanteController {
         Map<String, String> resp = new HashMap<>();
         Page<Comprobante> comPage = null;
 
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 25);
 
         try {
             comPage = comprobanteService.getByEstadoPedidoValidarBarranca(pageable);

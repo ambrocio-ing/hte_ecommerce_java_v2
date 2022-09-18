@@ -88,8 +88,9 @@ public class AdminProveedorController {
         
         try {
             proveedorService.savePro(pro);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al guardar datos, por favor revise sus datos e intentelo denuevo");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -145,8 +146,9 @@ public class AdminProveedorController {
         try {
            proveedor.setFotoPerfil(nombreImagen);
            proveedorService.savePro(proveedor);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "No es posible guardar la imagen, por favor asegurece que la imagen es válido e intentelo mas denuevo");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

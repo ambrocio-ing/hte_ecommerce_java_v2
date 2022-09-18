@@ -72,6 +72,7 @@ public class VariedadController {
             variedadService.saveVA(variedad);
         } catch (Exception e) {
             resp.put("mensaje", "Error de sistema: Inténtelo mas tarde");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -128,6 +129,7 @@ public class VariedadController {
             variedadService.saveVA(va);
         } catch (Exception e) {
             resp.put("mensaje", "Error de sistema: Inténtelo mas tarde");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -158,6 +160,7 @@ public class VariedadController {
            variedadService.deleteVA(variedad.getIdvariedad());
         } catch (Exception e) {
             resp.put("mensaje", "Error de sistema: Inténtelo mas tarde");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

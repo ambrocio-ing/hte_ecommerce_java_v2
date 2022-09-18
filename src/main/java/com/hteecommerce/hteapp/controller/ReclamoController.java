@@ -136,7 +136,7 @@ public class ReclamoController {
         Map<String,String> resp = new HashMap<>();
         Page<Reclamo> lista = null;
 
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 50);
         
         try {
             lista = reclamoService.getAll(pageable);
@@ -208,6 +208,7 @@ public class ReclamoController {
             reclamoService.saveR(reclamo);
         } catch (Exception e) {
             resp.put("mensaje", "Error al crear reclamo, intentelo mas tarde");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -262,6 +263,7 @@ public class ReclamoController {
             reclamoService.deleteR(reclamo.getIdreclamo());
         } catch (Exception e) {
             resp.put("mensaje", "Error, no fue posible eliminar registro");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

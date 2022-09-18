@@ -79,8 +79,9 @@ public class CategoriaTipoController {
 
         try {
             categoriaTipoService.saveCAT(categoria);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al guardar datos");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -145,8 +146,9 @@ public class CategoriaTipoController {
 
         try {
             categoriaTipoService.saveCAT(categoria);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al actualiar registro");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -175,8 +177,9 @@ public class CategoriaTipoController {
         
         try {            
             categoriaTipoService.deleteCAT(categoria.getIdcategoria());
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al eliminar registro");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -255,8 +258,9 @@ public class CategoriaTipoController {
 
         try {
             categoriaTipoService.saveTI(tipo);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al guardar datos");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -321,8 +325,9 @@ public class CategoriaTipoController {
 
         try {
             categoriaTipoService.saveTI(tip);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al actualizar datos");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -351,8 +356,9 @@ public class CategoriaTipoController {
         
         try {            
             categoriaTipoService.deleteTI(tipo.getIdtipo());
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al eliminar registro");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

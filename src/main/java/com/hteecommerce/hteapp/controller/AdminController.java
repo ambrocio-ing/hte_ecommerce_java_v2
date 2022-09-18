@@ -52,7 +52,7 @@ public class AdminController {
         Map<String, String> resp = new HashMap<>();
         Page<Cliente> clientes = null;
 
-        Pageable pageable = PageRequest.of(page, 5);
+        Pageable pageable = PageRequest.of(page, 50);
 
         try {
             clientes = clienteService.getAll(pageable);
@@ -134,6 +134,7 @@ public class AdminController {
 
         } catch (Exception e) {
             resp.put("mensaje", "Error al actualizar estado del cliente");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -145,7 +146,7 @@ public class AdminController {
             }
 
         } catch (Exception e) {
-            isEditDes = false;
+            isEditDes = false;           
         }
 
         if(isEditDes == false){
@@ -165,7 +166,7 @@ public class AdminController {
         Map<String, String> resp = new HashMap<>();
         Page<Proveedor> proveedores = null;
 
-        Pageable pageable = PageRequest.of(page, 5);
+        Pageable pageable = PageRequest.of(page, 50);
 
         try {
             proveedores = proveedorService.getAll(pageable);
@@ -235,8 +236,9 @@ public class AdminController {
 
         try {
             proveedorService.savePro(pro);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al actualizar estado del proveedor");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

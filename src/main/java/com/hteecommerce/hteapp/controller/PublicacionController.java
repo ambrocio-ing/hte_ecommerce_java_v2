@@ -84,6 +84,7 @@ public class PublicacionController {
             pu = publicacionService.saveP(publicacion);
         } catch (Exception e) {
             resp.put("mensaje", "Error al crear publicación, intentelo mas tarde");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -198,6 +199,7 @@ public class PublicacionController {
             publicacionService.saveP(pu);
         } catch (Exception e) {
             resp.put("mensaje", "Error al actualizar publicación, intentelo mas tarde");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -228,6 +230,7 @@ public class PublicacionController {
             publicacionService.deleteP(publicacion.getIdpublicacion());
         } catch (Exception e) {
             resp.put("mensaje", "Error al eliminar registro, intentelo mas tarde");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         

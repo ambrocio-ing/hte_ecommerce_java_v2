@@ -164,8 +164,9 @@ public class ComprobanteLibreController {
         Comprobante com = null;
         try {
             com = comprobanteService.saveCOM(comprobante);
-        } catch (DataAccessException e) {
-            resp.put("mensaje", "Error al guardar datos");            
+        } catch (Exception e) {
+            resp.put("mensaje", "Error al guardar datos");    
+            resp.put("error", e.getMessage());       
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -304,7 +305,8 @@ public class ComprobanteLibreController {
         try {
             com = comprobanteService.saveCOM(comprobante);
         } catch (Exception e) {
-            resp.put("mensaje", "Error al guardar datos");            
+            resp.put("mensaje", "Error al guardar datos");      
+            resp.put("error", e.getMessage());      
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -413,8 +415,9 @@ public class ComprobanteLibreController {
           
         try {
             comprobanteService.saveCOM(com);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al actualizar datos");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -458,8 +461,9 @@ public class ComprobanteLibreController {
                 direccionEnvioService.deleteDE(com.getDireccionEnvio().getIddireccion());
             }
 
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al eliminar comporobante");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -519,8 +523,9 @@ public class ComprobanteLibreController {
 
         try {
             direccionEnvioService.deleteDE(de.getIddireccion());
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al deshacer cambios");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         

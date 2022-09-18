@@ -155,8 +155,9 @@ public class PersonalController {
 
         try {
             personalService.savePe(per);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al guardar datos del personal, por favor revice que no haya errores en los campos solicitados");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -286,8 +287,9 @@ public class PersonalController {
 
         try {
             personalService.savePe(per);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al guardar datos del personal, por favor revice que no haya errores en los campos solicitados");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -319,8 +321,9 @@ public class PersonalController {
 
         try {
             personalService.deletePe(personal.getIdpersonal());
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al eliminar registro del personal");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

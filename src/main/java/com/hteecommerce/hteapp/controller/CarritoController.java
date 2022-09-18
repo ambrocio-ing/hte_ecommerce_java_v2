@@ -143,6 +143,7 @@ public class CarritoController {
             try {
                 carrito = carritoService.saveC(carrito);
             } catch (Exception e) {
+                resp.put("error", e.getMessage());
                 resp.put("mensaje", "Error del sistema: Inténtelo mas tarde");
                 return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
             }
@@ -203,6 +204,7 @@ public class CarritoController {
             carritoService.saveAllC(carrs);
         } catch (Exception e) {
             resp.put("mensaje", "Error, no fue posible agregar productos al carrito");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
         }        
 
@@ -242,6 +244,7 @@ public class CarritoController {
             carr = carritoService.saveC(carr);
         } catch (Exception e) {
             resp.put("mensaje", "Errores al actualizar carrito");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
         }
 
@@ -272,6 +275,7 @@ public class CarritoController {
             carritoService.deleteC(carrito.getIdcarrito());
         } catch (Exception e) {
             resp.put("mensaje", "Error, el sistema no responde, por favor intentelo de nuevo");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -306,6 +310,7 @@ public class CarritoController {
         } catch (Exception e) {
             resp.put("mensaje",
                     "Error, no fue posible limpiar productos del carrito, por favor procure eliminarlos de forma manual");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

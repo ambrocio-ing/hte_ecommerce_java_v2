@@ -55,7 +55,7 @@ public class ProductoController {
         Map<String, String> resp = new HashMap<>();
         Page<Producto> lista = null;
 
-        Pageable pageable = PageRequest.of(page, 3);
+        Pageable pageable = PageRequest.of(page, 50);
 
         try {
             lista = productoService.getAll(pageable);
@@ -80,7 +80,7 @@ public class ProductoController {
         Map<String, String> resp = new HashMap<>();
         Page<Producto> lista = null;
 
-        Pageable pageable = PageRequest.of(page, 5);
+        Pageable pageable = PageRequest.of(page, 50);
 
         try {
             lista = productoService.getAll(pageable);
@@ -167,8 +167,9 @@ public class ProductoController {
 
         try {
             pro = productoService.savePto(producto);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al guardar datos en la base de datos");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -322,8 +323,9 @@ public class ProductoController {
 
         try {
             productoService.updatePto(pro);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al guardar datos en la base de datos");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -354,8 +356,9 @@ public class ProductoController {
 
         try {
             productoService.deletePto(producto.getIdproducto());
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al eliminar registro");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -387,8 +390,9 @@ public class ProductoController {
 
         try {
             productoService.deleteImg(productoImg.getIdpimagen());
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al eliminar imagen");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

@@ -115,8 +115,9 @@ public class CompraRapidaController {
 
         try {
             compraRapidaService.saveCR(compraRapida);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put(("mensaje"), "Error de consulta");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -171,6 +172,7 @@ public class CompraRapidaController {
             compraRapidaService.deleteCR(comra.getIdcompra());
         } catch (Exception e) {
             resp.put(("mensaje"), "Error, no fue posible eliminar producto de sus lista");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

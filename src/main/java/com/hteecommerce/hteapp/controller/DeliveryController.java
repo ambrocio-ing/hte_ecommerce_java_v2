@@ -76,6 +76,7 @@ public class DeliveryController {
             deliveryService.saveDEL(delivery);
         } catch (Exception e) {
             resp.put("mensaje", "Error, no fue posible guardar registro");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -138,6 +139,7 @@ public class DeliveryController {
             deliveryService.saveDEL(del);
         } catch (Exception e) {
             resp.put("mensaje", "Error, no fue posible actualizar registro");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -167,8 +169,9 @@ public class DeliveryController {
 
         try {
             deliveryService.deleteDEL(del.getIddelivery());
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error de consulta");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

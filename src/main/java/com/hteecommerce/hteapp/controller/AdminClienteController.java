@@ -141,8 +141,9 @@ public class AdminClienteController {
         
         try {
             clienteService.saveCli(cli);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Ocurrio error al guardar sus datos, por favor intentelo nuevamente");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

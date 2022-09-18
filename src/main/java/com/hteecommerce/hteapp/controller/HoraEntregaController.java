@@ -73,6 +73,7 @@ public class HoraEntregaController {
             horaEntregaService.saveHE(horaEntrega);
         } catch (Exception e) {
             resp.put("mensaje", "Error de sistema: Inténtelo mas tarde");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -128,6 +129,7 @@ public class HoraEntregaController {
             horaEntregaService.saveHE(he);
         } catch (Exception e) {
             resp.put("mensaje", "Error de sistema: Inténtelo mas tarde");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -159,6 +161,7 @@ public class HoraEntregaController {
             horaEntregaService.deleteHE(he.getIdhoraentrega());
         } catch (Exception e) {
             resp.put("mensaje", "Error de sistema: Inténtelo mas tarde");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

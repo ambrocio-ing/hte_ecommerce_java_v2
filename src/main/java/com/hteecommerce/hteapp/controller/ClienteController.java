@@ -168,8 +168,9 @@ public class ClienteController {
         
         try {
             clien = clienteService.saveCli(cli);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Ocurrio error al guardar sus datos, por favor intentelo nuevamente");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -253,8 +254,9 @@ public class ClienteController {
 
         try {
             clienteService.deleteCli(cliente.getIdcliente());
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al eliminar registro del sistema");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

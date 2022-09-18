@@ -140,8 +140,9 @@ public class ComentarioController {
 
         try {
             comentarioSerivce.saveCOM(comentario);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al guardar comentario");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

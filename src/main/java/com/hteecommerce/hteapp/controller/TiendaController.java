@@ -474,6 +474,7 @@ public class TiendaController {
                 libroReclamoService.saveSU(sujerencia);
             } catch (Exception e) {
                 resp.put("mensaje", "Error: No fue posible enviar sujerencia");
+                resp.put("error", e.getMessage());
                 return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
@@ -546,6 +547,7 @@ public class TiendaController {
             libroReclamoService.saveLR(libroReclamo);
         } catch (Exception e) {
             resp.put("mensaje", "Error, no fue posible guardar reclamo");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

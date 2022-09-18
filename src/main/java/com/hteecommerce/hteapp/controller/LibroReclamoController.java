@@ -42,7 +42,7 @@ public class LibroReclamoController {
         Map<String,String> resp = new HashMap<>();
         Page<LibroReclamo> lrs = null;
 
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 50);
 
         try {
             lrs = libroReclamoService.getAll(pageable);
@@ -102,6 +102,7 @@ public class LibroReclamoController {
             libroReclamoService.saveLR(libroReclamo);
         } catch (Exception e) {
             resp.put("mensaje", "Error, no fue posible guardar reclamo");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -157,6 +158,7 @@ public class LibroReclamoController {
             libroReclamoService.saveLR(lr);
         } catch (Exception e) {
             resp.put("mensaje", "Error, no fue posible guardar respuesta");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -185,8 +187,9 @@ public class LibroReclamoController {
 
         try {
             lr = libroReclamoService.getByIdlibro(idlibro);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error de consulta");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -202,7 +205,7 @@ public class LibroReclamoController {
         Map<String,String> resp = new HashMap<>();
         Page<Sujerencia> sus = null;
 
-        Pageable pageable = PageRequest.of(page, 20);
+        Pageable pageable = PageRequest.of(page, 50);
 
         try {
             sus = libroReclamoService.getAllSujerencia(pageable);

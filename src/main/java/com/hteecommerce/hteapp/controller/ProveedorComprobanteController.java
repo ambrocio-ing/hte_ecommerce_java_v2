@@ -83,7 +83,7 @@ public class ProveedorComprobanteController {
         Map<String, String> resp = new HashMap<>();
         Page<ProveedorComprobante> pcs = null;
 
-        Pageable pageable = PageRequest.of(page, 5);
+        Pageable pageable = PageRequest.of(page, 50);
         try {
             pcs = proveedorComprobanteService.getAll(pageable);
         } catch (DataAccessException e) {
@@ -107,7 +107,7 @@ public class ProveedorComprobanteController {
         Map<String, String> resp = new HashMap<>();
         Page<ProveedorComprobante> pcs = null;
 
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 50);
         try {
             pcs = proveedorComprobanteService.getByEstadoOfertado(pageable);
         } catch (DataAccessException e) {
@@ -131,7 +131,7 @@ public class ProveedorComprobanteController {
         Map<String, String> resp = new HashMap<>();
         Page<ProveedorComprobante> pcs = null;
 
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 50);
         try {
             pcs = proveedorComprobanteService.getByEstadoRechazado(pageable);
         } catch (DataAccessException e) {
@@ -155,7 +155,7 @@ public class ProveedorComprobanteController {
         Map<String, String> resp = new HashMap<>();
         Page<ProveedorComprobante> pcs = null;
 
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 50);
         try {
             pcs = proveedorComprobanteService.getByEstadoAceptado(pageable);
         } catch (DataAccessException e) {
@@ -225,6 +225,7 @@ public class ProveedorComprobanteController {
         } catch (Exception e) {
             pos.forEach(po -> fileService.eliminar(ruta, po.getImagen()));
             resp.put("mensaje", "Error al enviar oferta, por favor intentelo mas tarde");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -257,6 +258,7 @@ public class ProveedorComprobanteController {
             proveedorComprobanteService.savePC(pc);
         } catch (Exception e) {            
             resp.put("mensaje", "Error, no fue posible actualizar estado");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     

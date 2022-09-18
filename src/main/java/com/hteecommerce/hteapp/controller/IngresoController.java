@@ -56,7 +56,7 @@ public class IngresoController {
         Map<String, String> resp = new HashMap<>();
         Page<DetalleIngreso> dis = null;
 
-        Pageable pageable = PageRequest.of(page, 5);
+        Pageable pageable = PageRequest.of(page, 50);
 
         try {
             dis = ingresoService.pageAllDetalleIngreso(pageable);
@@ -156,7 +156,7 @@ public class IngresoController {
         Map<String, String> resp = new HashMap<>();
         Page<Ingreso> inPage = null;
 
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 50);
 
         try {
             inPage = ingresoService.getAll(pageable);
@@ -275,8 +275,9 @@ public class IngresoController {
 
         try {
             ingresoService.saveIN(ingreso);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al guardar ingresos");
+            resp.put("error", e.getMessage());
             //resp.put("error", e.getMessage().concat(" : ").concat(e.getMostSpecificCause().getMessage()));
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -358,6 +359,7 @@ public class IngresoController {
             ingresoService.updateIN(ingre);
         } catch (Exception e) {
             resp.put("mensaje", "Error al actualizar ingresos");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -388,6 +390,7 @@ public class IngresoController {
             ingresoService.deleteIN(ingreso.getIdingreso());
         } catch (Exception e) {
             resp.put("mensaje", "Error, es posible que algún producto del ingreso ya fue vendido");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -418,6 +421,7 @@ public class IngresoController {
             ingresoService.deleteDI(di.getIddetalleingreso());
         } catch (Exception e) {
             resp.put("mensaje", "Error, es posible que el producto asociado al ingreso ya fue vendido");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

@@ -85,7 +85,7 @@ public class ClienteComprobanteController {
         Map<String, String> resp = new HashMap<>();
         Page<ClienteComprobante> ccs = null;
 
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 50);
 
         try {
             ccs = clienteComprobanteService.getByEstado(estado, pageable);
@@ -212,6 +212,7 @@ public class ClienteComprobanteController {
             clienteComprobanteService.saveCLICOM(cc);
         } catch (Exception e) {
             resp.put("mensaje", "Error.. No fue posible enviar sus productos, por favor intentelo mas tarde");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -242,8 +243,9 @@ public class ClienteComprobanteController {
         
         try {
             clienteComprobanteService.saveCLICOM(clicom);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error, no fue posible actualizar estado");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

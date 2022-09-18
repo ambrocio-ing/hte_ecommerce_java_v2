@@ -81,8 +81,9 @@ public class MembresiaController {
         
         try {
             mem = membresiaService.saveM(membresia);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al crear membresia, intentelo mas tarde");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -199,8 +200,9 @@ public class MembresiaController {
 
         try {
             membresiaService.saveM(mem);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al actualizar membresia, intentelo mas tarde");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -229,8 +231,9 @@ public class MembresiaController {
 
         try {
             membresiaService.deleteM(membresia.getIdmembresia());
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error de consulta a la base de datos");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }        
         

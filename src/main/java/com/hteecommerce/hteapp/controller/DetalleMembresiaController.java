@@ -221,8 +221,9 @@ public class DetalleMembresiaController {
 
         try {
             dm = detalleMembresiaService.saveDM(demem);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al comprar membresia, intentelo mas tarde");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -276,6 +277,7 @@ public class DetalleMembresiaController {
             detalleMembresiaService.saveDM(dm);
         } catch (Exception e) {
             resp.put("mensaje", "Error al guardar datos");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -332,8 +334,9 @@ public class DetalleMembresiaController {
 
         try {
             detalleMembresiaService.saveDM(dm);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al comprar membresia, intentelo mas tarde");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -362,8 +365,9 @@ public class DetalleMembresiaController {
 
         try {
             detalleMembresiaService.deleteDM(demem.getIddetallemembresia());
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("mensaje", "Error al deshacer cambios");
+            resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String,String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
