@@ -14,6 +14,7 @@ public interface IIngresoService {
     
     public Page<Ingreso> getAll(Pageable pageable);
     public Ingreso saveIN(Ingreso ingreso);
+    public void saveInAll(List<Ingreso> ingresos);
     public void updateIN(Ingreso ingreso);
     public void deleteDI(Integer iddi);  
     public void deleteIN(Integer idingreso);    

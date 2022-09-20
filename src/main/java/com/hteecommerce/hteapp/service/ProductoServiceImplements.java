@@ -30,6 +30,13 @@ public class ProductoServiceImplements implements IProductoService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Page<Producto> getAllNotIngresados(Pageable pageable) {
+        
+        return productoRepository.listAllNotIngresados(pageable);
+    }   
+
+    @Override
     @Transactional
     public Producto savePto(Producto producto) {       
        
@@ -94,12 +101,14 @@ public class ProductoServiceImplements implements IProductoService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ProductoImagen getByIdimagen(Integer idimagen) {
         
         return productoImagenRepository.findById(idimagen).orElse(null);
     }
 
     @Override
+    @Transactional
     public void deleteImg(Integer idimagen) {
         
         productoImagenRepository.deleteById(idimagen);

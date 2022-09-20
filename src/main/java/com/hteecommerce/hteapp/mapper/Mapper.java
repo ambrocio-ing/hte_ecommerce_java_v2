@@ -21,6 +21,7 @@ import com.hteecommerce.hteapp.entity.DetalleIngreso;
 import com.hteecommerce.hteapp.entity.DetalleMembresia;
 import com.hteecommerce.hteapp.entity.DetallePago;
 import com.hteecommerce.hteapp.entity.DireccionEnvio;
+import com.hteecommerce.hteapp.entity.Ingreso;
 import com.hteecommerce.hteapp.entity.Persona;
 import com.hteecommerce.hteapp.entity.ProductoDatoNutricional;
 import com.hteecommerce.hteapp.entity.ProductoOtros;
@@ -615,6 +616,37 @@ public class Mapper {
     public static MDetalleMembresia mapDetalleMembresia(DetalleMembresia dm){
         return new MDetalleMembresia(dm.getIddetallemembresia(), dm.getIdtransaccion(), 
             dm.getFechaInicio(), dm.getFechaFin(), dm.getImagen(), dm.getCliente(), dm.getMembresia(), dm.getDetallePago());
+    }
+
+    public static List<Ingreso> ingresoAmbosSucursales(Ingreso ingreso){
+
+        List<Ingreso> ingresos = new ArrayList<>();
+        Ingreso ingresoUno = new Ingreso();
+        ingresoUno.setEstado(ingreso.getEstado());
+        ingresoUno.setIgv(ingreso.getIgv());
+        ingresoUno.setPersonal(ingreso.getPersonal());
+        ingresoUno.setRuc(ingreso.getRuc());
+        ingresoUno.setTipoComprobante(ingreso.getTipoComprobante());
+        ingresoUno.setDetalleIngresos(newDetalleIngresos(ingreso.detalleIngresos, "Huacho"));
+
+        Ingreso ingresoDos = new Ingreso();
+        ingresoDos.setEstado(ingreso.getEstado());
+        ingresoDos.setIgv(ingreso.getIgv());
+        ingresoDos.setPersonal(ingreso.getPersonal());
+        ingresoDos.setRuc(ingreso.getRuc());
+        ingresoDos.setTipoComprobante(ingreso.getTipoComprobante());
+        ingresoDos.setDetalleIngresos(newDetalleIngresos(ingreso.detalleIngresos, "Barranca"));
+
+        ingresos.add(ingresoUno);
+        ingresos.add(ingresoDos);
+
+        return ingresos;
+    }
+
+    private static List<DetalleIngreso> newDetalleIngresos(List<DetalleIngreso> lista, String sucursal){
+        
+        lista.forEach(di -> di.setSucursal(sucursal));
+        return lista;
     }
     
 }

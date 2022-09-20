@@ -242,49 +242,94 @@ public class IngresoController {
             resp.put("mensaje", "Datos del personal no encontrados");
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.NOT_FOUND);
         }
-        
+
+        ingreso.setPersonal(per);         
         boolean isExistDi = false;
         String productoNombre = "";
 
-        for (DetalleIngreso di_nuevo : ingreso.getDetalleIngresos()) {
+        String sucursal = ingreso.getDetalleIngresos().get(0).getSucursal();
 
-            Producto pro = productoService.getByIdproducto(di_nuevo.getProducto().getIdproducto());
-            DetalleIngreso di_existe = ingresoService.getDIByIdproducto(di_nuevo.getProducto().getIdproducto(), di_nuevo.getSucursal());
-            if (pro != null && di_existe == null) {
+        if(sucursal != null && sucursal.equals("Ambos")){
 
-                if(pro.getProductoVestimenta() == null){
-                    di_nuevo.setVariedades(null);
-                } 
+            List<Ingreso> ingresos = Mapper.ingresoAmbosSucursales(ingreso);
 
-                di_nuevo.setProducto(pro);
-                di_nuevo.setStockActual(di_nuevo.getStockInicial());                
+            for(Ingreso in : ingresos){
+                for(DetalleIngreso di : in.getDetalleIngresos()){
+                    Producto pro = productoService.getByIdproducto(di.getProducto().getIdproducto());
+                    DetalleIngreso di_existe = ingresoService.getDIByIdproducto(di.getProducto().getIdproducto(), di.getSucursal());
+                    if (pro != null && di_existe == null) {
+        
+                        if(pro.getProductoVestimenta() == null){
+                            di.setVariedades(null);
+                        } 
+
+                        pro.setIngresado(true);
+                        di.setProducto(pro);
+                        di.setStockActual(di.getStockInicial());                
+                    }
+                    else{
+                        isExistDi = true;
+                        productoNombre = pro.getNombre();
+                        break;
+                    }
+                }
             }
-            else{
-                isExistDi = true;
-                productoNombre = pro.getNombre();
-                break;
+
+            if (isExistDi) {
+                resp.put("mensaje", "El producto: " + productoNombre + " ya fue ingresado");
+                return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.BAD_REQUEST);
+            }               
+    
+            try {
+                ingresoService.saveInAll(ingresos);
+            } catch (Exception e) {
+                resp.put("mensaje", "Error al guardar ingresos");
+                resp.put("error", e.getMessage());
+                //resp.put("error", e.getMessage().concat(" : ").concat(e.getMostSpecificCause().getMessage()));
+                return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        }
 
-        if (isExistDi) {
-            resp.put("mensaje", "El producto: " + productoNombre + " ya fue ingresado");
-            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.BAD_REQUEST);
         }
+        else{
+            for (DetalleIngreso di_nuevo : ingreso.getDetalleIngresos()) {
 
-        ingreso.setPersonal(per);        
-
-        try {
-            ingresoService.saveIN(ingreso);
-        } catch (Exception e) {
-            resp.put("mensaje", "Error al guardar ingresos");
-            resp.put("error", e.getMessage());
-            //resp.put("error", e.getMessage().concat(" : ").concat(e.getMostSpecificCause().getMessage()));
-            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+                Producto pro = productoService.getByIdproducto(di_nuevo.getProducto().getIdproducto());
+                DetalleIngreso di_existe = ingresoService.getDIByIdproducto(di_nuevo.getProducto().getIdproducto(), di_nuevo.getSucursal());
+                if (pro != null && di_existe == null) {
+    
+                    if(pro.getProductoVestimenta() == null){
+                        di_nuevo.setVariedades(null);
+                    } 
+    
+                    pro.setIngresado(true);
+                    di_nuevo.setProducto(pro);
+                    di_nuevo.setStockActual(di_nuevo.getStockInicial());                
+                }
+                else{
+                    isExistDi = true;
+                    productoNombre = pro.getNombre();
+                    break;
+                }
+            }
+    
+            if (isExistDi) {
+                resp.put("mensaje", "El producto: " + productoNombre + " ya fue ingresado");
+                return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.BAD_REQUEST);
+            }               
+    
+            try {
+                ingresoService.saveIN(ingreso);
+            } catch (Exception e) {
+                resp.put("mensaje", "Error al guardar ingresos");
+                resp.put("error", e.getMessage());
+                //resp.put("error", e.getMessage().concat(" : ").concat(e.getMostSpecificCause().getMessage()));
+                return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }        
 
         resp.put("mensaje", "Ingresos guardados con éxito");
         return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.CREATED);
-    }
+    }    
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/obtener/{id}")

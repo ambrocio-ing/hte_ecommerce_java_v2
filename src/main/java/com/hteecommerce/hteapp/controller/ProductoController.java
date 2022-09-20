@@ -80,10 +80,10 @@ public class ProductoController {
         Map<String, String> resp = new HashMap<>();
         Page<Producto> lista = null;
 
-        Pageable pageable = PageRequest.of(page, 50);
+        Pageable pageable = PageRequest.of(page, 10);
 
         try {
-            lista = productoService.getAll(pageable);
+            lista = productoService.getAllNotIngresados(pageable);
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error de consulta a la base de datos");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);

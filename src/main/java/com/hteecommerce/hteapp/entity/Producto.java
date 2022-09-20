@@ -50,6 +50,8 @@ public class Producto implements Serializable {
 
     private String descripcion;
 
+    private Boolean ingresado;
+
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tipo_id", nullable = false)
@@ -79,6 +81,7 @@ public class Producto implements Serializable {
     public void asignarNumeroEstrellas() {
         this.nestrellas = 5;
         this.nventas = 0;
+        this.ingresado = false;
     }
 
     public Integer getIdproducto() {
@@ -183,6 +186,14 @@ public class Producto implements Serializable {
 
     public void setMarca(String marca) {
         this.marca = marca;
+    }
+
+    public Boolean getIngresado() {
+        return ingresado;
+    }
+
+    public void setIngresado(Boolean ingresado) {
+        this.ingresado = ingresado;
     }
 
     private static final long serialVersionUID = 1L;

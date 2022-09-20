@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 public interface IProductoService {
     
     public Page<Producto> getAll(Pageable pageable);
+    public Page<Producto> getAllNotIngresados(Pageable pageable);
     public Producto savePto(Producto producto);
     public void updatePto(Producto producto);
     public void deletePto(Integer idproducto);

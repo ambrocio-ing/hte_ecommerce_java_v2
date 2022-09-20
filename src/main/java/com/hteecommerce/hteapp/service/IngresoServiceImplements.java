@@ -46,6 +46,13 @@ public class IngresoServiceImplements implements IIngresoService {
 
     @Override
     @Transactional
+    public void saveInAll(List<Ingreso> ingresos) {
+        
+        ingresoRepository.saveAll(ingresos);
+    }   
+
+    @Override
+    @Transactional
     public void deleteIN(Integer idingreso) {
         
         ingresoRepository.deleteById(idingreso);          
