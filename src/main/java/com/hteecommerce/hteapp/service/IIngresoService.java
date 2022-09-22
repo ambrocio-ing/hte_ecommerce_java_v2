@@ -33,16 +33,13 @@ public interface IIngresoService {
     public List<DetalleIngreso> listDIAll(String sucursal);
     public List<DetalleIngreso> listDIAllToMarca(String sucursal, String marca);
 
-    public List<DetalleIngreso> getByNombreProducto(String nombre, String sucursal);
-    public List<DetalleIngreso> getByNombreProductoToMarca(String nombre, String sucursal, String marca);
+    public List<DetalleIngreso> getByNombreProducto(String nombre, String sucursal); 
 
-    public List<DetalleIngreso> getByTipo(Integer idtipo, String sucursal);
-    public List<DetalleIngreso> getByTipoToMarca(Integer idtipo, String sucursal, String marca);
-
-    //public List<DetalleIngreso> getLast12ByProducto(Producto producto);
-
+    public List<DetalleIngreso> getByTipo(Integer idtipo, String sucursal);  
+    
     //productos mas vendidos
-    public List<DetalleIngreso> getMasVendidos(Integer idtipo, String sucursal);
+    public List<DetalleIngreso> getMasVendidosPorCategoria(Integer idcategoria, String sucursal);
+    public List<DetalleIngreso> getMasVendidosPorMarcaDeProducto(String marca, String sucursal);
     public List<DetalleIngreso> getMasVendidosGeneral(String sucursal);
-    public List<DetalleIngreso> getLastTwenty(String sucursal);
+    //public List<DetalleIngreso> getLastTwenty(String sucursal);
 }

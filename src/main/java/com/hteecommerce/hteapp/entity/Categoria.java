@@ -30,9 +30,9 @@ public class Categoria implements Serializable {
     @Column(unique = true)
     private String nombre;
 
-    private String descripcion;    
+    private String descripcion;
 
-    @JsonIgnoreProperties(value = {"categoria", "hibernateLazyInitializer", "handler"}, allowSetters = true)
+    @JsonIgnoreProperties(value = { "categoria", "hibernateLazyInitializer", "handler" }, allowSetters = true)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "categoria")
     private List<Tipo> tipos = null;
 
@@ -62,7 +62,7 @@ public class Categoria implements Serializable {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
-    }    
+    }
 
     public List<Tipo> getTipos() {
         return tipos;

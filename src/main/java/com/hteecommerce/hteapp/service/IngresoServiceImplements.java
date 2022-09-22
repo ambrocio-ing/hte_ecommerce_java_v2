@@ -2,8 +2,6 @@ package com.hteecommerce.hteapp.service;
 
 import java.time.LocalDate;
 import java.util.List;
-//import java.util.stream.Collectors;
-import java.util.stream.Collectors;
 
 import com.hteecommerce.hteapp.entity.DetalleIngreso;
 import com.hteecommerce.hteapp.entity.Ingreso;
@@ -135,53 +133,15 @@ public class IngresoServiceImplements implements IIngresoService {
     public List<DetalleIngreso> getByNombreProducto(String nombre, String sucursal) {
         
         return detalleIngresoRepository.listByNombreProducto(nombre, sucursal);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<DetalleIngreso> getByNombreProductoToMarca(String nombre, String sucursal, String marca) {
-        
-        return detalleIngresoRepository.listByNombreProductoToMarca(nombre, sucursal, marca);
-    }
+    }   
 
     @Override
     @Transactional(readOnly = true)
     public List<DetalleIngreso> getByTipo(Integer idtipo, String sucursal) {
         
         return detalleIngresoRepository.listByTipo(idtipo, sucursal);
-    }    
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<DetalleIngreso> getByTipoToMarca(Integer idtipo, String sucursal, String marca) {
-        
-        return detalleIngresoRepository.listByTipoToMarca(idtipo, sucursal, marca);
     }       
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<DetalleIngreso> getMasVendidos(Integer idtipo, String sucursal) {
-        
-        return detalleIngresoRepository.listMasVendidos(idtipo, sucursal);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<DetalleIngreso> getMasVendidosGeneral(String sucursal) {
-        
-        return detalleIngresoRepository.listMasVendidosGeneral(sucursal);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<DetalleIngreso> getLastTwenty(String sucursal) {
-        
-        return detalleIngresoRepository
-            .findTop50BySucursalOrderByIddetalleingresoDesc(sucursal)
-            .stream()
-            .filter(di -> di.getStockActual() > 0)
-            .collect(Collectors.toList());
-    }
+   
 
     @Override
     @Transactional(readOnly = true)
@@ -196,6 +156,37 @@ public class IngresoServiceImplements implements IIngresoService {
         
         ingresoRepository.save(ingreso);
         
-    }         
+    }        
+    
+    @Override
+    @Transactional(readOnly = true)
+    public List<DetalleIngreso> getMasVendidosPorCategoria(Integer idcategoria, String sucursal) {
+        
+        return detalleIngresoRepository.listMasVendidosPorCategoria(idcategoria, sucursal);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DetalleIngreso> getMasVendidosGeneral(String sucursal) {
+        
+        return detalleIngresoRepository.listMasVendidosGeneral(sucursal);
+    }
+
+    /* @Override
+    @Transactional(readOnly = true)
+    public List<DetalleIngreso> getLastTwenty(String sucursal) {
+        
+        return detalleIngresoRepository
+            .findTop50BySucursalOrderByIddetalleingresoDesc(sucursal)
+            .stream()
+            .filter(di -> di.getStockActual() > 0)
+            .collect(Collectors.toList());
+    } */
+
+    @Override
+    public List<DetalleIngreso> getMasVendidosPorMarcaDeProducto(String marca, String sucursal) {
+       
+        return detalleIngresoRepository.listMasVendidosPorMarcaDeProducto(marca, sucursal);
+    }
     
 }
