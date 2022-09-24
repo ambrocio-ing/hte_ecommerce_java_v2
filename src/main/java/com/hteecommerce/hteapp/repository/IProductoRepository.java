@@ -19,7 +19,7 @@ public interface IProductoRepository extends JpaRepository<Producto,Integer> {
     @Query("from Producto pro where pro.codigo like %?1% or upper(replace(pro.nombre, ' ', '')) like concat('%',upper(?2),'%')")
     public List<Producto> listByCodigoOrNombre(String codigo, String nombre);
 
-    @Query("from Producto pro where pro.ingresado = false")
+    @Query("select pro from Producto pro where pro.ingresadoBarranca = false or pro.ingresadoHuacho = false")
     public Page<Producto> listAllNotIngresados(Pageable pageable);
 
 }

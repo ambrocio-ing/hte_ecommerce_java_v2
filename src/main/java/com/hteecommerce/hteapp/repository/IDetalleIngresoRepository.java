@@ -25,7 +25,7 @@ public interface IDetalleIngresoRepository extends JpaRepository<DetalleIngreso,
   public Page<DetalleIngreso> pageAll(Pageable pageable);
 
   @Query("select di from DetalleIngreso di join di.producto pro where pro.idproducto = ?1")
-  public Optional<DetalleIngreso> find_ByIdproducto(Integer idproducto);
+  public List<DetalleIngreso> find_ByIdproducto(Integer idproducto);
 
   // LISTA Y FILTRO DESDE VISTA CLIENTE
   @Query("select di from DetalleIngreso di join di.producto pro where di.estado = true and pro.idproducto = ?1 and di.sucursal = ?2")
@@ -40,13 +40,13 @@ public interface IDetalleIngresoRepository extends JpaRepository<DetalleIngreso,
   @Query("select di from DetalleIngreso di where di.estado = true and di.stockActual > 0 and di.sucursal = ?1 order by di.iddetalleingreso desc")
   public List<DetalleIngreso> listAll(String sucursal);
 
-  @Query("select di from DetalleIngreso di join di.producto pro where di.estado = true and di.stockActual > 0 and di.sucursal = ?1 and pro.marca = ?2 order by di.iddetalleingreso desc")
+  @Query("select di from DetalleIngreso di join di.producto pro where di.estado = true and di.stockActual > 0 and di.sucursal = ?1 and replace(pro.marca, ' ', '') = ?2 order by di.iddetalleingreso desc")
   public List<DetalleIngreso> listAllToMarca(String sucursal, String marca);  
   
   // lista de productos mas populares
   @Query(nativeQuery = true, value = "select * from detalle_ingresos di inner join productos pro on di.producto_id = pro.idproducto " 
-                                      + "inner join tipo tip on pro.tipo_id = tip.idtipo "
-                                      + "inner join categoria cat on tip.categoria_id = cat.idcategoria "
+                                      + "inner join tipos tip on pro.tipo_id = tip.idtipo "
+                                      + "inner join categorias cat on tip.categoria_id = cat.idcategoria "
                                       + "where di.stock_actual > 0 and di.estado = true and cat.idcategoria = ?1 and di.sucursal = ?2 order by pro.nventas desc limit 50")
   public List<DetalleIngreso> listMasVendidosPorCategoria(Integer idcategora, String sucursal);
 
@@ -55,8 +55,8 @@ public interface IDetalleIngresoRepository extends JpaRepository<DetalleIngreso,
 
   // lista de productos mas populares
   @Query(nativeQuery = true, value = "select * from detalle_ingresos di inner join productos pro on di.producto_id = pro.idproducto " 
-                                      + "inner join tipo tip on pro.tipo_id = tip.idtipo "
-                                      + "inner join categoria cat on tip.categoria_id = cat.idcategoria "
+                                      + "inner join tipos tip on pro.tipo_id = tip.idtipo "
+                                      + "inner join categorias cat on tip.categoria_id = cat.idcategoria "
                                       + "where di.stock_actual > 0 and di.estado = true and upper(replace(pro.marca, ' ', '')) = upper(?1) and di.sucursal = ?2 order by pro.nventas desc limit 50")
   public List<DetalleIngreso> listMasVendidosPorMarcaDeProducto(String marca, String sucursal);
   

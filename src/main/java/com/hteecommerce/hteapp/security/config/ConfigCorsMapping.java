@@ -12,7 +12,7 @@ public class ConfigCorsMapping implements WebMvcConfigurer  {
         
         registry
             .addMapping("/**")
-            .allowedOrigins("http://localhost:4200")
+            .allowedOrigins("http://localhost:4200", "https://www.htesac.store", "https://www.htesac.com")           
             .allowedMethods("*")
             .allowedHeaders("*");
     }

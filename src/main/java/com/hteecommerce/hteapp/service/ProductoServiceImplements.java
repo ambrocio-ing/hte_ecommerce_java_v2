@@ -112,6 +112,15 @@ public class ProductoServiceImplements implements IProductoService {
     public void deleteImg(Integer idimagen) {
         
         productoImagenRepository.deleteById(idimagen);
+    }
+
+    //metodo temporal
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Producto> getAllTemporal() {
+        
+        return productoRepository.findAll();
     }    
     
 }

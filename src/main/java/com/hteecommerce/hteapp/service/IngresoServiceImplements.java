@@ -44,9 +44,9 @@ public class IngresoServiceImplements implements IIngresoService {
 
     @Override
     @Transactional
-    public void saveInAll(List<Ingreso> ingresos) {
+    public List<Ingreso> saveInAll(List<Ingreso> ingresos) {
         
-        ingresoRepository.saveAll(ingresos);
+        return ingresoRepository.saveAll(ingresos);
     }   
 
     @Override
@@ -145,9 +145,9 @@ public class IngresoServiceImplements implements IIngresoService {
 
     @Override
     @Transactional(readOnly = true)
-    public DetalleIngreso getDetalleIngresoByIdproducto(Integer idproducto) {
+    public List<DetalleIngreso> getDetalleIngresoByIdproducto(Integer idproducto) {
         
-        return detalleIngresoRepository.find_ByIdproducto(idproducto).orElse(null);
+        return detalleIngresoRepository.find_ByIdproducto(idproducto);
     }
 
     @Override

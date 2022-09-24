@@ -46,30 +46,34 @@ public class Producto implements Serializable {
 
     private Integer nventas;
 
-    private Integer nestrellas;   
+    private Integer nestrellas;
 
     private String descripcion;
 
-    private Boolean ingresado;
+    @Column(name = "ingresado_barranca")
+    private Boolean ingresadoBarranca;
+
+    @Column(name = "ingresado_huacho")
+    private Boolean ingresadoHuacho;
 
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tipo_id", nullable = false)
     private Tipo tipo;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE, CascadeType.REMOVE })
     @JoinColumn(name = "producto_id")
     private List<ProductoImagen> productoImagenes = null;
 
-    @OneToOne(cascade = CascadeType.ALL )
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "pdnutricional_id", nullable = true)
     private ProductoDatoNutricional productoDatoNutricional;
 
-    @OneToOne(cascade = CascadeType.ALL )
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "pvestimenta_id", nullable = true)
     private ProductoVestimenta productoVestimenta;
 
-    @OneToOne(cascade = CascadeType.ALL )
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "potros_id", nullable = true)
     private ProductoOtros productoOtros;
 
@@ -81,7 +85,8 @@ public class Producto implements Serializable {
     public void asignarNumeroEstrellas() {
         this.nestrellas = 5;
         this.nventas = 0;
-        this.ingresado = false;
+        this.ingresadoHuacho = false;
+        this.ingresadoHuacho = false;
     }
 
     public Integer getIdproducto() {
@@ -188,12 +193,20 @@ public class Producto implements Serializable {
         this.marca = marca;
     }
 
-    public Boolean getIngresado() {
-        return ingresado;
+    public Boolean getIngresadoBarranca() {
+        return ingresadoBarranca;
     }
 
-    public void setIngresado(Boolean ingresado) {
-        this.ingresado = ingresado;
+    public void setIngresadoBarranca(Boolean ingresadoBarranca) {
+        this.ingresadoBarranca = ingresadoBarranca;
+    }
+
+    public Boolean getIngresadoHuacho() {
+        return ingresadoHuacho;
+    }
+
+    public void setIngresadoHuacho(Boolean ingresadoHuacho) {
+        this.ingresadoHuacho = ingresadoHuacho;
     }
 
     private static final long serialVersionUID = 1L;

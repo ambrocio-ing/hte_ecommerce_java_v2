@@ -14,7 +14,7 @@ public interface IIngresoService {
     
     public Page<Ingreso> getAll(Pageable pageable);
     public Ingreso saveIN(Ingreso ingreso);
-    public void saveInAll(List<Ingreso> ingresos);
+    public List<Ingreso> saveInAll(List<Ingreso> ingresos);
     public void updateIN(Ingreso ingreso);
     public void deleteDI(Integer iddi);  
     public void deleteIN(Integer idingreso);    
@@ -26,7 +26,7 @@ public interface IIngresoService {
 
     public Page<DetalleIngreso> pageAllDetalleIngreso(Pageable pageable);
     public DetalleIngreso getByIddetalleingreso(Integer iddi);
-    public DetalleIngreso getDetalleIngresoByIdproducto(Integer idproducto);
+    public List<DetalleIngreso> getDetalleIngresoByIdproducto(Integer idproducto);
     
     //LISTA Y FILTRO DESDE VISTA DEL CLIENTE
     public DetalleIngreso getDIByIdproducto(Integer idproducto, String sucursal);

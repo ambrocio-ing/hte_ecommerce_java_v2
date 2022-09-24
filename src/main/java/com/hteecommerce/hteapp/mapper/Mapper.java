@@ -526,7 +526,7 @@ public class Mapper {
     }
 
     // metodos para restablecer existencias en base de datos al momento de editar
-    // vender eliminar productos   
+    // vender eliminar productos
     public static List<Variedad> actualizarVariedades(List<Variedad> vendidos, List<Variedad> variedades) {
 
         for (Variedad variedad : variedades) {
@@ -611,23 +611,33 @@ public class Mapper {
                 com.getDetallePago(),
                 com.getDetalleComprobantes());
 
-    }    
-
-    public static MDetalleMembresia mapDetalleMembresia(DetalleMembresia dm){
-        return new MDetalleMembresia(dm.getIddetallemembresia(), dm.getIdtransaccion(), 
-            dm.getFechaInicio(), dm.getFechaFin(), dm.getImagen(), dm.getCliente(), dm.getMembresia(), dm.getDetallePago());
     }
 
-    public static List<Ingreso> ingresoAmbosSucursales(Ingreso ingreso){
+    public static MDetalleMembresia mapDetalleMembresia(DetalleMembresia dm) {
+        return new MDetalleMembresia(dm.getIddetallemembresia(), 
+                                    dm.getIdtransaccion(),
+                                    dm.getFechaInicio(), 
+                                    dm.getFechaFin(), 
+                                    dm.getImagen(), 
+                                    dm.getMontoTotal(),
+                                    dm.getCliente(), 
+                                    dm.getMembresia(),
+                                    dm.getDetallePago());
+    }
+
+    public static List<Ingreso> ingresoAmbosSucursales(Ingreso ingreso) {
 
         List<Ingreso> ingresos = new ArrayList<>();
+
         Ingreso ingresoUno = new Ingreso();
         ingresoUno.setEstado(ingreso.getEstado());
         ingresoUno.setIgv(ingreso.getIgv());
         ingresoUno.setPersonal(ingreso.getPersonal());
         ingresoUno.setRuc(ingreso.getRuc());
         ingresoUno.setTipoComprobante(ingreso.getTipoComprobante());
-        ingresoUno.setDetalleIngresos(newDetalleIngresos(ingreso.detalleIngresos, "Huacho"));
+        ingresoUno.setDetalleIngresos(newDetalleIngresos(ingreso.getDetalleIngresos(), "Huacho"));
+        
+        ingresos.add(ingresoUno);
 
         Ingreso ingresoDos = new Ingreso();
         ingresoDos.setEstado(ingreso.getEstado());
@@ -635,18 +645,39 @@ public class Mapper {
         ingresoDos.setPersonal(ingreso.getPersonal());
         ingresoDos.setRuc(ingreso.getRuc());
         ingresoDos.setTipoComprobante(ingreso.getTipoComprobante());
-        ingresoDos.setDetalleIngresos(newDetalleIngresos(ingreso.detalleIngresos, "Barranca"));
-
-        ingresos.add(ingresoUno);
+        ingresoDos.setDetalleIngresos(newDetalleIngresos(ingreso.getDetalleIngresos(), "Barranca"));
+        
         ingresos.add(ingresoDos);
 
         return ingresos;
     }
 
-    private static List<DetalleIngreso> newDetalleIngresos(List<DetalleIngreso> lista, String sucursal){
-        
-        lista.forEach(di -> di.setSucursal(sucursal));
-        return lista;
+    private static List<DetalleIngreso> newDetalleIngresos(List<DetalleIngreso> lista, String sucursal) {
+
+        List<DetalleIngreso> dis = new ArrayList<>();
+        DetalleIngreso dIngreso = null;
+
+        for (DetalleIngreso di : lista) {
+            dIngreso = new DetalleIngreso();
+
+            dIngreso.setEstado(di.getEstado());
+            dIngreso.setFechaProduccion(di.getFechaProduccion());
+            dIngreso.setFechaVencimiento(di.getFechaVencimiento());
+            dIngreso.setPorcentajeDescuento(di.getPorcentajeDescuento());
+            dIngreso.setPrecioCompra(di.getPrecioCompra());
+            dIngreso.setPrecioVenta(di.getPrecioVenta());
+            dIngreso.setPrecioVentaAnterior(di.getPrecioVentaAnterior());
+            dIngreso.setProducto(di.getProducto());
+            dIngreso.setStockActual(di.getStockActual());
+            dIngreso.setStockInicial(di.getStockInicial());
+            dIngreso.setSucursal(sucursal);
+            dIngreso.setVariedades(di.getVariedades());
+            dIngreso.setVentaPorGramo(di.getVentaPorGramo());
+            
+            dis.add(dIngreso);
+        }
+
+        return dis;
     }
-    
+
 }

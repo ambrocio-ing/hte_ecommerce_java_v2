@@ -44,6 +44,10 @@ public class DetalleMembresia implements Serializable {
     @Size(max = 100)
     private String imagen;
 
+    @NotNull    
+    @Column(name = "monto_total")
+    private Double montoTotal;
+
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", nullable = false)
@@ -132,6 +136,14 @@ public class DetalleMembresia implements Serializable {
 
     public void setImagen(String imagen) {
         this.imagen = imagen;
+    }
+
+    public Double getMontoTotal() {
+        return montoTotal;
+    }
+
+    public void setMontoTotal(Double montoTotal) {
+        this.montoTotal = montoTotal;
     }
 
     private static final long serialVersionUID = 1L;

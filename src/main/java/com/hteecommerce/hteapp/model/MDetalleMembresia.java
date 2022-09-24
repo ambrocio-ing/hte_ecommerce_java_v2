@@ -21,6 +21,8 @@ public class MDetalleMembresia {
 
     private String imagen;
 
+    private Double montoTotal;
+
     private MCliente cliente;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -38,6 +40,7 @@ public class MDetalleMembresia {
         this.fechaInicio = dm.getFechaInicio();
         this.fechaFin = dm.getFechaFin();
         this.imagen = dm.getImagen();
+        this.montoTotal = dm.getMontoTotal();
         this.cliente = new MCliente(dm.getCliente().getIdcliente());
         this.membresia = dm.getMembresia();
         this.detallePago = Mapper.mapDetallePago(dm.getDetallePago());
@@ -46,12 +49,13 @@ public class MDetalleMembresia {
     
 
     public MDetalleMembresia(Integer iddetallemembresia, String idtransaccion, LocalDate fechaInicio,
-            LocalDate fechaFin, String imagen, Cliente cliente, Membresia membresia, DetallePago detallePago) {
+            LocalDate fechaFin, String imagen, Double montoTotal, Cliente cliente, Membresia membresia, DetallePago detallePago) {
         this.iddetallemembresia = iddetallemembresia;
         this.idtransaccion = idtransaccion;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.imagen = imagen;
+        this.montoTotal = montoTotal;
         this.cliente = new MCliente(cliente.getIdcliente(), cliente.getPersona());
         this.membresia = membresia;
         this.detallePago = Mapper.mapDetallePago(detallePago);
@@ -119,6 +123,14 @@ public class MDetalleMembresia {
 
     public void setImagen(String imagen) {
         this.imagen = imagen;
+    }
+
+    public Double getMontoTotal() {
+        return montoTotal;
+    }
+
+    public void setMontoTotal(Double montoTotal) {
+        this.montoTotal = montoTotal;
     }
 
 }

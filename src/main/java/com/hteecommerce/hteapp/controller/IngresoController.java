@@ -14,6 +14,7 @@ import com.hteecommerce.hteapp.entity.Ingreso;
 import com.hteecommerce.hteapp.entity.Personal;
 import com.hteecommerce.hteapp.entity.Producto;
 import com.hteecommerce.hteapp.mapper.Mapper;
+import com.hteecommerce.hteapp.model.MDetalleIngreso;
 import com.hteecommerce.hteapp.model.MIngreso;
 import com.hteecommerce.hteapp.service.IIngresoService;
 import com.hteecommerce.hteapp.service.IPersonalService;
@@ -67,8 +68,8 @@ public class IngresoController {
 
         if (dis.getContent().size() != 0) {
 
-            //Page<MDetalleIngreso> mpage = dis.map(di -> new MDetalleIngreso(di));
-            return new ResponseEntity<Page<DetalleIngreso>>(dis, HttpStatus.OK);
+            Page<MDetalleIngreso> mpage = dis.map(di -> new MDetalleIngreso(di));
+            return new ResponseEntity<Page<MDetalleIngreso>>(mpage, HttpStatus.OK);
         } else {
             resp.put("mensaje", "Sin datos que mostrar");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
@@ -91,8 +92,8 @@ public class IngresoController {
         }
 
         if (dis != null && dis.size() != 0) {
-            //List<MDetalleIngreso> mlista = dis.stream().map(di -> Mapper.mapDetalleIngreso(di)).collect(Collectors.toList()) ;
-            return new ResponseEntity<List<DetalleIngreso>>(dis, HttpStatus.OK);
+            List<MDetalleIngreso> mlista = dis.stream().map(di -> new MDetalleIngreso(di)).collect(Collectors.toList()) ;
+            return new ResponseEntity<List<MDetalleIngreso>>(mlista, HttpStatus.OK);
         } else {
             resp.put("mensaje", "Sin datos que mostrar");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
@@ -115,8 +116,8 @@ public class IngresoController {
         }
 
         if (dis != null && dis.size() != 0) {
-            //List<MDetalleIngreso> mlista = dis.stream().map(di -> Mapper.mapDetalleIngreso(di)).collect(Collectors.toList()) ;
-            return new ResponseEntity<List<DetalleIngreso>>(dis, HttpStatus.OK);
+            List<MDetalleIngreso> mlista = dis.stream().map(di -> Mapper.mapDetalleIngreso(di)).collect(Collectors.toList()) ;
+            return new ResponseEntity<List<MDetalleIngreso>>(mlista, HttpStatus.OK);
         } else {
             resp.put("mensaje", "Sin datos que mostrar");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
@@ -124,29 +125,30 @@ public class IngresoController {
 
     }
 
+    //METODO CORREGIDO
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/di/por/idp/{idproducto}")
     public ResponseEntity<?> getDIByIdproducto(@PathVariable(value = "idproducto") Integer idproducto) {
 
         Map<String, String> resp = new HashMap<>();
-        DetalleIngreso di = null;
+        List<DetalleIngreso> dis = null;
 
         try {
-            di = ingresoService.getDetalleIngresoByIdproducto(idproducto);
+            dis = ingresoService.getDetalleIngresoByIdproducto(idproducto);
         } catch (DataAccessException e) {
             resp.put("mensaje", "Error de consulta a la base de datos");
             return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if (di == null) {
+        if (dis != null && dis.size() != 0) {
 
-            resp.put("mensaje", "Sin datos que mostrar");
-            return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
-
+            List<MDetalleIngreso> mlista = dis.stream().map(di -> new MDetalleIngreso(di)).collect(Collectors.toList());
+            return new ResponseEntity<List<MDetalleIngreso>>(mlista, HttpStatus.OK);
         }
 
-        return new ResponseEntity<DetalleIngreso>(di, HttpStatus.OK);
-
+        resp.put("mensaje", "Sin datos que mostrar");
+        return new ResponseEntity<Map<String, String>>(resp, HttpStatus.NOT_FOUND);
+        
     }    
 
     @PreAuthorize("hasRole('USER')")
@@ -233,7 +235,7 @@ public class IngresoController {
 
         try {
             per = personalService.getByIdpersonal(ingreso.getPersonal().getIdpersonal());
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             resp.put("mensaje", "Error al guardar ingresos");
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -248,10 +250,10 @@ public class IngresoController {
         String productoNombre = "";
 
         String sucursal = ingreso.getDetalleIngresos().get(0).getSucursal();
-
+        
         if(sucursal != null && sucursal.equals("Ambos")){
 
-            List<Ingreso> ingresos = Mapper.ingresoAmbosSucursales(ingreso);
+            List<Ingreso> ingresos = Mapper.ingresoAmbosSucursales(ingreso);            
 
             for(Ingreso in : ingresos){
                 for(DetalleIngreso di : in.getDetalleIngresos()){
@@ -263,7 +265,9 @@ public class IngresoController {
                             di.setVariedades(null);
                         } 
 
-                        pro.setIngresado(true);
+                        pro.setIngresadoHuacho(true);
+                        pro.setIngresadoBarranca(true);
+
                         di.setProducto(pro);
                         di.setStockActual(di.getStockInicial());                
                     }
@@ -285,10 +289,9 @@ public class IngresoController {
             } catch (Exception e) {
                 resp.put("mensaje", "Error al guardar ingresos");
                 resp.put("error", e.getMessage());
-                //resp.put("error", e.getMessage().concat(" : ").concat(e.getMostSpecificCause().getMessage()));
                 return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-
+            } 
+            
         }
         else{
             for (DetalleIngreso di_nuevo : ingreso.getDetalleIngresos()) {
@@ -299,9 +302,15 @@ public class IngresoController {
     
                     if(pro.getProductoVestimenta() == null){
                         di_nuevo.setVariedades(null);
-                    } 
-    
-                    pro.setIngresado(true);
+                    }                       
+                    
+                    if(di_nuevo.getSucursal().equals("Huacho")){
+                        pro.setIngresadoHuacho(true);
+                    }
+                    else{
+                        pro.setIngresadoBarranca(true);
+                    }
+
                     di_nuevo.setProducto(pro);
                     di_nuevo.setStockActual(di_nuevo.getStockInicial());                
                 }
@@ -322,7 +331,6 @@ public class IngresoController {
             } catch (Exception e) {
                 resp.put("mensaje", "Error al guardar ingresos");
                 resp.put("error", e.getMessage());
-                //resp.put("error", e.getMessage().concat(" : ").concat(e.getMostSpecificCause().getMessage()));
                 return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }        

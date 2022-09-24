@@ -445,7 +445,7 @@ public class TiendaController {
             }
         }
 
-        resp.put("mensaje", "Sujerencia enviado con éxito");
+        resp.put("mensaje", "Sugerencia enviado con éxito");
         return new ResponseEntity<Map<String, String>>(resp, HttpStatus.CREATED);
     }
 
