@@ -1,6 +1,7 @@
 package com.hteecommerce.hteapp.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -64,6 +65,9 @@ public class MDetalleIngreso {
 
         if(di.getVariedades() != null && di.getVariedades().size() != 0){
             this.variedades = di.getVariedades();
+        }
+        else{
+            this.variedades = new ArrayList<>();
         }
         
         this.ingresoId = di.getIngresoId();

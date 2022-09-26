@@ -680,4 +680,24 @@ public class Mapper {
         return dis;
     }
 
+    //metodo patea administrativa temporal
+    public static int validandoIngreso(List<DetalleIngreso> dis){
+        int num = 0;
+
+        if(dis.size() == 1){
+            if(dis.get(0).getSucursal().equals("Huacho")){
+                num = 1;
+            }
+
+            if(dis.get(0).getSucursal().equals("Barranca")){
+                num = 2;
+            }
+        }
+        else if(dis.size() == 2){
+            num = 3;
+        }
+
+        return num;
+    }
+
 }

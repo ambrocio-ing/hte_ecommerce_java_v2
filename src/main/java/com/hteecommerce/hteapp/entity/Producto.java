@@ -86,7 +86,7 @@ public class Producto implements Serializable {
         this.nestrellas = 5;
         this.nventas = 0;
         this.ingresadoHuacho = false;
-        this.ingresadoHuacho = false;
+        this.ingresadoBarranca = false;
     }
 
     public Integer getIdproducto() {

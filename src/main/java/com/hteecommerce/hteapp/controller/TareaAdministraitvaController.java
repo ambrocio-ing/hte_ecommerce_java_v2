@@ -15,13 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hteecommerce.hteapp.entity.DetalleIngreso;
 import com.hteecommerce.hteapp.entity.Producto;
+import com.hteecommerce.hteapp.mapper.Mapper;
 import com.hteecommerce.hteapp.service.IIngresoService;
 import com.hteecommerce.hteapp.service.IProductoService;
 
 @RestController
 @RequestMapping("/tarea/admin")
 public class TareaAdministraitvaController {
-    
+
     @Autowired
     private IProductoService productoService;
 
@@ -30,8 +31,8 @@ public class TareaAdministraitvaController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/corregir")
-    public ResponseEntity<?> corregirEstados(){
-        
+    public ResponseEntity<?> corregirEstados() {
+
         Map<String, String> resp = new HashMap<>();
         List<Producto> productos = null;
         List<DetalleIngreso> dis = null;
@@ -45,18 +46,25 @@ public class TareaAdministraitvaController {
 
         int contador = 0;
 
-        for(Producto pro : productos){
+        for (Producto pro : productos) {
 
             dis = ingresoService.getDetalleIngresoByIdproducto(pro.getIdproducto());
-            
-            if(dis != null && dis.size() != 0){
 
-                if(dis.get(0).getSucursal().equals("Huacho")){
-                    pro.setIngresadoHuacho(true);
-                }                
+            if (dis != null && dis.size() != 0) {
 
-                if(dis.get(0).getSucursal().equals("Barranca")){
-                    pro.setIngresadoBarranca(true);
+                int num = Mapper.validandoIngreso(dis);
+
+                switch (num) {
+                    case 1:
+                        pro.setIngresadoHuacho(true);
+                        break;
+                    case 2:
+                        pro.setIngresadoBarranca(true);
+                        break;
+                    case 3:
+                        pro.setIngresadoHuacho(true);
+                        pro.setIngresadoBarranca(true);
+                        break;
                 }
 
                 try {
@@ -65,12 +73,12 @@ public class TareaAdministraitvaController {
                     resp.put("mensaje", "Error al actualizar estados");
                     resp.put("error", e.getMessage());
                     return new ResponseEntity<Map<String, String>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
-                }  
-                
+                }
+
                 contador++;
-            }                 
-            
-        }        
+            }
+
+        }
 
         resp.put("mensaje", "Operación completado con éxito");
         resp.put("cantidad", contador + " productos actualizados con exito");
